@@ -1,0 +1,26 @@
+#This document is used to record some useful commands for me
+#Run man to see detailed info.
+pkg-config - Return metainformation about installed libraries.
+
+ps -f - list full list
+ctrl+alt+F1 - change to command line
+ctrl+alt+F7(tty7) - change to tty7. usually X is tty7
+alt+print screen + k - restart X
+pkill X - kill X
+
+pdflatex -shell-escape myfile.tex
+#solve the issue of pdflatex cannot find the eps-to-pdf file in subfolders
+
+#awk
+#judge if a duplicate field exist in a file; if an item in first column appears more than once
+awk -F '[ \t]' 'FNR==NR {if($1 in a) a[$1]=a[$1]+1; else a[$1]=1;next} ($1 in a && a[$1]>1){print $1}' mem-layout.dat mem-layout.dat
+
+
+##git##
+how to set git without pasword
+#https://help.github.com/articles/set-up-git
+git config --global credential.helper 'cache --timeout=3600' #timeout 3600sec
+#set user name
+git config --global user.name "Your Name Here"
+#set email 
+git config --global user.email "your_email@example.com"

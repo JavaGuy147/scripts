@@ -1,0 +1,16 @@
+1. Xen dom0 dedicated memory and preventing dom0 mem bollooning. (http://wiki.xen.org/wiki/Xen_Best_Practices)
+You should always dedicate a fixed amount of RAM for Xen dom0.
+This can be done by specifying "dom0_mem=512M,max:512M" option for the Xen hypervisor (usually xen.gz) in grub.conf/menu.lst. This makes sure that the initial amount of memory allocated for dom0 is 512 MB (note: Replace this value with the amount of memory you want to allocate to dom0) and leaves the rest of the host system's RAM available for other guests. See this grub.conf example for GRUB1:
+
+title Xen 4.1.0 / pv_ops dom0 kernel 2.6.32.36
+        root (hd0,0)
+        kernel /xen-4.0.gz dom0_mem=512M,max:512M loglvl=all guest_loglvl=all
+        module /vmlinuz-2.6.32.36 ro root=/dev/sda2 console=hvc0 earlyprintk=xen nomodeset
+        module /initrd-2.6.32.36.img
+The next step is to configure the toolstack to make sure dom0 memory is never ballooned down while starting new guests:
+If you are using the XL toolstack this can be done by editing /etc/xen/xl.conf and setting autoballoon=0. This will prevent XL from ever automatically adjusting the amount of memory assigned to dom0.
+If you are using the xend toolstack this can be done by editing /etc/xen/xend-config.sxp and changing the "dom0-min-mem" option (to "dom0-min-mem 512") and changing the "enable-dom0-ballooning" option (to "enable-dom0-ballooning no"). These options will make sure xend never takes any memory away from dom0.
+After making these changes to grub.conf and to xend-config.sxp/xl.conf, reboot the system. After reboot you will notice dom0 has only 512 MB of memory, and the rest of the RAM is available in Xen hypervisor as a free memory. You can run "xl list" (or "xm list") to verify the amount of memory dom0 has, and "xl info" (or "xm info") to verify the amount of free memory in Xen hypervisor.
+
+=============
+2. 

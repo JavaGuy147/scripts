@@ -1,0 +1,4 @@
+To use the configured vim on a new machine:
+(1) install vim, ctags, cscope;
+(2) copy .vim folder to ~/
+(3) copy .vimrc file to ~/

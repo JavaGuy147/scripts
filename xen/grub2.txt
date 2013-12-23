@@ -1,0 +1,65 @@
+#How to configure the grub2 entry for rt-xen
+#It is almost the same way to construct a constumized grub2 entry
+1) append at the end of /etc/grub.d/40_custom with the whole submemu{} block in the file /boot/grub/grub.cfg
+2) change the grub entry value to rtxen's desired value. One example is attached at the end of this doc.
+3) comment out "GRUB_HIDDEN_TIMEOUT=0" and "GRUB_HIDDEN_TIMEOUT_QUIET=true" in /etc/default/grub
+4) update grub with command 'sudo update-grub'
+5) reboot, you will see the RT-Xen entry at the end of the grub2 menu
+
+=======Below is a sample 40_custom script, only change the cmdline after xen-4.3.0.gz================
+#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+submenu "RT-Xen 2.0" {
+menuentry 'Ubuntu GNU/Linux, with RT-Xen 2.0(rtglobal) and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+        insmod part_msdos
+        insmod ext2
+        set root='(hd0,msdos3)'
+        search --no-floppy --fs-uuid --set=root acd81245-dcae-4f1e-a388-6dd9118bb665
+        echo    'Loading Xen 4.3.0 ...'
+        multiboot       /boot/xen-4.3.0.gz placeholder dom0_max_vcpus=6 dom0_vcpus_pin dom0_mem=4096M sched=rtglobal
+        echo    'Loading Linux 3.8.0-29-generic ...'
+        module  /boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=acd81245-dcae-4f1e-a388-6dd9118bb665 ro  quiet splash
+        echo    'Loading initial ramdisk ...'
+        module  /boot/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with RT-Xen 2.0(rtpartition) and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+        insmod part_msdos
+        insmod ext2
+        set root='(hd0,msdos3)'
+        search --no-floppy --fs-uuid --set=root acd81245-dcae-4f1e-a388-6dd9118bb665
+        echo    'Loading Xen 4.3.0 ...'
+        multiboot       /boot/xen-4.3.0.gz placeholder dom0_max_vcpus=6 dom0_vcpus_pin dom0_mem=4096M sched=rtpartition
+        echo    'Loading Linux 3.8.0-29-generic ...'
+        module  /boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=acd81245-dcae-4f1e-a388-6dd9118bb665 ro  quiet splash
+        echo    'Loading initial ramdisk ...'
+        module  /boot/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with RT-Xen 2.0(credit) and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+        insmod part_msdos
+        insmod ext2
+        set root='(hd0,msdos3)'
+        search --no-floppy --fs-uuid --set=root acd81245-dcae-4f1e-a388-6dd9118bb665
+        echo    'Loading Xen 4.3.0 ...'
+        multiboot       /boot/xen-4.3.0.gz placeholder dom0_max_vcpus=6 dom0_vcpus_pin dom0_mem=4096M sched=credit
+        echo    'Loading Linux 3.8.0-29-generic ...'
+        module  /boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=acd81245-dcae-4f1e-a388-6dd9118bb665 ro  quiet splash
+        echo    'Loading initial ramdisk ...'
+        module  /boot/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with RT-Xen 2.0(credit2) and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+        insmod part_msdos
+        insmod ext2
+        set root='(hd0,msdos3)'
+        search --no-floppy --fs-uuid --set=root acd81245-dcae-4f1e-a388-6dd9118bb665
+        echo    'Loading Xen 4.3.0 ...'
+        multiboot       /boot/xen-4.3.0.gz placeholder dom0_max_vcpus=6 dom0_vcpus_pin dom0_mem=4096M sched=credit2
+        echo    'Loading Linux 3.8.0-29-generic ...'
+        module  /boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=acd81245-dcae-4f1e-a388-6dd9118bb665 ro  quiet splash
+        echo    'Loading initial ramdisk ...'
+        module  /boot/initrd.img-3.8.0-29-generic
+}
+}
+

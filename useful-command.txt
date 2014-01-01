@@ -24,3 +24,14 @@ git config --global credential.helper 'cache --timeout=3600' #timeout 3600sec
 git config --global user.name "Your Name Here"
 #set email 
 git config --global user.email "your_email@example.com"
+
+
+
+##shell##
+find -path "path/you/want/" -o -print #find the files under the path
+find -path "path/to/ignore/" -prune -o -print #ignore the path when do find
+
+#grep the keyword in all .h and .c files under current dir but exclude some directories
+find . -type d \( -path "./stubdom/*" -o -path "./dist/*" \) -prune -o -regex '.*\.\(h\|c\)$'  -print | xargs grep map_foreign_range
+#the following cmd also works; it avoid the problem when the path/filename has whitespace; In addition, it's more efficient because of appending "{} +"
+find . -type d \( -path "./stubdom/" -o -path "./dist/" \) -prune -o -name '*.[ch]' -exec grep map_foreign_range {} +

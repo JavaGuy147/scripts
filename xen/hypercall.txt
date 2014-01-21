@@ -1,0 +1,13 @@
+How to make a Hypercall in Xen ?
+Hyper-call is the communication channel between domains and Xen. This ensures security between domains.
+
+How to make a Hypercall in Xen ?
+
+1. add entry of hypercall in /include/xen/hypercall.h and
+/include/asm-x86/hypercall.h
+2.make entry in /arch/x86/x86_32/entry.S
+(.long)
+make entry in /arch/x86/x86_64/entry.S
+(.quad)
+3.make entry in /include/public/xen.h
+ref: http://ashwinvasani.wordpress.com/2011/03/03/how-to-make-a-hypercall-in-xen/

@@ -1,0 +1,309 @@
+diff --git a/tools/libxc/xc_private.c b/tools/libxc/xc_private.c
+index a500c08..2fbb12a 100755
+--- a/tools/libxc/xc_private.c
++++ b/tools/libxc/xc_private.c
+@@ -528,11 +528,21 @@ int do_memory_op(xc_interface *xch, int cmd, void *arg, size_t len)
+     return ret;
+ }
+ 
++int xc_show_cache(xc_interface *xch)
++{
++    return do_memory_op(xch, XENMEM_show_cache, NULL, 0);
++}
++
+ int xc_disable_cache(xc_interface *xch)
+ {
+     return do_memory_op(xch, XENMEM_disable_cache, NULL, 0);
+ }
+ 
++int xc_enable_cache(xc_interface *xch)
++{
++    return do_memory_op(xch, XENMEM_enable_cache, NULL, 0);
++}
++
+ long xc_maximum_ram_page(xc_interface *xch)
+ {
+     return do_memory_op(xch, XENMEM_maximum_ram_page, NULL, 0);
+diff --git a/tools/libxc/xenctrl.h b/tools/libxc/xenctrl.h
+index 6239b0b..2c04189 100755
+--- a/tools/libxc/xenctrl.h
++++ b/tools/libxc/xenctrl.h
+@@ -1341,6 +1341,8 @@ int xc_mmuext_op(xc_interface *xch, struct mmuext_op *op, unsigned int nr_ops,
+                  domid_t dom);
+ 
+ int xc_disable_cache(xc_interface *xch);
++int xc_enable_cache(xc_interface *xch);
++int xc_show_cache(xc_interface *xch);
+ 
+ /* System wide memory properties */
+ long xc_maximum_ram_page(xc_interface *xch);
+diff --git a/tools/misc/xen-cache b/tools/misc/xen-cache
+index 9589376..a957707 100755
+Binary files a/tools/misc/xen-cache and b/tools/misc/xen-cache differ
+diff --git a/tools/misc/xen-cache.c b/tools/misc/xen-cache.c
+index 33ed3e8..f3a8956 100644
+--- a/tools/misc/xen-cache.c
++++ b/tools/misc/xen-cache.c
+@@ -3,12 +3,11 @@
+ #include <xc_core.h>
+ #include <errno.h>
+ #include <unistd.h>
+-#include <xen/mm_mask.h>
+ 
+ #include "xg_save_restore.h"
+ 
+ #define ARRAY_SIZE(a) (sizeof (a) / sizeof ((a)[0]))
+-
++#define CD_SHIFT 30
+ static xc_interface *xch;
+ 
+ int help_func(int argc, char *argv[])
+@@ -17,6 +16,7 @@ int help_func(int argc, char *argv[])
+             "Usage: xen-cache <command> [args]\n"
+             "Command:\n"
+             "  help                     show this help\n"
++            "  show                     show cache status (30bit of CR0)\n"
+             "  disable                  disable all cache levels\n"
+             "  enable                   enable cache_level L1/L2/L3\n"
+             );
+@@ -24,9 +24,35 @@ int help_func(int argc, char *argv[])
+     return 0;
+ }
+ 
++int show_func(int argc, char *argv[])
++{
++    unsigned long cr0 = 2;
++    int cd = -1;    
++
++    if ( argc > 0 )
++    {
++        help_func(0, NULL);
++        return 1;
++    }
++
++    cr0 = (unsigned long) xc_show_cache(xch);
++    cd = ( (cr0 >> CD_SHIFT) & 0x1 );
++    printf("return value:%#018lx\n"
++            "30bit(CD) of CR0 is: %d\n", 
++            cr0, cd);
++    if ( cd == 1 )
++        printf("The cache is disabled\n");
++    else if( cd == 0 )
++        printf("The cache is enabled\n");
++    else
++        ERROR("Failed to show 30th bit (CD) of CR0\n");
++
++    return 0;
++}
++
+ int disable_func(int argc, char *argv[])
+ {
+-    int ret = -1;
++    int ret = -EINVAL;
+     if ( argc > 0 )
+     {
+         help_func(0, NULL);
+@@ -34,6 +60,7 @@ int disable_func(int argc, char *argv[])
+     }
+ 
+     ret = xc_disable_cache(xch);
++   // ret = xc_maximum_ram_page(xch);
+     printf("return value:%d\n", ret);
+     if ( !ret )
+         printf(" All cache levels have been disabled!\n");
+@@ -45,15 +72,21 @@ int disable_func(int argc, char *argv[])
+ 
+ int enable_func(int argc, char *argv[])
+ {
+-   // int ret = -1;
++    int ret = -EINVAL;
+     if (argc > 0 )
+     {
+         help_func(0, NULL);
+         return 1;
+     }
+     
+-    printf("Dump func: TO Implement");
++    ret = xc_enable_cache(xch);
+     
++    printf("Enable cache return value:%d\n", ret);
++    if ( !ret )
++        printf(" All cache levels have been enabled!\n");
++    else
++        ERROR("Failed to enable cache of all levels");
++
+     return 0;
+ }
+ 
+@@ -62,6 +95,7 @@ struct{
+     int (*func)(int argc, char *argv[]);
+ } opts[] = {
+     { "help", help_func },
++    { "show", show_func},
+     { "disable", disable_func },
+     { "enable", enable_func },
+ };
+diff --git a/tools/misc/xen-mfndump b/tools/misc/xen-mfndump
+index aafbe18..216e972 100755
+Binary files a/tools/misc/xen-mfndump and b/tools/misc/xen-mfndump differ
+diff --git a/xen/arch/x86/mm.c b/xen/arch/x86/mm.c
+index 7e151b4..eb02333 100755
+--- a/xen/arch/x86/mm.c
++++ b/xen/arch/x86/mm.c
+@@ -4937,7 +4937,8 @@ long arch_memory_op(int op, XEN_GUEST_HANDLE_PARAM(void) arg)
+     }
+ 
+     default:
+-        dprintk(XENLOG_INFO,"call subarch_memory_op");
++        //dprintk(XENLOG_INFO,"call subarch_memory_op");
++        printk("call subarch_memory_op");
+         return subarch_memory_op(op, arg);
+     }
+ 
+diff --git a/xen/arch/x86/x86_64/mm.c b/xen/arch/x86/x86_64/mm.c
+index 270434e..551fa60 100755
+--- a/xen/arch/x86/x86_64/mm.c
++++ b/xen/arch/x86/x86_64/mm.c
+@@ -1030,6 +1030,13 @@ long subarch_memory_op(int op, XEN_GUEST_HANDLE_PARAM(void) arg)
+     case XENMEM_disable_cache:
+         dprintk(XENLOG_ERR,"Dummy hypercall: TODO:Disable cache of all levels\n");
+         printk("Meng: Dummy Hypercall");
++        /*__asm__ __volatile__(
++        "push %eax\n\t"
++        "movl %cr0,%eax\n\t"
++        "orl $0x40000000,%eax\n\t"  
++        "movl %eax,%cr0\n\t"
++        "wbinvd\n\t"
++        "pop  %eax\n\t");*/
+         break;
+     case XENMEM_machphys_mfn_list:
+         if ( copy_from_guest(&xmml, arg, 1) )
+diff --git a/xen/common/memory.c b/xen/common/memory.c
+index 13ccae7..3272dec 100755
+--- a/xen/common/memory.c
++++ b/xen/common/memory.c
+@@ -545,14 +545,15 @@ static long memory_exchange(XEN_GUEST_HANDLE_PARAM(xen_memory_exchange_t) arg)
+ long do_memory_op(unsigned long cmd, XEN_GUEST_HANDLE_PARAM(void) arg)
+ {
+     struct domain *d;
+-    long rc;
++    long rc = -EINVAL;
+     unsigned int address_bits;
+     unsigned long start_extent;
+     struct xen_memory_reservation reservation;
+     struct memop_args args;
+     domid_t domid;
+     int op = cmd & MEMOP_CMD_MASK;
+-
++    unsigned long cr0 = 0;
++    
+     switch ( op )
+     {
+     case XENMEM_increase_reservation:
+@@ -638,6 +639,53 @@ long do_memory_op(unsigned long cmd, XEN_GUEST_HANDLE_PARAM(void) arg)
+         rc = max_page;
+         break;
+ 
++    case XENMEM_disable_cache:
++        __asm__ __volatile__( 
++              "pushq %%rax\n\t"
++              "movq %%cr0,%%rax\n\t"
++              "orq $0x40000000,%%rax\n\t"  
++              "movq %%rax,%%cr0\n\t"
++              "movq %%cr0, %0\n\t"
++              "wbinvd\n\t"
++              "popq  %%rax"
++              :"=r" (cr0)
++              :
++              :
++       );
++        //gdprintk(XENLOG_WARNING, "gdprintk:XENMEM_disable_cache disable cache! TODO IMPLEMENT\n");
++        printk("<1>printk: disable cache! cr0=%#018lx\n", cr0);
++        rc = 0;
++        break;
++
++    case XENMEM_enable_cache:
++         __asm__ __volatile__(
++                "pushq %%rax\n\t"
++                "movq %%cr0,%%rax\n\t"
++                "andq $0xffffffffbfffffff,%%rax\n\t"       /*~0x4000000*/   
++                "movq %%rax,%%cr0\n\t"
++                "movq %%cr0, %0\n\t"
++                "popq  %%rax"
++                :"=r" (cr0)
++                :
++                :
++        );
++        printk("<1>printk: enable cache; cr0=%#018lx\n", cr0);
++        rc = 0;
++        break;
++
++    case XENMEM_show_cache:
++       __asm__ __volatile__("pushq %%rax\n\t"
++                            "movq %%cr0, %%rax\n\t"
++                            "movq %%rax, %0\n\t"
++                            "popq %%rax"
++                            :"=r" (cr0)
++                            :
++                            :
++            );
++        //gdprintk(XENLOG_WARNING, "gdprintk:XENMEM_show_cache_status! CR0 value is %#018lx\n", cr0);
++        printk("<1>printk: XENMEM_show_cache_status! CR0 value is %#018lx\n",cr0);
++        return (long) cr0;
++
+     case XENMEM_current_reservation:
+     case XENMEM_maximum_reservation:
+     case XENMEM_maximum_gpfn:
+@@ -738,12 +786,15 @@ long do_memory_op(unsigned long cmd, XEN_GUEST_HANDLE_PARAM(void) arg)
+         break;
+ 
+     default:
+-        dprintk(XENLOG_INFO,"call arch_memory_op");
++        //dprintk(XENLOG_INFO,"call arch_memory_op");
+         printk("call arch_memory_op");
+         rc = arch_memory_op(op, arg);
+         break;
+     }
+ 
++    //gdprintk(XENLOG_WARNING,"gdprintk: Begin of do_memory_op @memory.c\n");
++    //printk("printk: Begin of do_memory_op @memory.c\ncmd is %lu\n",cmd);
++
+     return rc;
+ }
+ 
+diff --git a/xen/include/public/memory.h b/xen/include/public/memory.h
+index 569356b..385dd7e 100755
+--- a/xen/include/public/memory.h
++++ b/xen/include/public/memory.h
+@@ -146,7 +146,10 @@ DEFINE_XEN_GUEST_HANDLE(xen_memory_exchange_t);
+ /*
+  * RT-Xen: disable cache
+  */
+-#define XENMEM_disable_cache                33 
++#define XENMEM_disable_cache        25
++#define XENMEM_enable_cache         26
++#define XENMEM_show_cache           27
++
+ 
+ /*
+  * Returns the current or maximum memory reservation, in pages, of the
+diff --git a/xen/include/xen/mm_mask.h b/xen/include/xen/mm_mask.h
+new file mode 100644
+index 0000000..296a66c
+--- /dev/null
++++ b/xen/include/xen/mm_mask.h
+@@ -0,0 +1,14 @@
++#ifndef __MM_MASK_H__
++#define __MM_MASK_H__
++
++#define BITS_PER_LONG 64
++#define PG_shift(idx)   (BITS_PER_LONG - (idx))
++#define PG_mask(x, idx) (x ## UL << PG_shift(idx))
++
++ /* Count of uses of this frame as its current type. */
++#define PGT_count_width   PG_shift(9)
++#define PGT_count_mask    ((1UL<<PGT_count_width)-1)
++
++
++#endif
++

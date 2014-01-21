@@ -1,0 +1,7 @@
+#########################
+This folder keeps workable grub.cfg and 40_custom grub script!
+#########################
+
+The 40_custom 
+1) creates a RT-Xen submenu at the end of the grub.cfg; 
+2) configure the serial console; output to screen (vga, tty0) and serial port (ttyS0)

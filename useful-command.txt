@@ -35,3 +35,8 @@ find -path "path/to/ignore/" -prune -o -print #ignore the path when do find
 find . -type d \( -path "./stubdom/*" -o -path "./dist/*" \) -prune -o -regex '.*\.\(h\|c\)$'  -print | xargs grep map_foreign_range
 #the following cmd also works; it avoid the problem when the path/filename has whitespace; In addition, it's more efficient because of appending "{} +"
 find . -type d \( -path "./stubdom/" -o -path "./dist/" \) -prune -o -name '*.[ch]' -exec grep map_foreign_range {} +
+
+
+##Xen##
+#show the dependence of libraries
+ldd `which xl` 

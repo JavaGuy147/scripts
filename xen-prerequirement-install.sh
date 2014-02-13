@@ -8,4 +8,5 @@ sudo apt-get -y install make gcc libc6-dev zlib1g-dev python python-dev python-t
 sudo apt-get -y install libvncserver-dev 
 sudo apt-get install -y libsdl-dev libjpeg62-dev iasl libbz2-dev e2fslibs-dev git-core uuid-dev ocaml ocaml-findlib libx11-dev bison flex xz-utils libyajl-dev 
 sudo apt-get install -y gettext
-sudo apt-get install gcc-multilib
+sudo apt-get install -y gcc-multilib
+sudo apt-get install -y libpixman-1-dev

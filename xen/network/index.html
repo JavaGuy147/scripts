@@ -1,0 +1,1851 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<!--
+	generated in 0.733 seconds
+	110061 bytes batcached for 300 seconds
+-->
+<head profile="http://gmpg.org/xfn/11">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Ubuntu 12.04 IPv4 NAT Gateway and DHCP Server | Code Ghar</title>
+	<link rel="pingback" href="http://codeghar.wordpress.com/xmlrpc.php" />
+	<link rel="alternate" type="application/rss+xml" title="Code Ghar &raquo; Feed" href="http://codeghar.wordpress.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Code Ghar &raquo; Comments Feed" href="http://codeghar.wordpress.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Code Ghar &raquo; Ubuntu 12.04 IPv4 NAT Gateway and DHCP&nbsp;Server Comments Feed" href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/feed/" />
+<script type="text/javascript">
+/* <![CDATA[ */
+function addLoadEvent(func){var oldonload=window.onload;if(typeof window.onload!='function'){window.onload=func;}else{window.onload=function(){oldonload();func();}}}
+/* ]]> */
+</script>
+<link rel='stylesheet' id='all-css-0' href='http://s0.wp.com/_static/??-eJx9UNEOgjAM/CFnFQzqg/FbBqtj0NGFdSH+vRMfJBJ56zV317vCFFTDg+Ag4JMKlKwbIpDrMUKHEnTTqxntmxh3sKDXxPYrYGvRcBL1YCKeYHLGoqxEixsjkhY0KnCUH7Ql86HKax+0zGObA6750qLPBUKqIUMcw+giQpQn4Xakd6k8WsisBfx3oD2BJa41bbl+XhFnS8tsRtRmjnz3t2N5LQ/FuboU3QuzWZOS' type='text/css' media='all' />
+<link rel='stylesheet' id='print-css-0' href='http://s0.wp.com/wp-content/mu-plugins/global-print/global-print.css?m=1387483371g' type='text/css' media='print' />
+<script type='text/javascript'>
+/* <![CDATA[ */
+var LoggedOutFollow = {"invalid_email":"Your subscription did not succeed, please try again with a valid email address."};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://s1.wp.com/_static/??-eJyFj0kOwjAMRS+Em0JXXSDO0jZu5JCJOCGC05NKgKAgdeXpfX9blACTdwldEpqF9SMZhMwYB1V7QG72jeadqBy5yWSJvID6kjHenmETAEsqDgkbS+4Ff7gGz8kic7X8M/22InclLJuYxhSG6QwRme4/W0fjFQSTFTkWNVcofU4we2N8EYWkwrTW2PxWRDT1GQnL3auqqk72uO/6rj20fdvrB2bFhFI='></script>
+<link rel='stylesheet' id='all-css-0' href='http://s2.wp.com/wp-content/mu-plugins/highlander-comments/style.css?m=1377793621g' type='text/css' media='all' />
+<!--[if lt IE 8]>
+<link rel='stylesheet' id='highlander-comments-ie7-css'  href='http://s2.wp.com/wp-content/mu-plugins/highlander-comments/style-ie7.css?m=1351637563g&#038;ver=20110606' type='text/css' media='all' />
+<![endif]-->
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://codeghar.wordpress.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://codeghar.wordpress.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='I fixed a bug in&nbsp;yum' href='http://codeghar.wordpress.com/2012/04/04/i-fixed-a-bug-in-yum/' />
+<link rel='next' title='CLI&nbsp;First' href='http://codeghar.wordpress.com/2012/06/16/cli-first/' />
+<meta name="generator" content="WordPress.com" />
+<link rel='canonical' href='http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/' />
+<link rel='shortlink' href='http://wp.me/p8kvX-eT' />
+<link rel="alternate" type="application/json+oembed" href="http://public-api.wordpress.com/oembed/1.0/?format=json&amp;url=http%3A%2F%2Fcodeghar.wordpress.com%2F2012%2F05%2F02%2Fubuntu-12-04-ipv4-nat-gateway-and-dhcp-server%2F&amp;for=wpcom-auto-discovery" /><link rel="alternate" type="application/xml+oembed" href="http://public-api.wordpress.com/oembed/1.0/?format=xml&amp;url=http%3A%2F%2Fcodeghar.wordpress.com%2F2012%2F05%2F02%2Fubuntu-12-04-ipv4-nat-gateway-and-dhcp-server%2F&amp;for=wpcom-auto-discovery" />
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Ubuntu 12.04 IPv4 NAT Gateway and DHCP Server" />
+<meta property="og:url" content="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/" />
+<meta property="og:description" content="Before I begin this post, I want to thank Internet Connection Sharing – Ubuntu 10.04 NAT Gateway Setup (Abridged Version) for providing the bulk of the tutorial. I have made some modifications for ..." />
+<meta property="article:published_time" content="2012-05-02T23:00:22+00:00" />
+<meta property="article:modified_time" content="2012-11-21T19:29:21+00:00" />
+<meta property="article:author" content="http://codeghar.wordpress.com/author/hamzasheikh/" />
+<meta property="og:site_name" content="Code Ghar" />
+<meta property="og:image" content="http://wordpress.com/i/blank.jpg?m=1383295312g" />
+<meta name="twitter:site" content="@wordpressdotcom" />
+<meta name="twitter:card" content="summary" />
+<meta property="fb:app_id" content="249643311490" />
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom" />
+<link rel="shortcut icon" type="image/x-icon" href="http://s2.wp.com/i/favicon.ico?m=1311975824g" sizes="16x16 24x24 32x32 48x48" />
+<link rel="icon" type="image/x-icon" href="http://s2.wp.com/i/favicon.ico?m=1311975824g" sizes="16x16 24x24 32x32 48x48" />
+<link rel="apple-touch-icon-precomposed" href="http://s0.wp.com/i/webclip.png?m=1391188133g" />
+<link rel='openid.server' href='http://codeghar.wordpress.com/?openidserver=1' />
+<link rel='openid.delegate' href='http://codeghar.wordpress.com/' />
+<link rel="search" type="application/opensearchdescription+xml" href="http://codeghar.wordpress.com/osd.xml" title="Code Ghar" />
+<link rel="search" type="application/opensearchdescription+xml" href="http://wordpress.com/opensearch.xml" title="WordPress.com" />
+	<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+		<style type="text/css">
+			.recentcomments a {
+				display: inline !important;
+				padding: 0 !important;
+				margin: 0 !important;
+			}
+
+			table.recentcommentsavatartop img.avatar, table.recentcommentsavatarend img.avatar {
+				border: 0px;
+				margin: 0;
+			}
+
+			table.recentcommentsavatartop a, table.recentcommentsavatarend a {
+				border: 0px !important;
+				background-color: transparent !important;
+			}
+
+			td.recentcommentsavatarend, td.recentcommentsavatartop {
+				padding: 0px 0px 1px 0px;
+				margin: 0px;
+			}
+
+			td.recentcommentstextend {
+				border: none !important;
+				padding: 0px 0px 2px 10px;
+			}
+
+			.rtl td.recentcommentstextend {
+				padding: 0px 10px 2px 0px;
+			}
+
+			td.recentcommentstexttop {
+				border: none !important;
+				padding: 0px 0px 0px 10px;
+			}
+
+			.rtl td.recentcommentstexttop {
+				padding: 0px 10px 0px 0px;
+			}
+		</style>
+		<meta name="application-name" content="Code Ghar" /><meta name="msapplication-window" content="width=device-width;height=device-height" /><meta name="msapplication-tooltip" content="Code, Scripts, Configurations, and Discussion" /><meta name="msapplication-task" content="name=Subscribe;action-uri=http://codeghar.wordpress.com/feed/;icon-uri=http://s2.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=Sign up for a free blog;action-uri=http://wordpress.com/signup/;icon-uri=http://s2.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=WordPress.com Support;action-uri=http://support.wordpress.com/;icon-uri=http://s2.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=WordPress.com Forums;action-uri=http://forums.wordpress.com/;icon-uri=http://s2.wp.com/i/favicon.ico" /><meta name="title" content="Ubuntu 12.04 IPv4 NAT Gateway and DHCP&nbsp;Server | Code Ghar on WordPress.com" />
+<meta name="description" content="Before I begin this post, I want to thank Internet Connection Sharing – Ubuntu 10.04 NAT Gateway Setup (Abridged Version) for providing the bulk of the tutorial. I have made some modifications for Ubuntu 12.04. The setup is simple: a single Ubuntu server will act as a gateway and DHCP server for a local network.&hellip;" />
+		<style type="text/css">
+			#header h1,
+			#header h1 a,
+			#header h1 a:visited,
+			#header h4,
+			#header h4 a,
+			#header h4 a:visited,
+			.header-left {
+				color: #333333;
+			}
+		</style>
+
+<script type='text/javascript' src='http://partner.googleadservices.com/gampad/google_service.js'>
+</script>
+<script type='text/javascript'>
+if ( typeof GS_googleAddAdSenseService == 'function' ) { GS_googleAddAdSenseService("ca-pub-3443918307802676"); }
+if ( typeof GS_googleEnableAllServices == 'function' ) { GS_googleEnableAllServices() };
+</script>
+<script type="text/javascript" src="http://c.amazon-adsystem.com/aax2/amzn_ads.js"></script>
+<script type="text/javascript">
+try { amznads.getAds("3033","300x250"); } catch(e) { /* ignore */ }
+</script>
+<script type="text/javascript">
+var amznKeys = amznads.getKeys();
+if (typeof amznKeys != "undefined" && amznKeys != "") { for (var i =0; i < amznKeys.length; i++) { var key = amznKeys[i]; GA_googleAddAttr("amzn", key);} }
+document.close();
+</script>
+<script type='text/javascript'>
+if ( typeof GA_googleAddSlot == 'function' ) { GA_googleAddSlot("ca-pub-3443918307802676", "wpcom_below_post_adsafe"); }
+</script>
+<script type='text/javascript'>
+if ( typeof GA_googleFetchAds == 'function' ) { GA_googleFetchAds(); }
+</script>
+
+<script type="text/javascript">
+var wpcom_ads = { bid: 1985485, pt: 'permalink', wa: 0, as: 1, domain: 'codeghar.wordpress.com', url: 'http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/', gid: '', };
+</script>
+<style id="syntaxhighlighteranchor"></style>
+<script type="text/javascript">
+	window.google_analytics_uacct = "UA-52447-2";
+</script>
+
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-52447-2']);
+	_gaq.push(['_setDomainName', 'wordpress.com']);
+	_gaq.push(['_initData']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+	})();
+</script>
+</head>
+
+<body class="single single-post postid-923 single-format-standard mp6 highlander-enabled highlander-light">
+
+<div id="header">
+	<div class="header-left">
+					<h4><a href="http://codeghar.wordpress.com/">Code Ghar</a></h4>
+				<p id="description">Code, Scripts, Configurations, and Discussion</p>
+	</div>
+	<div class="header-right">
+		<form method="get" id="searchform" action="http://codeghar.wordpress.com/" >
+			<div><label class="hidden" for="s">Search:</label>
+			<input type="text" value="" name="s" id="s" />
+			<input type="submit" id="searchsubmit" value="Go" /></div>
+		</form>
+	</div>
+</div>
+<div id="access">
+	<div id="nav">
+		<div id="supernav" class="navleft nav">
+			<div class="menu"><ul><li ><a href="http://codeghar.wordpress.com/">Home</a></li><li class="page_item page-item-2"><a href="http://codeghar.wordpress.com/about/">About</a></li></ul></div>
+		</div>
+		<div class="navright">
+			<a class="rsslink" rel="nofollow" href="http://codeghar.wordpress.com/feed/">Posts</a>
+			<a class="rsslink" rel="nofollow" href="http://codeghar.wordpress.com/comments/feed/">Comments</a>
+		</div>
+	</div>
+
+	<div id="subnav" class="subnav nav">
+			<div class="menu">
+		<ul>
+				<li class="cat-item cat-item-45809"><a href="http://codeghar.wordpress.com/category/configuration/" title="View all posts filed under configuration">configuration</a>
+</li>
+	<li class="cat-item cat-item-15352"><a href="http://codeghar.wordpress.com/category/discussion/" title="View all posts filed under discussion">discussion</a>
+</li>
+	<li class="cat-item cat-item-656"><a href="http://codeghar.wordpress.com/category/code/" title="View all posts filed under code">code</a>
+</li>
+	<li class="cat-item cat-item-455"><a href="http://codeghar.wordpress.com/category/script/" title="View all posts filed under script">script</a>
+</li>
+		</ul>
+	</div>
+	</div>
+</div>
+
+<div id="wrap">
+<div id="content">
+
+	<div id="content-left">
+
+		
+			<div id="nav-above">
+				<div class="nav-previous"><a href="http://codeghar.wordpress.com/2012/04/04/i-fixed-a-bug-in-yum/" rel="prev"><span class="meta-nav">&larr;</span> I fixed a bug in&nbsp;yum</a></div>
+				<div class="nav-next"><a href="http://codeghar.wordpress.com/2012/06/16/cli-first/" rel="next">CLI&nbsp;First <span class="meta-nav">&rarr;</span></a></div>
+			</div>
+
+			<div class="post-923 post type-post status-publish format-standard hentry category-configuration tag-ubuntu">
+
+				<div class="entry">
+
+					<h1>Ubuntu 12.04 IPv4 NAT Gateway and DHCP&nbsp;Server</h1>
+
+					<div class="post-info">
+						<p>
+							<span class="time">May 2, 2012</span>
+															<span class="author">by <a href="http://codeghar.wordpress.com/author/hamzasheikh/" title="Posts by hs" rel="author">hs</a></span>
+																						<span class="post-comments"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comments" title="Comment on Ubuntu 12.04 IPv4 NAT Gateway and DHCP&nbsp;Server">42 Comments</a></span>
+																				</p>
+					</div>
+
+					<p>Before I begin this post, I want to thank <a href="http://www.somewhereville.com/?p=1196">Internet Connection Sharing – Ubuntu 10.04 NAT Gateway Setup (Abridged Version)</a> for providing the bulk of the tutorial. I have made some modifications for Ubuntu 12.04.</p>
+<p>The setup is simple: a single Ubuntu server will act as a gateway and DHCP server for a local network. All other machines on the local network will receive their IPs from the DHCP server. To make things easier, I&#8217;ll call this Ubuntu server &#8220;Skyray&#8221; for the rest of the post.</p>
+<p>Skyray has two network interfaces, eth0 and eth1. eth0 is on the 10.20.30.0/24 subnet and this is the Internet facing interface. eth1 is on the 172.22.22.0/24 subnet, where all other machines are also present. Basically, eth0 will connect to the Internet and eth1 will serve DHCP requests and act as the gateway.</p>
+<h3>/etc/network/interfaces</h3>
+<p>First you need to configure eth0 and eth1 for Skyray. Edit the file and make sure it has at least the following settings (or whatever settings are appropriate for your environment).</p>
+<p><code>sudo vim /etc/network/interfaces</code></p>
+<pre>
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet static
+    address 10.20.30.77
+    netmask 255.255.255.0
+    gateway 10.20.30.1
+    network 10.20.30.0
+    broadcast 10.20.30.255
+    dns-nameservers 10.20.30.15 10.20.30.16
+    dns-search codeghar.com
+
+auto eth1
+iface eth1 inet static
+    address 172.22.22.1
+    netmask 255.255.255.0
+    network 172.22.22.0
+    broadcast 172.22.22.255
+</pre>
+<h3>/etc/sysctl.conf</h3>
+<p>You need to enable IPv4 forwarding. To do so, edit this file.</p>
+<p><code>sudo vim /etc/sysctl.conf</code></p>
+<p>And uncomment the line</p>
+<pre># net.ipv4.ip_forward=1</pre>
+<p>so that it now appears as</p>
+<pre>net.ipv4.ip_forward=1</pre>
+<p>Save the file and run the following command to make the change effective without a reboot.</p>
+<p><code>sudo sysctl -w net.ipv4.ip_forward=1</code></p>
+<h3>/etc/rc.local</h3>
+<p>You&#8217;ll need to allow iptables rules for NAT to work. Edit the file and save it.</p>
+<p><code>sudo vim /etc/rc.local</code></p>
+<p>Make sure the following two lines appear before the <code>exit 0</code> line in the file.</p>
+<pre>/sbin/iptables -P FORWARD ACCEPT
+/sbin/iptables --table nat -A POSTROUTING -o eth0 -j MASQUERADE</pre>
+<p>To make these iptables rules active without rebooting, run the following commands:</p>
+<p><code>sudo iptables -P FORWARD ACCEPT</code></p>
+<p><code>sudo iptables –-table nat -A POSTROUTING -o eth0 -j MASQUERADE</code></p>
+<h3>Install DHCP server</h3>
+<p><code>sudo aptitude install isc-dhcp-server</code></p>
+<h3>/etc/dhcp/dhcpd.conf</h3>
+<p>Configure your newly installed DHCP server. Edit the file and save.</p>
+<p><code>sudo vim /etc/dhcp/dhcpd.conf</code></p>
+<p>The file is very well commented and you can learn a lot reading it. Just make sure it has at least the following configuration.</p>
+<pre>
+ddns-update-style none;
+
+# option definitions common to all supported networks...
+option domain-name "codeghar.com";
+option domain-name-servers 10.20.30.15, 10.20.30.16;
+
+default-lease-time 3600;
+max-lease-time 7200;
+
+# If this DHCP server is the official DHCP server for the local
+# network, the authoritative directive should be uncommented.
+authoritative;
+
+# Use this to send dhcp log messages to a different log file (you also
+# have to hack syslog.conf to complete the redirection).
+log-facility local7;
+
+# This is a very basic subnet declaration.
+
+subnet 172.22.22.0 netmask 255.255.255.0 {
+  range 172.22.22.21 172.22.22.250;
+  option subnet-mask 255.255.255.0;
+  option broadcast-address 172.22.22.255;
+  option routers 172.22.22.1;
+}
+</pre>
+<h3>/etc/default/isc-dhcp-server</h3>
+<p>We want to serve DHCP only on eth1 interface to we need to configure it that way. Edit the file and save it.</p>
+<p><code>sudo vim /etc/default/isc-dhcp-server</code></p>
+<p>The line will look like this before you change it</p>
+<pre>INTERFACES=""</pre>
+<p>And after you change it, it will look like this:</p>
+<pre>INTERFACES="eth1"</pre>
+<p>Now you should stop and start the DHCP server.</p>
+<p><code>sudo service isc-dhcp-server stop</code> (if the service is already running; skip if it&#8217;s not running)</p>
+<p><code>sudo service isc-dhcp-server start</code></p>
+<h3>Conclusion</h3>
+<p>Now any machines you have on the 172.22.22.0/24 network will get their IP address from Skyray if they are set to DHCP. And Skyray will also serve as their gateway.</p>
+
+<div class="wpa" style="position: relative; width:300px; text-align: center; padding: 0; margin: 10px auto; overflow: hidden; clear: both;">
+<a style="position: absolute; text-align: left; display: block; font: 9px/1 sans-serif; text-decoration: underline;" href="http://en.wordpress.com/about-these-ads/" rel="nofollow">About these ads</a>
+<script type="text/javascript">
+		var wpcom_adclk_hovering = false;
+		var wpcom_adclk_recorded = false;
+		var wpcom_adclk_theme = "Enterprise";
+		var wpcom_adclk_slot = "wpcom_below_post_adsafe";
+		var wpcom_adclk_network = ( typeof wpcom_adclk_network === "undefined" ) ? "" : wpcom_adclk_network ;
+
+		jQuery(document).ready( function() {
+			function wpcom_adclk_hover_yes() { wpcom_adclk_hovering = true; }
+			function wpcom_adclk_hover_no() { wpcom_adclk_hovering = false; }
+			jQuery(".wpa").click(wpcom_adclk_click);
+			jQuery(".wpa iframe").hover( wpcom_adclk_hover_yes, wpcom_adclk_hover_no );
+			jQuery(".wpa object").hover( wpcom_adclk_hover_yes, wpcom_adclk_hover_no );
+
+			jQuery(window).blur( function() {
+				if ( wpcom_adclk_hovering ) { wpcom_adclk_click(); }
+			});
+		});
+
+		function wpcom_adclk_impression() {
+			var stat_gif = document.location.protocol + "//stats.wordpress.com/g.gif?v=wpcom-no-pv";
+			stat_gif += "&x_ads_imp_theme=" + wpcom_adclk_theme;
+			stat_gif += "&x_ads_imp_placement="+wpcom_adclk_slot;
+			stat_gif += "&x_ads_imp_network=" + wpcom_adclk_network;
+			stat_gif += "&x_ads_imp_theme_network="+wpcom_adclk_theme+"_"+wpcom_adclk_network;
+			new Image().src = stat_gif + "&baba=" + Math.random();
+			return true;
+		}
+
+		function wpcom_adclk_click() {
+			if (wpcom_adclk_recorded) { return true; } // no double counting
+			var stat_gif = document.location.protocol + "//stats.wordpress.com/g.gif?v=wpcom-no-pv";
+			stat_gif += "&x_ads_click_theme=" + wpcom_adclk_theme;
+			stat_gif += "&x_ads_click_placement="+wpcom_adclk_slot;
+			stat_gif += "&x_ads_click_network=" + wpcom_adclk_network;
+			stat_gif += "&x_ads_click_theme_network="+wpcom_adclk_theme+"_"+wpcom_adclk_network;
+
+			new Image().src = stat_gif + "&baba=" + Math.random();
+			wpcom_adclk_recorded = true;
+			var now=new Date(); var end=now.getTime()+250;
+			while(true){now=new Date();if(now.getTime()>end){break;}}
+			return true;
+		}
+	
+if ( typeof GA_googleAddAttr == 'function' ) {
+GA_googleAddAttr("AdOpt", "1");
+GA_googleAddAttr("Origin", "other");
+GA_googleAddAttr("LangId", "1");
+GA_googleAddAttr("Domain", "codeghar.wordpress.com");
+GA_googleAddAttr("BlogId", "1985485");
+GA_googleAddAttr("PageURL", "http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/");
+GA_googleAddAttr("AdSafe", "1");
+GA_googleAddAttr("Autotag", "technology");
+GA_googleAddAttr("Tag", "configuration");
+GA_googleAddAttr("Tag", "ubuntu");
+GA_googleAddAttr("Partner", "AOL");
+GA_googleAddAttr("theme_bg", "f0f0f0");
+GA_googleAddAttr("theme_border", "cccccc");
+GA_googleAddAttr("theme_text", "555555");
+GA_googleAddAttr("theme_link", "008DCF");
+GA_googleAddAttr("theme_url", "008DCF");
+GA_googleAddAdSensePageAttr("google_page_url", "http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/");
+GA_googleFillSlot("wpcom_below_post_adsafe");
+}
+</script>
+</div>
+<style type="text/css">
+div.wpa>div { margin-top: 1em; } #google_ads_div_wpcom_below_post_adsafe_ad_container { display: block !important; }
+</style>
+<script type="text/javascript">
+jQuery( window ).load( function() {
+    if ( jQuery(".wpa script[src*='shareth.ru']").length > 0 || jQuery(".wpa iframe[src*='boomvideo.tv']").length > 0 || jQuery(".wpa iframe[src*='viewablemedia.net']").length > 0 || jQuery(".wpa .sharethrough-placement").length > 0 ) {
+        jQuery( '.wpa' ).css( 'width', '400px' );
+    }
+setTimeout(function(){if(typeof GS_googleAddAdSenseService !== 'function'){new Image().src=document.location.protocol+"//stats.wordpress.com/g.gif?v=wpcom-no-pv&x_noads=adblock&baba="+Math.random()}},100);
+} );
+</script>
+<div id="jp-post-flair" class="sharedaddy sd-like-enabled"><div class='sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-unloaded' id='like-post-wrapper-1985485-923-530ba21b53cd3' data-src='//widgets.wp.com/likes/#blog_id=1985485&amp;post_id=923&amp;origin=codeghar.wordpress.com&amp;obj_id=1985485-923-530ba21b53cd3' data-name='like-post-frame-1985485-923-530ba21b53cd3'><h3 class='sd-title'>Like this:</h3><div class='likes-widget-placeholder post-likes-widget-placeholder' style='height:55px'><span class='button'><span>Like</span></span> <span class="loading">Loading...</span></div><span class='sd-text-color'></span><a class='sd-link-color'></a></div>
+<div id='jp-relatedposts' class='jp-relatedposts'>
+	<h3 class="jp-relatedposts-headline"><em>Related</em></h3>
+</div></div><div class="clear"></div>
+					
+					<!--
+					<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+			xmlns:dc="http://purl.org/dc/elements/1.1/"
+			xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+		<rdf:Description rdf:about="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/"
+    dc:identifier="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/"
+    dc:title="Ubuntu 12.04 IPv4 NAT Gateway and DHCP&nbsp;Server"
+    trackback:ping="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/trackback/" />
+</rdf:RDF>					-->
+
+				</div>
+
+				<div class="post-meta">
+					<p>
+						<span class="categories">Filed under <a href="http://codeghar.wordpress.com/category/configuration/" title="View all posts in configuration" rel="category tag">configuration</a></span>
+						<span class="tags">Tagged with <a href="http://codeghar.wordpress.com/tag/ubuntu/" rel="tag">ubuntu</a></span>					</p>
+				</div>
+
+			</div>
+
+			
+						<p></p>
+
+			<div id="comments">
+	
+
+	<h3 id="comments-title">42 Responses to <em>Ubuntu 12.04 IPv4 NAT Gateway and DHCP&nbsp;Server</em>	</h3>
+
+	<ol class="commentlist snap_preview">
+				<li class="comment byuser comment-author-guhpraset even thread-even depth-1 highlander-comment" id="li-comment-1110">
+		<div id="comment-1110">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/c7604fc5fbb1fe14c398df51eb601a95?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">Guh</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1110">May 7, 2012 at 3:53 pm</a></div>
+
+		<div class="comment-body"><p>when i &#8220;sudo service isc-dhcp-server start&#8221;, i got this:<br />
+start: Job failed to start</p>
+<p>What is wrong?</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-guhpraset odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1111">
+		<div id="comment-1111">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/c7604fc5fbb1fe14c398df51eb601a95?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">Guh</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1111">May 7, 2012 at 4:22 pm</a></div>
+
+		<div class="comment-body"><p>Nevermind, i got something wrong uncommented in the conf file, now it fixed.</p>
+<p>Thank You VERY MUCH for the tutorial :)</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1115">
+		<div id="comment-1115">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=40' class='avatar avatar-40 avatar-default' height='40' width='40' />			<cite class="fn">Anonymous</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1115">May 10, 2012 at 2:42 pm</a></div>
+
+		<div class="comment-body"><p>Do i have to uninstall networkmanager?</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-mvpfin odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1153">
+		<div id="comment-1153">
+		<div class="comment-author vcard">
+			<img alt='' src='http://1.gravatar.com/avatar/ae80e14b07705b38caec065b633ff4b8?s=40&#038;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn"><a href='http://korpivaellus.wordpress.com' rel='external nofollow' class='url'>mvpfin</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1153">June 20, 2012 at 6:16 am</a></div>
+
+		<div class="comment-body"><p>Nice tutorial, thank you kindly!</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1158">
+		<div id="comment-1158">
+		<div class="comment-author vcard">
+			<img alt='' src='http://i1.wp.com/a0.twimg.com/profile_images/2168595577/IMG_1632_normal.jpg?resize=40%2C40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn"><a href='http://twitter.com/neo_one2199' rel='external nofollow' class='url'>Morteza Moosavi (@neo_one2199)</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1158">June 24, 2012 at 7:51 pm</a></div>
+
+		<div class="comment-body"><p>Tnx for your tutorial. dhcp server is working find but clients do not have any internet access.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1159">
+		<div id="comment-1159">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=40' class='avatar avatar-40 avatar-default' height='40' width='40' />			<cite class="fn">Anonymous</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1159">June 26, 2012 at 12:29 pm</a></div>
+
+		<div class="comment-body"><p>Thanks. Works fine for me too, but no internet access on clients.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1162">
+		<div id="comment-1162">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/f0bceb6c0d6489675a3f86cf29ba3845?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">Shubhendu</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1162">June 30, 2012 at 9:00 am</a></div>
+
+		<div class="comment-body"><p>when i “sudo service isc-dhcp-server start”, i got this:<br />
+start: Job failed to start </p>
+<p>plz some 1 help me how to restart my services</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1165">
+		<div id="comment-1165">
+		<div class="comment-author vcard">
+			<img alt='' src='http://2.gravatar.com/avatar/5d7d64c9c659f6ac4031a72b3578e9b3?s=40&#038;d=http%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">John Smith</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1165">July 7, 2012 at 3:26 am</a></div>
+
+		<div class="comment-body"><p>Where does the dhcpd pass the packets in order to reach www?</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1168">
+		<div id="comment-1168">
+		<div class="comment-author vcard">
+			<img alt='' src='http://2.gravatar.com/avatar/21a4b84c0c4472df95efe32a7596ec91?s=40&#038;d=http%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">James Webb</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1168">July 12, 2012 at 3:04 pm</a></div>
+
+		<div class="comment-body"><p>DHCP works great, but clients have no internet access, how do i fix this???</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1176">
+		<div id="comment-1176">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/002b3d758c26f0db92affcd2ff2ad4d2?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">Anon</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1176">July 18, 2012 at 4:08 pm</a></div>
+
+		<div class="comment-body"><p>Similar to some of the other commenters, I am also having problems with internet access.  I think it has something to do with the clients not being able to find the DNS.  For example, &#8220;ping yahoo.com&#8221; failed, but &#8220;ping 209.191.122.70&#8243; (an IP address for yahoo) returned a successful response.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1177">
+		<div id="comment-1177">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/002b3d758c26f0db92affcd2ff2ad4d2?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">Anon</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1177">July 18, 2012 at 4:31 pm</a></div>
+
+		<div class="comment-body"><p>I was able to fix internet connectivity by modifying /etc/network/interfaces to add the following line after the &#8220;auth eth0&#8243; and &#8220;iface&#8230;&#8221; lines:<br />
+dns-nameservers 8.8.8.8 8.8.4.4</p>
+<p>Thsese are two public DNSs that Google maintains (<a href="https://developers.google.com/speed/public-dns/" rel="nofollow">https://developers.google.com/speed/public-dns/</a>), so I would think they are relatively reliable.</p>
+<p>CAUTION: I probably don&#8217;t know what I am doing, since I had to seek out this blog in the first place to get my LAN gateway set up.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1196">
+		<div id="comment-1196">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=40' class='avatar avatar-40 avatar-default' height='40' width='40' />			<cite class="fn">Anonymous</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1196">August 9, 2012 at 5:07 pm</a></div>
+
+		<div class="comment-body"><p>Clients receive dhcp addresses, but use of dns unavailable. Please post an addendum greatly appreciated. clients should not have to specify it&#8217;s own dns servers, and also NAT packet forwarding is not working on the server/gateway in this setup.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1197">
+		<div id="comment-1197">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/0ddc63e53496112eed21fd08d24c5812?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">nsmgo</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1197">August 9, 2012 at 5:54 pm</a></div>
+
+		<div class="comment-body"><p>Here&#8217;s what i needed to add to /etc/rc.local to get forwarding to work for clients: </p>
+<p>/sbin/iptables -P FORWARD ACCEPT<br />
+/sbin/iptables -A FORWARD -i eth1 -j ACCEPT<br />
+/sbin/iptables -A FORWARD -i eth2 -j ACCEPT<br />
+/sbin/iptables &#8211;table nat -A POSTROUTING -o eth0 -j MASQUERADE</p>
+<p>thanks to:<br />
+<a href="http://ubuntulinux.co.in/blog/ubuntu/nat-configuration-with-iptables-in-ubuntu/" rel="nofollow">http://ubuntulinux.co.in/blog/ubuntu/nat-configuration-with-iptables-in-ubuntu/</a></p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1267">
+		<div id="comment-1267">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=40' class='avatar avatar-40 avatar-default' height='40' width='40' />			<cite class="fn">Anonymous</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1267">September 27, 2012 at 6:09 pm</a></div>
+
+		<div class="comment-body"><p>Using Ubuntu 12.04.1 LTS with iptables v1.4.12, I had to put the &#8220;&#8211;table nat&#8221; option at the end, otherwise I get: Bad argument `–-table&#8217;</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1325">
+		<div id="comment-1325">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/9d7de5da181b24d4ffd6b8344b8863b4?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">adedoyin david</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1325">October 18, 2012 at 10:28 am</a></div>
+
+		<div class="comment-body"><p>please i have the same problem {sudo service isc-dhcp-server stop<br />
+stop: Unknown instance: }<br />
+after followed the tutoria in ubuntu 12.04 (not ubuntu server 120.4)<br />
+can somebody help me.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1327">
+		<div id="comment-1327">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/62c93ee1e5552d85158a9be9ea69415a?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">Rogier</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1327">October 18, 2012 at 7:03 pm</a></div>
+
+		<div class="comment-body"><p>Same here: sudo service isc-dhcp-server stop: Unknown instance&#8230; what to do?</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-hamzasheikh bypostauthor even thread-even depth-1 highlander-comment" id="li-comment-1328">
+		<div id="comment-1328">
+		<div class="comment-author vcard">
+			<img alt='' src='http://2.gravatar.com/avatar/295043db5e7f2b78df37964276b3a6b1?s=40&#038;d=http%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn"><a href='http://codeghar.wordpress.com/' rel='external nofollow' class='url'>hs</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1328">October 18, 2012 at 9:25 pm</a></div>
+
+		<div class="comment-body"><p>RE: sudo service isc-dhcp-server stop: Unknown instance</p>
+<p>If the service is not running already then you&#8217;ll see this error. Just skip the step to stop the service and move on to starting the service.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1330">
+		<div id="comment-1330">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/62c93ee1e5552d85158a9be9ea69415a?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">Rogier</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1330">October 19, 2012 at 5:23 am</a></div>
+
+		<div class="comment-body"><p>Well, how cdan I check if the server is actually running? Please see below, when I try to run it, it got the message &#8220;running, process 10955&#8243;. However when afterward try to stop the service, it says &#8220;unknown instance&#8221;.</p>
+<p>Is there some way to check if the dhcp server is running?</p>
+<p>[rogier@server] ~ $ sudo service isc-dhcp-server start<br />
+isc-dhcp-server start/running, process 10955<br />
+[rogier@server] ~ $ sudo service isc-dhcp-server stop<br />
+stop: Unknown instance:<br />
+[rogier@server] ~ $</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-hamzasheikh bypostauthor even thread-even depth-1 highlander-comment" id="li-comment-1331">
+		<div id="comment-1331">
+		<div class="comment-author vcard">
+			<img alt='' src='http://2.gravatar.com/avatar/295043db5e7f2b78df37964276b3a6b1?s=40&#038;d=http%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn"><a href='http://codeghar.wordpress.com/' rel='external nofollow' class='url'>hs</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1331">October 19, 2012 at 4:06 pm</a></div>
+
+		<div class="comment-body"><p>Rogier, look at the /var/log/syslog file for any errors that DHCP server may be giving out. It looks like the server is not starting because of some errors.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1393">
+		<div id="comment-1393">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/909e813d3e74776ba067d4bacfa8e027?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">richie tabhu</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1393">October 31, 2012 at 12:49 pm</a></div>
+
+		<div class="comment-body"><p>good post it really sorted me out.. Ubuntu 12.04</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1416">
+		<div id="comment-1416">
+		<div class="comment-author vcard">
+			<img alt='' src='http://i1.wp.com/graph.facebook.com/100002998187946/picture?q=type%3Dlarge%26_md5%3D8d3834f946dd81dc05fe774361916b7c&#038;resize=40%2C40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn"><a href='http://www.facebook.com/profnicola.nascimento' rel='external nofollow' class='url'>Prof-Nicola Nascimento</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1416">November 4, 2012 at 11:28 am</a></div>
+
+		<div class="comment-body"><p>&gt;hs says:<br />
+&gt;October 19, 2012 at 4:06 pm<br />
+&gt;<br />
+&gt;Rogier, look at the /var/log/syslog file for any errors that DHCP server may be giving out. It looks &gt;like the server is not starting because of some errors.</p>
+<p>That saved my day. I had a small error in the configuration file. Solved it like this (ubuntu server 12.04 LTS):</p>
+<p>administrador@servidor:~$ sudo service isc-dhcp-server start<br />
+start: Job failed to start<br />
+administrador@servidor:~$ tail /var/log/syslog</p>
+<p>Nov  4 11:20:08 servidor dhcpd: bad range, address 192.168.1.200 not in subnet 192.168.88.0 netmask 255.255.255.0</p>
+<p>administrador@servidor:~$ sudo nano /etc/dhcp/dhcpd.conf</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1419">
+		<div id="comment-1419">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/62c93ee1e5552d85158a9be9ea69415a?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">Rogier</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1419">November 5, 2012 at 8:33 am</a></div>
+
+		<div class="comment-body"><p>Thanks; it worked out fine&#8230;</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1421">
+		<div id="comment-1421">
+		<div class="comment-author vcard">
+			<img alt='' src='http://2.gravatar.com/avatar/e6bf1817a5393145ac7e30ec3c6abf9b?s=40&#038;d=http%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn"><a href='http://www.channel7.com.pk' rel='external nofollow' class='url'>avais</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1421">November 5, 2012 at 10:19 am</a></div>
+
+		<div class="comment-body"><p>internet is not throughing &#8230;&#8230;&#8230;&#8230; either DNS probleum or some other please help me out</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1439">
+		<div id="comment-1439">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=40' class='avatar avatar-40 avatar-default' height='40' width='40' />			<cite class="fn">Anonymous</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1439">November 8, 2012 at 11:55 am</a></div>
+
+		<div class="comment-body"><p>fuck youu</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1440">
+		<div id="comment-1440">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/62c93ee1e5552d85158a9be9ea69415a?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">Rogier</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1440">November 8, 2012 at 11:56 am</a></div>
+
+		<div class="comment-body"><p>Who?</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1443">
+		<div id="comment-1443">
+		<div class="comment-author vcard">
+			<img alt='' src='http://i0.wp.com/graph.facebook.com/1421601205/picture?q=type%3Dlarge%26_md5%3D4631917fd54727bc95dd8f347e073d70&#038;resize=40%2C40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn"><a href='http://www.facebook.com/davidatpeak' rel='external nofollow' class='url'>David Doyin</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1443">November 8, 2012 at 2:28 pm</a></div>
+
+		<div class="comment-body"><p>help us with nat that can startup with script.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1449">
+		<div id="comment-1449">
+		<div class="comment-author vcard">
+			<img alt='' src='http://i1.wp.com/graph.facebook.com/1301974157/picture?q=type%3Dlarge%26_md5%3Dfb9250b43d7239632934beb907e72b62&#038;resize=40%2C40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn"><a href='http://www.facebook.com/lester.torres.904' rel='external nofollow' class='url'>Lester Torres</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1449">November 9, 2012 at 8:29 pm</a></div>
+
+		<div class="comment-body"><p>Prof-Nicola I have a question&#8230;.<br />
+I did as you advised&#8230;<br />
+tail /var/log/syslog<br />
+and got in return&#8230;</p>
+<p>Nov 9 15:23:35 lsproxy1210 dhclient: DHCPDISCOVER on the eth1 to 255.255.255.255 port 67 interval 10</p>
+<p>I am a little confused on what to do from here. I have been trying to set up the DHCP using eth1 but it does not seem to work for some reason. I think it is a configuration issue but maybe it can also be that I do not have Bing9 or Dnsmasquerade. I do not think I need those things to get my DHCP running but you tell me what you think,. Thank you!</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1460">
+		<div id="comment-1460">
+		<div class="comment-author vcard">
+			<img alt='' src='http://2.gravatar.com/avatar/83ac50ef21e029e336b5e65525803fc3?s=40&#038;d=http%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">TEQUILA JULIO</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1460">November 15, 2012 at 4:31 pm</a></div>
+
+		<div class="comment-body"><p>Hello,<br />
+I&#8217; m having problem with the dhcp I follow all the steps for setting up eth1 but for some reason when I try to network boot it say,no DHCP offers were received. PLS HELP! NEW TO LINUX! REALLY APPRECIATED..</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1466">
+		<div id="comment-1466">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=40' class='avatar avatar-40 avatar-default' height='40' width='40' />			<cite class="fn">Anonymous</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1466">November 20, 2012 at 7:41 am</a></div>
+
+		<div class="comment-body"><p>hi<br />
+  my name is girish kumar i have configured entire  Skyray with eth1 &amp; eth0 is internet facing interface and when i am connected another system to this Skyray client getting ip but not getting internet.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-hamzasheikh bypostauthor odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1469">
+		<div id="comment-1469">
+		<div class="comment-author vcard">
+			<img alt='' src='http://2.gravatar.com/avatar/295043db5e7f2b78df37964276b3a6b1?s=40&#038;d=http%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn"><a href='http://codeghar.wordpress.com/' rel='external nofollow' class='url'>hs</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1469">November 21, 2012 at 7:40 pm</a></div>
+
+		<div class="comment-body"><p>I setup a brand new VM following these instructions step by step and everything works fine. A few things to check:</p>
+<p>1. Make sure you are using IP settings based on your environment.<br />
+2. Your DNS should be in working condition. Run nslookup on your client to make sure it&#8217;s resolving names correctly.<br />
+3. Check your iptables rules for anything that might be blocking traffic.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1592">
+		<div id="comment-1592">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/64e3912e1c65aacc149b46a1a2ff4a63?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn"><a href='http://lowbuckpc.com' rel='external nofollow' class='url'>dan</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1592">December 20, 2012 at 5:19 pm</a></div>
+
+		<div class="comment-body"><p>This tutorial is good, but I take it your also running a bind9 with this. Is there a way to do this without bind?</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-hamzasheikh bypostauthor odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1593">
+		<div id="comment-1593">
+		<div class="comment-author vcard">
+			<img alt='' src='http://2.gravatar.com/avatar/295043db5e7f2b78df37964276b3a6b1?s=40&#038;d=http%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn"><a href='http://codeghar.wordpress.com/' rel='external nofollow' class='url'>hs</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1593">December 20, 2012 at 5:23 pm</a></div>
+
+		<div class="comment-body"><p>Dan, it&#8217;s not running with bind9. In my test environment I had a Windows DNS server running. As long as DNS server IPs are reachable via this gateway, they could be any platform.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1667">
+		<div id="comment-1667">
+		<div class="comment-author vcard">
+			<img alt='' src='http://1.gravatar.com/avatar/4e4053ff647eb966ad70315ed98bb850?s=40&#038;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">Manish Singh</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1667">January 10, 2013 at 6:47 am</a></div>
+
+		<div class="comment-body"><p>Same here. I was able to setup everything, however clients in the internal network are still unable to access the internet. Did anyone was able to get it working?</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="post pingback">
+		<p>Pingback: <a href='http://blog.mikemichaelis.com/2013/02/19/client-openvpn-as-nat-gateway-router-to-local-network/' rel='external nofollow' class='url'>Client OpenVPN as NAT Gateway Router to Local Network &laquo; mike#.Net Development</a></p>
+	</li><!-- #comment-## -->
+		<li class="post pingback">
+		<p>Pingback: <a href='https://wernerstrydom.com/journal/2013/02/23/configure-ubuntu-server-12-04-to-do-nat/' rel='external nofollow' class='url'>Configure Ubuntu Server 12.04 to do NAT | Werner Strydom</a></p>
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1865">
+		<div id="comment-1865">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=40' class='avatar avatar-40 avatar-default' height='40' width='40' />			<cite class="fn">MgFrobozz</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1865">April 25, 2013 at 4:00 pm</a></div>
+
+		<div class="comment-body"><p>When I installed 12.04, it installed udhcp. If this is the case, edit /etc/udhcpd.conf:<br />
+* Change &#8216;start&#8217; to the lowest IP number to be assigned by dhcpd<br />
+* Change &#8216;end&#8217; to the lowest IP number to be assigned by dhcpd<br />
+* Uncomment &#8220;# option subnet&#8221; and (if necessary) change the mask for the the subnet.<br />
+* Uncomment &#8220;# opt dns&#8221; and add the IP number(s) of the DNS server(s) that should be used. If there is a DNS service running on the local host (eg, bind9), use the IP number of the local host on the local network.<br />
+* If the local host is a router (eg, routes packets from the local network on eth1 to the isp connection on eth0), uncomment &#8220;#option router&#8221;, and change the value to the IP number of the local host on the local network.<br />
+* For each device which needs a static IP assignment, add a line &#8220;static_lease hw_addr ip_number&#8221;, where hw_addr is the HWaddr shown by ipconfig for the adapter on the box to be assigned (commonly known as &#8220;mac address&#8221;).<br />
+* Restart the service with &#8220;sudo service udhcpd restart&#8221;.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1907">
+		<div id="comment-1907">
+		<div class="comment-author vcard">
+			<img alt='' src='http://2.gravatar.com/avatar/81601348d85028caef103b6f3230f0ca?s=40&#038;d=http%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">Anonymous</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1907">May 3, 2013 at 1:12 pm</a></div>
+
+		<div class="comment-body"><p>fucking unknow instance<br />
+job failed</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1914">
+		<div id="comment-1914">
+		<div class="comment-author vcard">
+			<img alt='' src='http://1.gravatar.com/avatar/182b6dc6009ebd4d7ac1189f59c5922b?s=40&#038;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">Asad</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1914">May 3, 2013 at 10:12 pm</a></div>
+
+		<div class="comment-body"><p>it is really excellent&#8230;. thank you&#8230;.</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-1932">
+		<div id="comment-1932">
+		<div class="comment-author vcard">
+			<img alt='' src='http://1.gravatar.com/avatar/dfbcd470c6be527fa69aed5b0edaa06a?s=40&#038;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn">Mark</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1932">May 8, 2013 at 1:48 am</a></div>
+
+		<div class="comment-body"><p>Exactly what i was looking for!  Thx!!!</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-1976">
+		<div id="comment-1976">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=40' class='avatar avatar-40 avatar-default' height='40' width='40' />			<cite class="fn">Anonymous</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-1976">May 24, 2013 at 12:57 pm</a></div>
+
+		<div class="comment-body"><p>thanks</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-2064">
+		<div id="comment-2064">
+		<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/cadce7a59af35a66f18b9aaddebfd50f?s=40&#038;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D40' class='avatar avatar-40' height='40' width='40' />			<cite class="fn"><a href='http://gravatar.com/i159' rel='external nofollow' class='url'>I159</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#comment-2064">July 6, 2013 at 9:29 am</a></div>
+
+		<div class="comment-body"><p>You have hard to detect typo in: sudo iptables –-table nat -A POSTROUTING -o eth0 -j MASQUERADE . Instead of minus minus table, you have dash minus table. Should be: sudo iptables &#8211;table nat -A POSTROUTING -o eth0 -j MASQUERADE</p>
+</div>
+
+		<div class="reply">
+					</div>
+	</div>
+
+	</li><!-- #comment-## -->
+		<li class="post pingback">
+		<p>Pingback: <a href='http://wezzel.com/?p=28' rel='external nofollow' class='url'>Rebuild of the gateway &laquo; Wezzel In the blog.</a></p>
+	</li><!-- #comment-## -->
+	</ol>
+
+
+								<div id="respond" class="comment-respond">
+				<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/#respond" style="display:none;">Cancel reply</a></small></h3>
+									<form action="http://codeghar.wordpress.com/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+																										
+
+
+												<input type="hidden" id="highlander_comment_nonce" name="highlander_comment_nonce" value="0049a1a8ed" /><input type="hidden" name="_wp_http_referer" value="/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/" />
+<input type="hidden" name="hc_post_as" id="hc_post_as" value="guest" />
+
+<div class="comment-form-field comment-textarea">
+	<label for="comment">Enter your comment here...</label>
+	<div id="comment-form-comment"><textarea id="comment" name="comment" title="Enter your comment here..."></textarea></div>
+</div>
+
+<div id="comment-form-identity">
+
+	<div id="comment-form-nascar">
+		<p>Fill in your details below or click an icon to log in:</p>
+		<ul>
+			<li class="selected" style="display:none;">
+				<a href="#comment-form-guest" id="postas-guest" title="Guest">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:WordPress.com" id="postas-wordpress" title="WordPress.com">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:Twitter" id="postas-twitter" title="Twitter">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:Facebook" id="postas-facebook" title="Facebook">
+					<span></span>
+				</a>
+			</li>
+			<li>
+			<iframe id="googleplus-sign-in" name="googleplus-sign-in" src="https://public-api.wordpress.com/connect/?googleplus-sign-in=1" width="24" height="24" scrolling="no" allowtransparency="true" seamless="seamless" frameborder="0"></iframe>
+			</li>
+		</ul>
+	</div>
+
+	<div id="comment-form-guest" class="comment-form-service selected">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+<a href="https://gravatar.com/site/signup/" target="_blank">				<img src="http://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=25" alt="Gravatar" width="25" class="no-grav" />
+</a>			</div>
+
+				<div class="comment-form-fields">
+				<div class="comment-form-field comment-form-email">
+					<label for="email">Email <span class="nopublish">(Address never made public)</span></label>
+					<div class="comment-form-input"><input id="email" name="email" type="email" value="" /></div>
+				</div>
+				<div class="comment-form-field comment-form-author">
+					<label for="author">Name</label>
+					<div class="comment-form-input"><input id="author" name="author" type="text" value="" /></div>
+				</div>
+				<div class="comment-form-field comment-form-url">
+					<label for="url">Website</label>
+					<div class="comment-form-input"><input id="url" name="url" type="text" value="" /></div>
+				</div>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-wordpress" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="http://s2.wp.com/wp-content/mu-plugins/highlander-comments/images/wplogo.png?m=1391188133g" alt="WordPress.com Logo" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="wp_avatar" id="wordpress-avatar" class="comment-meta-wordpress" value="" />
+				<input type="hidden" name="wp_user_id" id="wordpress-user_id" class="comment-meta-wordpress" value="" />
+				<input type="hidden" name="wp_access_token" id="wordpress-access_token" class="comment-meta-wordpress" value="" />
+				<p class="comment-form-posting-as pa-wordpress"><strong></strong> You are commenting using your WordPress.com account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'wordpress' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-twitter" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="http://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=25" alt="Twitter picture" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="twitter_avatar" id="twitter-avatar" class="comment-meta-twitter" value="" />
+				<input type="hidden" name="twitter_user_id" id="twitter-user_id" class="comment-meta-twitter" value="" />
+				<input type="hidden" name="twitter_access_token" id="twitter-access_token" class="comment-meta-twitter" value="" />
+				<p class="comment-form-posting-as pa-twitter"><strong></strong> You are commenting using your Twitter account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'twitter' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-facebook" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="http://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=25" alt="Facebook photo" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="fb_avatar" id="facebook-avatar" class="comment-meta-facebook" value="" />
+				<input type="hidden" name="fb_user_id" id="facebook-user_id" class="comment-meta-facebook" value="" />
+				<input type="hidden" name="fb_access_token" id="facebook-access_token" class="comment-meta-facebook" value="" />
+				<p class="comment-form-posting-as pa-facebook"><strong></strong> You are commenting using your Facebook account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'facebook' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-googleplus" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="http://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=25" alt="Google+ photo" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="googleplus_avatar" id="googleplus-avatar" class="comment-meta-googleplus" value="" />
+				<input type="hidden" name="googleplus_user_id" id="googleplus-user_id" class="comment-meta-googleplus" value="" />
+				<input type="hidden" name="googleplus_access_token" id="googleplus-access_token" class="comment-meta-googleplus" value="" />
+				<p class="comment-form-posting-as pa-googleplus"><strong></strong> You are commenting using your Google+ account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'googleplus' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+
+	<div id="comment-form-load-service" class="comment-form-service">
+		<div class="comment-form-posting-as-cancel"><a href="javascript:HighlanderComments.cancelExternalWindow();">Cancel</a></div>
+		<p>Connecting to %s</p>
+	</div>
+
+	
+</div>
+
+<script type="text/javascript">
+var highlander_expando_javascript = function(){
+	var input = document.createElement( 'input' ),
+	    comment = jQuery( '#comment' );
+
+	if ( 'placeholder' in input ) {
+		comment.attr( 'placeholder', jQuery( '.comment-textarea label' ).remove().text() );
+	}
+
+	// Expando Mode: start small, then auto-resize on first click + text length
+	jQuery( '#comment-form-identity' ).hide();
+	jQuery( '#comment-form-subscribe' ).hide();
+	jQuery( '#commentform .form-submit' ).hide();
+
+	comment.css( { 'height':'10px' } ).one( 'focus', function() {
+		var timer = setInterval( HighlanderComments.resizeCallback, 10 )
+		jQuery( this ).animate( { 'height': HighlanderComments.initialHeight } ).delay( 100 ).queue( function(n) { clearInterval( timer ); HighlanderComments.resizeCallback(); n(); } );
+		jQuery( '#comment-form-identity' ).slideDown();
+		jQuery( '#comment-form-subscribe' ).slideDown();
+		jQuery( '#commentform .form-submit' ).slideDown();
+	});
+}
+jQuery(document).ready( highlander_expando_javascript );
+</script>
+
+<div id="comment-form-subscribe">
+	<p class="comment-subscription-form"><input type="checkbox" name="subscribe" id="subscribe" value="subscribe" style="width: auto;" tabindex="6"/> <label class="subscribe-label" id="subscribe-label" for="subscribe" style="display: inline;">Notify me of follow-up comments via email.</label></p></div>
+
+												<p class="form-submit">
+							<input name="submit" type="submit" id="comment-submit" value="Post Comment" />
+							<input type='hidden' name='comment_post_ID' value='923' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+						</p>
+						
+<input type="hidden" name="genseq" value="1393271323" />
+<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="5b04a1346c" /></p><script type='text/javascript' src='http://s2.wp.com/wp-content/mu-plugins/akismet-2.5/form.js?m=1308783962g'></script>
+<p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="248"/></p>					</form>
+							</div><!-- #respond -->
+			<div style="clear: both"></div>
+</div><!-- #comments -->
+	</div>
+
+<div id="sidebar">
+
+	<div id="pages-2" class="widget widget_pages"><h4>Pages</h4>		<ul>
+			<li class="page_item page-item-2"><a href="http://codeghar.wordpress.com/about/">About</a></li>
+		</ul>
+		</div>		<aside id="recent-posts-2" class="widget widget_recent_entries">		<h3 class="widget-title">Recent Posts</h3>		<ul>
+					<li>
+				<a href="http://codeghar.wordpress.com/2014/02/10/crunchbang-is-simply-awesome/">CrunchBang is Simply Awesome</a>
+						</li>
+					<li>
+				<a href="http://codeghar.wordpress.com/2014/02/03/dnf-and-yum-show-different-updates/">dnf and yum show different updates</a>
+						</li>
+					<li>
+				<a href="http://codeghar.wordpress.com/2013/12/24/install-arch-linux-on-esx-5-5/">Install Arch Linux on ESX 5.5</a>
+						</li>
+					<li>
+				<a href="http://codeghar.wordpress.com/2013/11/19/the-importance-of-a-pleasurable-user-experience/">The Importance of a Pleasurable User Experience</a>
+						</li>
+					<li>
+				<a href="http://codeghar.wordpress.com/2013/11/14/gnome-3-10-post-install-customization/">GNOME 3.10 Post Install Customization</a>
+						</li>
+					<li>
+				<a href="http://codeghar.wordpress.com/2013/09/27/virtualenv-with-python-3-using-venv/">virtualenv with Python 3 using venv</a>
+						</li>
+				</ul>
+		</aside><div id="categories-1" class="widget widget_categories"><h4>Categories</h4>		<ul>
+	<li class="cat-item cat-item-656"><a href="http://codeghar.wordpress.com/category/code/" title="View all posts filed under code">code</a> (26)
+</li>
+	<li class="cat-item cat-item-45809"><a href="http://codeghar.wordpress.com/category/configuration/" title="View all posts filed under configuration">configuration</a> (99)
+</li>
+	<li class="cat-item cat-item-15352"><a href="http://codeghar.wordpress.com/category/discussion/" title="View all posts filed under discussion">discussion</a> (76)
+</li>
+	<li class="cat-item cat-item-455"><a href="http://codeghar.wordpress.com/category/script/" title="View all posts filed under script">script</a> (1)
+</li>
+		</ul>
+</div><div id="wp_tag_cloud-2" class="widget wp_widget_tag_cloud"><h4></h4><div style="overflow:hidden"><a href='http://codeghar.wordpress.com/tag/aes/' class='tag-link-618236' title='1 topic' style='font-size: 8pt;'>aes</a>
+<a href='http://codeghar.wordpress.com/tag/apache/' class='tag-link-3768' title='5 topics' style='font-size: 13.014925373134pt;'>apache</a>
+<a href='http://codeghar.wordpress.com/tag/apple/' class='tag-link-291' title='1 topic' style='font-size: 8pt;'>apple</a>
+<a href='http://codeghar.wordpress.com/tag/arch/' class='tag-link-36199' title='2 topics' style='font-size: 9.8805970149254pt;'>arch</a>
+<a href='http://codeghar.wordpress.com/tag/asterisk/' class='tag-link-25809' title='1 topic' style='font-size: 8pt;'>asterisk</a>
+<a href='http://codeghar.wordpress.com/tag/backup/' class='tag-link-5469' title='1 topic' style='font-size: 8pt;'>backup</a>
+<a href='http://codeghar.wordpress.com/tag/centos/' class='tag-link-134600' title='20 topics' style='font-size: 18.65671641791pt;'>centos</a>
+<a href='http://codeghar.wordpress.com/tag/command-line/' class='tag-link-33927' title='9 topics' style='font-size: 15.313432835821pt;'>command line</a>
+<a href='http://codeghar.wordpress.com/tag/cryptography/' class='tag-link-25818' title='1 topic' style='font-size: 8pt;'>cryptography</a>
+<a href='http://codeghar.wordpress.com/tag/customer-service/' class='tag-link-9273' title='1 topic' style='font-size: 8pt;'>customer service</a>
+<a href='http://codeghar.wordpress.com/tag/database/' class='tag-link-475' title='5 topics' style='font-size: 13.014925373134pt;'>database</a>
+<a href='http://codeghar.wordpress.com/tag/debian/' class='tag-link-428' title='29 topics' style='font-size: 20.328358208955pt;'>debian</a>
+<a href='http://codeghar.wordpress.com/tag/django/' class='tag-link-15988' title='8 topics' style='font-size: 14.791044776119pt;'>django</a>
+<a href='http://codeghar.wordpress.com/tag/fedora/' class='tag-link-611' title='30 topics' style='font-size: 20.432835820896pt;'>fedora</a>
+<a href='http://codeghar.wordpress.com/tag/freebsd/' class='tag-link-3588' title='1 topic' style='font-size: 8pt;'>freebsd</a>
+<a href='http://codeghar.wordpress.com/tag/freeswitch/' class='tag-link-6015633' title='1 topic' style='font-size: 8pt;'>freeswitch</a>
+<a href='http://codeghar.wordpress.com/tag/gnome/' class='tag-link-870' title='1 topic' style='font-size: 8pt;'>gnome</a>
+<a href='http://codeghar.wordpress.com/tag/iphone/' class='tag-link-106595' title='1 topic' style='font-size: 8pt;'>iphone</a>
+<a href='http://codeghar.wordpress.com/tag/ipv6/' class='tag-link-10414' title='1 topic' style='font-size: 8pt;'>ipv6</a>
+<a href='http://codeghar.wordpress.com/tag/kde/' class='tag-link-804' title='1 topic' style='font-size: 8pt;'>kde</a>
+<a href='http://codeghar.wordpress.com/tag/license/' class='tag-link-45234' title='1 topic' style='font-size: 8pt;'>license</a>
+<a href='http://codeghar.wordpress.com/tag/linux/' class='tag-link-610' title='30 topics' style='font-size: 20.432835820896pt;'>linux</a>
+<a href='http://codeghar.wordpress.com/tag/mac/' class='tag-link-808' title='4 topics' style='font-size: 12.179104477612pt;'>mac</a>
+<a href='http://codeghar.wordpress.com/tag/mageia/' class='tag-link-36944052' title='1 topic' style='font-size: 8pt;'>mageia</a>
+<a href='http://codeghar.wordpress.com/tag/mysql/' class='tag-link-4419' title='7 topics' style='font-size: 14.268656716418pt;'>mysql</a>
+<a href='http://codeghar.wordpress.com/tag/openfiler/' class='tag-link-602037' title='1 topic' style='font-size: 8pt;'>openfiler</a>
+<a href='http://codeghar.wordpress.com/tag/opensolaris/' class='tag-link-8815' title='1 topic' style='font-size: 8pt;'>opensolaris</a>
+<a href='http://codeghar.wordpress.com/tag/openssl/' class='tag-link-1359391' title='3 topics' style='font-size: 11.134328358209pt;'>openssl</a>
+<a href='http://codeghar.wordpress.com/tag/opensuse/' class='tag-link-234820' title='4 topics' style='font-size: 12.179104477612pt;'>opensuse</a>
+<a href='http://codeghar.wordpress.com/tag/oracle/' class='tag-link-3766' title='1 topic' style='font-size: 8pt;'>oracle</a>
+<a href='http://codeghar.wordpress.com/tag/pfsense/' class='tag-link-1008535' title='1 topic' style='font-size: 8pt;'>pfsense</a>
+<a href='http://codeghar.wordpress.com/tag/postgresql/' class='tag-link-15989' title='3 topics' style='font-size: 11.134328358209pt;'>postgresql</a>
+<a href='http://codeghar.wordpress.com/tag/python/' class='tag-link-832' title='27 topics' style='font-size: 20.014925373134pt;'>python</a>
+<a href='http://codeghar.wordpress.com/tag/raspberry-pi/' class='tag-link-49695267' title='1 topic' style='font-size: 8pt;'>raspberry pi</a>
+<a href='http://codeghar.wordpress.com/tag/red-hat/' class='tag-link-57767' title='5 topics' style='font-size: 13.014925373134pt;'>red hat</a>
+<a href='http://codeghar.wordpress.com/tag/replication/' class='tag-link-481477' title='2 topics' style='font-size: 9.8805970149254pt;'>replication</a>
+<a href='http://codeghar.wordpress.com/tag/security/' class='tag-link-801' title='7 topics' style='font-size: 14.268656716418pt;'>security</a>
+<a href='http://codeghar.wordpress.com/tag/serial-number/' class='tag-link-2014068' title='1 topic' style='font-size: 8pt;'>Serial Number</a>
+<a href='http://codeghar.wordpress.com/tag/service-tag/' class='tag-link-2106054' title='1 topic' style='font-size: 8pt;'>service tag</a>
+<a href='http://codeghar.wordpress.com/tag/sip/' class='tag-link-32527' title='1 topic' style='font-size: 8pt;'>SIP</a>
+<a href='http://codeghar.wordpress.com/tag/sql-query/' class='tag-link-311850' title='6 topics' style='font-size: 13.746268656716pt;'>sql query</a>
+<a href='http://codeghar.wordpress.com/tag/sql-server/' class='tag-link-6407' title='9 topics' style='font-size: 15.313432835821pt;'>sql server</a>
+<a href='http://codeghar.wordpress.com/tag/ssh/' class='tag-link-49320' title='3 topics' style='font-size: 11.134328358209pt;'>ssh</a>
+<a href='http://codeghar.wordpress.com/tag/ssl/' class='tag-link-58302' title='5 topics' style='font-size: 13.014925373134pt;'>ssl</a>
+<a href='http://codeghar.wordpress.com/tag/testing/' class='tag-link-12' title='1 topic' style='font-size: 8pt;'>testing</a>
+<a href='http://codeghar.wordpress.com/tag/ubuntu/' class='tag-link-255' title='43 topics' style='font-size: 22pt;'>ubuntu</a>
+<a href='http://codeghar.wordpress.com/tag/unicode/' class='tag-link-34880' title='1 topic' style='font-size: 8pt;'>unicode</a>
+<a href='http://codeghar.wordpress.com/tag/usb/' class='tag-link-57231' title='1 topic' style='font-size: 8pt;'>USB</a>
+<a href='http://codeghar.wordpress.com/tag/usb-problems/' class='tag-link-34785679' title='1 topic' style='font-size: 8pt;'>USB problems</a>
+<a href='http://codeghar.wordpress.com/tag/virtualbox/' class='tag-link-989685' title='1 topic' style='font-size: 8pt;'>virtualbox</a>
+<a href='http://codeghar.wordpress.com/tag/vitualbox/' class='tag-link-2909668' title='1 topic' style='font-size: 8pt;'>VitualBox</a>
+<a href='http://codeghar.wordpress.com/tag/vmware/' class='tag-link-38600' title='2 topics' style='font-size: 9.8805970149254pt;'>VMware</a>
+<a href='http://codeghar.wordpress.com/tag/vnc/' class='tag-link-111142' title='3 topics' style='font-size: 11.134328358209pt;'>vnc</a>
+<a href='http://codeghar.wordpress.com/tag/voip/' class='tag-link-811' title='1 topic' style='font-size: 8pt;'>VOIP</a>
+<a href='http://codeghar.wordpress.com/tag/wiki/' class='tag-link-1359' title='1 topic' style='font-size: 8pt;'>wiki</a>
+<a href='http://codeghar.wordpress.com/tag/windows/' class='tag-link-800' title='6 topics' style='font-size: 13.746268656716pt;'>windows</a>
+<a href='http://codeghar.wordpress.com/tag/wireshark/' class='tag-link-686916' title='3 topics' style='font-size: 11.134328358209pt;'>wireshark</a></div></div><div id="search-2" class="widget widget_search"><form role="search" method="get" id="searchform" class="searchform" action="http://codeghar.wordpress.com/">
+				<div>
+					<label class="screen-reader-text" for="s">Search for:</label>
+					<input type="text" value="" name="s" id="s" />
+					<input type="submit" id="searchsubmit" value="Search" />
+				</div>
+			</form></div><div id="recent-comments-2" class="widget widget_recent_comments"><h4>Recent Comments</h4>				<table class="recentcommentsavatar" cellspacing="0" cellpadding="0" border="0">
+					<tr><td title="Karel" class="recentcommentsavatartop" style="height:16px; width:16px;"><a href="http://gravatar.com/kbemelmans" rel="nofollow"><img alt='' src='http://1.gravatar.com/avatar/75ed328f8b5fc1eee0fc212275d60487?s=16&#038;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D16' class='avatar avatar-16' height='16' width='16' /></a></td><td class="recentcommentstexttop" style=""><a href="http://gravatar.com/kbemelmans" rel="nofollow">Karel</a> on <a href="http://codeghar.wordpress.com/2012/08/03/ipv6-in-ubuntu-12-04/#comment-4074">IPv6 in Ubuntu&nbsp;12.04</a></td></tr><tr><td title="gino taleban" class="recentcommentsavatarend" style="height:16px; width:16px;"><img alt='' src='http://2.gravatar.com/avatar/e32e2bcf343b47a6c82c007e4a882f79?s=16&#038;d=http%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D16' class='avatar avatar-16' height='16' width='16' /></td><td class="recentcommentstextend" style="">gino taleban on <a href="http://codeghar.wordpress.com/2012/07/12/get-broadcom-bcm4311-working-in-ubuntu-12-04/#comment-3540">Get Broadcom BCM4311 Working i&hellip;</a></td></tr><tr><td title="Jim" class="recentcommentsavatarend" style="height:16px; width:16px;"><a href="http://ozjd.wordpress.com/" rel="nofollow"><img alt='' src='http://2.gravatar.com/avatar/e7f7cd5ac179bb97f164a2734dbc0076?s=16&#038;d=http%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D16' class='avatar avatar-16' height='16' width='16' /></a></td><td class="recentcommentstextend" style=""><a href="http://ozjd.wordpress.com/" rel="nofollow">Jim</a> on <a href="http://codeghar.wordpress.com/2014/02/03/dnf-and-yum-show-different-updates/#comment-2618">dnf and yum show different&hellip;</a></td></tr><tr><td title="" class="recentcommentsavatarend" style="height:16px; width:16px;"><img alt='' src='http://0.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=16' class='avatar avatar-16 avatar-default' height='16' width='16' /></td><td class="recentcommentstextend" style="">Anonymous on <a href="http://codeghar.wordpress.com/2013/04/16/use-private-certificate-authority-to-sign-certificate-signing-request-on-linux/#comment-2591">Use Private Certificate Author&hellip;</a></td></tr><tr><td title="" class="recentcommentsavatarend" style="height:16px; width:16px;"><img alt='' src='http://0.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=16' class='avatar avatar-16 avatar-default' height='16' width='16' /></td><td class="recentcommentstextend" style="">Anonymous on <a href="http://codeghar.wordpress.com/2012/07/12/get-broadcom-bcm4311-working-in-ubuntu-12-04/#comment-2228">Get Broadcom BCM4311 Working i&hellip;</a></td></tr>				</table>
+				</div><div id="linkcat-1356" class="widget widget_links"><h4>Blogroll</h4>
+	<ul class='xoxo blogroll'>
+<li><a href="http://www.fefe.de/">Felix von Leitner</a></li>
+<li><a href="http://www.freesoftwaremagazine.com/">Free Software Magazine</a></li>
+<li><a href="http://postgresql.fastware.com/">Fujitsu Supported PostgreSQL</a></li>
+<li><a href="http://www.togaware.com/linux/survivor/">GNU/Linux Desktop Survival Guide</a></li>
+<li><a href="http://stackoverflow.com/questions/58640/great-programming-quotes/58796">Great Programming Quotes</a></li>
+<li><a href="http://blog.ianbicking.org/">Ian Bicking</a></li>
+<li><a href="http://informationsecuritytips.wordpress.com/">Information Security Tips</a></li>
+<li><a href="http://www.dissociatedpress.net/">Joe &#8216;Zonker&#8217; Brockmeier</a></li>
+<li><a href="http://www.joelonsoftware.com/">Joel on Software</a></li>
+<li><a href="http://www.geekculture.com/joyoftech/">Joy of Tech</a></li>
+<li><a href="http://odetocode.com/Blogs/scott/">K. Scott Allen</a></li>
+<li><a href="http://linuxcommand.org/learning_the_shell.php">Learning the Shell</a></li>
+<li><a href="https://savannah.nongnu.org/projects/lpi-manuals/">Linux Administration Manuals</a></li>
+<li><a href="http://www.pixelbeat.org/cmdline.html">Linux Command Line Tips</a></li>
+<li><a href="http://www.linuxformat.co.uk/">Linux Format</a></li>
+<li><a href="http://www.linuxtopia.org/online_books/">Linux Online Books</a></li>
+<li><a href="http://techspot.zzzeek.org/">Mike Bayer</a></li>
+<li><a href="http://www.mysqlperformanceblog.com/">MySQL Performance Blog</a></li>
+<li><a href="http://sectools.org/">Network Security Tools</a></li>
+<li><a href="http://www.oreilly.com/openbook/">O&#8217;Reilly Open Books</a></li>
+<li><a href="http://ola.hallengren.com/" title="SQL Server 2005 Backup, Integrity Check and Index Optimization">Ola Hallengren</a></li>
+<li><a href="http://www.onstartups.com/">On Startups</a></li>
+<li><a href="http://www.postgresql-support.de/blog/">PostgreSQL Blogs</a></li>
+<li><a href="http://postgresql.blogg.se/">PostgreSQL Stuff</a></li>
+<li><a href="http://projecteuler.net/">Project Euler</a></li>
+<li><a href="http://www.aminus.org/blogs/index.php/fumanchu">Robert Brewer</a></li>
+<li><a href="http://www.reddit.com/r/linux/comments/7tyo2/ask_rlinux_post_your_handy_self_made_command_line/">Self-made Command Line Utilities</a></li>
+<li><a href="http://www.reddit.com/r/linux/comments/7tc3a/ask_linux_what_skills_are_expected_from_a_linux/">Skills Expected of a Linux Admin</a></li>
+<li><a href="http://www.spi-inc.org/">Software in the Public Interest</a></li>
+<li><a href="http://www.softpanorama.org/Articles/solaris_vs_linux.shtml">Solaris v Linux</a></li>
+<li><a href="http://storageadvisors.adaptec.com/">Storage Advisors</a></li>
+<li><a href="http://weblogs.sqlteam.com/tarad/Default.aspx" title="Ramblings of a DBA">Tara Kizer</a></li>
+<li><a href="http://www.djangobook.com/">The Django Book</a></li>
+<li><a href="http://www.greenteapress.com/thinkpython/thinkpython.html">Think Python</a></li>
+<li><a href="http://www.gasperson.com/">Tina Gasperson</a></li>
+<li><a href="http://ubuntuguide.org/">Ubuntu Guide</a></li>
+<li><a href="http://www.ubuntu.com/download/ubuntu/upgrade">Ubuntu Upgrade</a></li>
+<li><a href="http://cb.vu/unixtoolbox.xhtml">UNIX Toolbox</a></li>
+<li><a href="http://www.reddit.com/r/programming/comments/9tnl4/what_are_your_favorite_programming_related_blogs/">What are your favorite programming related blogs?</a></li>
+<li><a href="http://wordpress.org/">WordPress.org</a></li>
+
+	</ul>
+</div>
+<div id="linkcat-2200" class="widget widget_links"><h4>Links</h4>
+	<ul class='xoxo blogroll'>
+<li><a href="http://aprogrammerslife.info/">A Programmer&#039;s Life</a></li>
+<li><a href="http://ansible.cc/" title="Configuration management">Ansible</a></li>
+<li><a href="http://www.catalystframework.org/">Catalyst Framework</a></li>
+<li><a href="http://utcc.utoronto.ca/~cks/space/blog/">Chris Siebenmann</a></li>
+<li><a href="http://www.codinghorror.com/blog/">Coding Horror</a></li>
+<li><a href="http://www.lemis.com/grog/Documentation/CFBSD/">Complete FreeBSD</a></li>
+<li><a href="http://dabodev.com/">Dabo</a></li>
+<li><a href="http://it.toolbox.com/blogs/database-soup">Database Soup</a></li>
+<li><a href="http://pgsnake.blogspot.com/">Dave’s PostgreSQL Blog</a></li>
+<li><a href="http://www.debianadmin.com/">Debian Admin</a></li>
+<li><a href="http://www.debian-administration.org/">Debian Administration</a></li>
+<li><a href="http://www.diveintopython.org/">Dive into Python</a></li>
+<li><a href="http://www.diveintopython3.org/">Dive into Python 3</a></li>
+<li><a href="http://djangoproject.com">Django</a></li>
+<li><a href="http://www.dotfiles.com/">DotFiles.com</a></li>
+<li><a href="http://www.dotfiles.org/">DotFiles.org</a></li>
+<li><a href="http://josephpierini.blogspot.com/">Joseph Pierini, Hacker?</a></li>
+<li><a href="http://packetlife.net/blog/">Packet Life</a></li>
+<li><a href="http://www.pentestit.com/">PenTestIT</a></li>
+<li><a href="http://www.securityfocus.com/">Security Focus</a></li>
+<li><a href="http://www.sphirewall.net/">Sphirewall</a></li>
+<li><a href="http://everythingsysadmin.com/the-test.html">The Limoncelli Test: 32 Questions for Your Sysadmin Team</a></li>
+<li><a href="https://www.owasp.org/index.php/Main_Page">The Open Web Application Security Project</a></li>
+<li><a href="http://securityblog.verizonbusiness.com/">Verizon Business Security Blog</a></li>
+<li><a href="http://www-public.int-evry.fr/~maigron/RIR_Stats/RIR_Delegations/World/IPv6-ByNb.html">World IPv6 Addresses Statistics</a></li>
+
+	</ul>
+</div>
+<div id="meta-2" class="widget widget_meta"><h4>Administration</h4>			<ul>
+			<li><a href="http://wordpress.com/signup/?ref=wplogin">Register</a></li>			<li><a href="http://codeghar.wordpress.com/wp-login.php">Log in</a></li>
+			<li><a href="http://codeghar.wordpress.com/feed/" title="Syndicate this site using RSS 2.0">Entries <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="http://codeghar.wordpress.com/comments/feed/" title="The latest comments to all posts in RSS">Comments <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="http://wordpress.com/" title="Powered by WordPress, state-of-the-art semantic personal publishing platform.">WordPress.com</a></li>						</ul>
+</div>
+</div>
+</div>
+
+
+<div id="footer">
+	<div class="footerleft">
+		<p><a href="http://wordpress.com/?ref=footer">Blog at WordPress.com</a>.</p>
+    </div>
+    <div class="footerright">
+	    <a href="http://theme.wordpress.com/themes/enterprise/" title="Learn more about this theme">The Enterprise Theme</a>.    </div>
+</div>
+
+</div>
+
+<script type='text/javascript' src='//0.gravatar.com/js/gprofiles.js?ver=201409x'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://s2.wp.com/wp-content/mu-plugins/gravatar-hovercards/wpgroho.js?m=1380573781g'></script>
+
+	<script>
+		//initialize and attach hovercards to all gravatars
+		jQuery( document ).ready( function( $ ) {
+			Gravatar.profile_cb = function( hash, id ) {
+				WPGroHo.syncProfileData( hash, id );
+			};
+			Gravatar.my_hash = WPGroHo.my_hash;
+			Gravatar.init( 'body', '#wp-admin-bar-my-account' );
+		});
+	</script>
+
+		<div style="display:none">
+	<div class="grofile-hash-map-c7604fc5fbb1fe14c398df51eb601a95">
+	</div>
+	<div class="grofile-hash-map-d41d8cd98f00b204e9800998ecf8427e">
+	</div>
+	<div class="grofile-hash-map-ae80e14b07705b38caec065b633ff4b8">
+	</div>
+	<div class="grofile-hash-map-8484b670239e869ad12ae25f0f711cd4">
+	</div>
+	<div class="grofile-hash-map-f0bceb6c0d6489675a3f86cf29ba3845">
+	</div>
+	<div class="grofile-hash-map-5d7d64c9c659f6ac4031a72b3578e9b3">
+	</div>
+	<div class="grofile-hash-map-21a4b84c0c4472df95efe32a7596ec91">
+	</div>
+	<div class="grofile-hash-map-002b3d758c26f0db92affcd2ff2ad4d2">
+	</div>
+	<div class="grofile-hash-map-0ddc63e53496112eed21fd08d24c5812">
+	</div>
+	<div class="grofile-hash-map-9d7de5da181b24d4ffd6b8344b8863b4">
+	</div>
+	<div class="grofile-hash-map-62c93ee1e5552d85158a9be9ea69415a">
+	</div>
+	<div class="grofile-hash-map-295043db5e7f2b78df37964276b3a6b1">
+	</div>
+	<div class="grofile-hash-map-909e813d3e74776ba067d4bacfa8e027">
+	</div>
+	<div class="grofile-hash-map-77d2cf6c00551be3e2bb4edbe2afe9d0">
+	</div>
+	<div class="grofile-hash-map-e6bf1817a5393145ac7e30ec3c6abf9b">
+	</div>
+	<div class="grofile-hash-map-2e36d231039068fedaa539c20313f737">
+	</div>
+	<div class="grofile-hash-map-83ac50ef21e029e336b5e65525803fc3">
+	</div>
+	<div class="grofile-hash-map-64e3912e1c65aacc149b46a1a2ff4a63">
+	</div>
+	<div class="grofile-hash-map-4e4053ff647eb966ad70315ed98bb850">
+	</div>
+	<div class="grofile-hash-map-81601348d85028caef103b6f3230f0ca">
+	</div>
+	<div class="grofile-hash-map-182b6dc6009ebd4d7ac1189f59c5922b">
+	</div>
+	<div class="grofile-hash-map-dfbcd470c6be527fa69aed5b0edaa06a">
+	</div>
+	<div class="grofile-hash-map-cadce7a59af35a66f18b9aaddebfd50f">
+	</div>
+	<div class="grofile-hash-map-75ed328f8b5fc1eee0fc212275d60487">
+	</div>
+	<div class="grofile-hash-map-e32e2bcf343b47a6c82c007e4a882f79">
+	</div>
+	<div class="grofile-hash-map-e7f7cd5ac179bb97f164a2734dbc0076">
+	</div>
+	</div>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var HighlanderComments = {"loggingInText":"Logging In\u2026","submittingText":"Posting Comment\u2026","postCommentText":"Post Comment","connectingToText":"Connecting to %s","commentingAsText":"%1$s: You are commenting using your %2$s account.","logoutText":"Log Out","loginText":"Log In","connectURL":"http:\/\/codeghar.wordpress.com\/public.api\/connect\/?action=request","logoutURL":"http:\/\/codeghar.wordpress.com\/wp-login.php?action=logout&_wpnonce=1e05541c62","homeURL":"http:\/\/codeghar.wordpress.com\/","postID":"923","gravDefault":"mystery","enterACommentError":"Please enter a comment","enterEmailError":"Please enter your email address here","invalidEmailError":"Invalid email address","enterAuthorError":"Please enter your name here","gravatarFromEmail":"This picture will show whenever you leave a comment. Click to customize it.","logInToExternalAccount":"Log in to use details from one of these accounts.","change":"Change","changeAccount":"Change Account","comment_registration":"","userIsLoggedIn":"","isJetpack":"0"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://s1.wp.com/_static/??/wp-content/js/jquery/jquery.autoresize.js,/wp-content/mu-plugins/highlander-comments/script.js?m=1390247596j'></script>
+
+	<div id="bit" class="loggedout-follow-normal">
+		<a class="bsub" href="javascript:void(0)"><span id='bsub-text'>Follow</span></a>
+		<div id="bitsubscribe">
+
+					<h3><label for="loggedout-follow-field">Follow &ldquo;Code Ghar&rdquo;</label></h3>
+
+			<form action="https://subscribe.wordpress.com" method="post" accept-charset="utf-8" id="loggedout-follow">
+			<p>Get every new post delivered to your Inbox.</p>
+
+			<p id="loggedout-follow-error" style="display: none;"></p>
+
+						<p class="bit-follow-count">Join 30 other followers</p>
+			<p><input type="email" name="email" value="Enter your email address" onfocus='this.value=(this.value=="Enter your email address") ? "" : this.value;' onblur='this.value=(this.value=="") ? "Enter email address" : this.value;'  id="loggedout-follow-field"/></p>
+
+			<input type="hidden" name="action" value="subscribe"/>
+			<input type="hidden" name="blog_id" value="1985485"/>
+			<input type="hidden" name="source" value="http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/"/>
+			<input type="hidden" name="sub-type" value="loggedout-follow"/>
+
+			<input type="hidden" id="_wpnonce" name="_wpnonce" value="9e40ab6030" /><input type="hidden" name="_wp_http_referer" value="/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/" />
+			<p id='bsub-subscribe-button'><input type="submit" value="Sign me up" /></p>
+			</form>
+					<div id='bsub-credit'><a href="http://wordpress.com/signup/?ref=lof">Powered by WordPress.com</a></div>
+		</div><!-- #bitsubscribe -->
+	</div><!-- #bit -->
+	<script type="text/javascript">
+	var skimlinks_pub_id = "725X584219"
+	var skimlinks_sitename = "codeghar.wordpress.com";
+	</script>
+	<script type="text/javascript" src="http://s.skimresources.com/js/725X1342.skimlinks.js"></script>		<iframe src='http://widgets.wp.com/likes/master.html?ver=20140212#ver=20140212&amp;mp6=1' scrolling='no' id='likes-master' name='likes-master' style='display:none;'></iframe>
+		<div id='likes-other-gravatars'><div class="likes-text"><span>%d</span> bloggers like this:</div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+		<script type="text/javascript">
+		//<![CDATA[
+			var jetpackLikesWidgetQueue = [];
+			var jetpackLikesWidgetBatch = [];
+			var jetpackLikesMasterReady = false;
+
+			function JetpackLikespostMessage( message, target ) {
+				if ( "string" === typeof message ){
+					try{
+						message = JSON.parse( message );
+					}
+					catch(e) {
+						return;
+					}
+				}
+
+				pm( {
+					target: target,
+					type: 'likesMessage',
+					data: message,
+					origin: '*'
+				} );
+			}
+
+			function JetpackLikesBatchHandler() {
+				var requests = [];
+				jQuery( 'div.jetpack-likes-widget-unloaded' ).each( function( i ) {
+					if ( jetpackLikesWidgetBatch.indexOf( this.id ) > -1 )
+						return;
+					jetpackLikesWidgetBatch.push( this.id );
+					var regex = /like-(post|comment)-wrapper-(\d+)-(\d+)-(\w+)/;
+					var match = regex.exec( this.id );
+					if ( ! match || match.length != 5 )
+						return;
+
+					var info = {
+						blog_id: match[2],
+						width:   this.width
+					};
+
+					if ( 'post' == match[1] ) {
+						info.post_id = match[3];
+					} else if ( 'comment' == match[1] ) {
+						info.comment_id = match[3];
+					}
+
+					info.obj_id = match[4];
+
+					requests.push( info );
+				});
+
+				if ( requests.length > 0 ) {
+					JetpackLikespostMessage( { event: 'initialBatch', requests: requests }, window.frames['likes-master'] );
+				}
+			}
+
+			function JetpackLikesMessageListener( event ) {
+				if ( "undefined" == typeof event.event )
+					return;
+
+				if ( 'masterReady' == event.event ) {
+					jQuery( document ).ready( function() {
+						jetpackLikesMasterReady = true;
+
+						var stylesData = {
+								event: 'injectStyles'
+						};
+
+						if ( jQuery( 'iframe.admin-bar-likes-widget' ).length > 0 ) {
+							JetpackLikespostMessage( { event: 'adminBarEnabled' }, window.frames[ 'likes-master' ] );
+
+							stylesData.adminBarStyles = {
+								background: jQuery( '#wpadminbar .quicklinks li#wp-admin-bar-wpl-like > a' ).css( 'background' ),
+								isRtl: ( 'rtl' == jQuery( '#wpadminbar' ).css( 'direction' ) )
+							};
+						}
+
+						if ( !window.addEventListener )
+							jQuery( '#wp-admin-bar-admin-bar-likes-widget' ).hide();
+
+						stylesData.textStyles = {
+							color: jQuery( '.sd-text-color').css( 'color' ),
+							fontFamily: jQuery( '.sd-text-color' ).css( 'font-family' ),
+							fontSize: jQuery( '.sd-text-color' ).css( 'font-size' ),
+							direction: jQuery( '.sd-text-color' ).css( 'direction' ),
+							fontWeight: jQuery( '.sd-text-color' ).css( 'font-weight' ),
+							fontStyle: jQuery( '.sd-text-color' ).css( 'font-style' ),
+							textDecoration: jQuery( '.sd-text-color' ).css('text-decoration')
+						};
+
+						stylesData.linkStyles = {
+							color: jQuery( '.sd-link-color' ).css('color'),
+							fontFamily: jQuery( '.sd-link-color' ).css('font-family'),
+							fontSize: jQuery( '.sd-link-color' ).css('font-size'),
+							textDecoration: jQuery( '.sd-link-color' ).css('text-decoration'),
+							fontWeight: jQuery( '.sd-link-color' ).css( 'font-weight' ),
+							fontStyle: jQuery( '.sd-link-color' ).css( 'font-style' )
+						};
+
+						JetpackLikespostMessage( stylesData, window.frames[ 'likes-master' ] );
+
+						JetpackLikesBatchHandler();
+
+						jQuery( document ).on( 'inview', 'div.jetpack-likes-widget-unloaded', function() {
+							jetpackLikesWidgetQueue.push( this.id );
+						});
+					});
+				}
+
+				if ( 'showLikeWidget' == event.event ) {
+					jQuery( '#' + event.id + ' .post-likes-widget-placeholder'  ).fadeOut( 'fast', function() {
+						jQuery( '#' + event.id + ' .post-likes-widget' ).fadeIn( 'fast', function() {
+							JetpackLikespostMessage( { event: 'likeWidgetDisplayed', blog_id: event.blog_id, post_id: event.post_id, obj_id: event.obj_id }, window.frames['likes-master'] );
+						});
+					});
+				}
+
+				if ( 'clickReblogFlair' == event.event ) {
+					wpcom_reblog.toggle_reblog_box_flair( event.obj_id );
+				}
+
+				if ( 'showOtherGravatars' == event.event ) {
+					var $container = jQuery( '#likes-other-gravatars' );
+					var $list = $container.find( 'ul' );
+
+					$container.hide();
+					$list.html( '' );
+
+					$container.find( '.likes-text span' ).text( event.total );
+
+					jQuery.each( event.likers, function( i, liker ) {
+						$list.append( '<li class="' + liker.css_class + '"><a href="' + liker.profile_URL + '" class="wpl-liker" rel="nofollow" target="_parent"><img src="' + liker.avatar_URL + '" alt="' + liker.name + '" width="30" height="30" style="padding-right: 3px;" /></a></li>');
+					} );
+
+					var offset = jQuery( "[name='" + event.parent + "']" ).offset();
+
+					$container.css( 'left', offset.left + event.position.left - 10 + 'px' );
+					$container.css( 'top', offset.top + event.position.top - 33 + 'px' );
+
+					var rowLength = Math.floor( event.width / 37 );
+					var height = ( Math.ceil( event.likers.length / rowLength ) * 37 ) + 13;
+					if ( height > 204 ) {
+						height = 204;
+					}
+
+					$container.css( 'height', height + 'px' );
+					$container.css( 'width', rowLength * 37 - 7 + 'px' );
+
+					$list.css( 'width', rowLength * 37 + 'px' );
+
+					$container.fadeIn( 'slow' );
+
+					var scrollbarWidth = $list[0].offsetWidth - $list[0].clientWidth;
+					if ( scrollbarWidth > 0 ) {
+						$container.width( $container.width() + scrollbarWidth );
+						$list.width( $list.width() + scrollbarWidth );
+					}
+				}
+			}
+
+			pm.bind( 'likesMessage', function(e) { JetpackLikesMessageListener(e); } );
+
+			jQuery( document ).click( function( e ) {
+				var $container = jQuery( '#likes-other-gravatars' );
+
+				if ( $container.has( e.target ).length === 0 ) {
+					$container.fadeOut( 'slow' );
+				}
+			});
+
+			function JetpackLikesWidgetQueueHandler() {
+				var wrapperID;
+				if ( ! jetpackLikesMasterReady ) {
+					setTimeout( JetpackLikesWidgetQueueHandler, 500 );
+					return;
+				}
+
+				if ( jetpackLikesWidgetQueue.length > 0 ) {
+					// We may have a widget that needs creating now
+					var found = false;
+					while( jetpackLikesWidgetQueue.length > 0 ) {
+						// Grab the first member of the queue that isn't already loading.
+						wrapperID = jetpackLikesWidgetQueue.splice( 0, 1 )[0];
+						if ( jQuery( '#' + wrapperID ).hasClass( 'jetpack-likes-widget-unloaded' ) ) {
+							found = true;
+							break;
+						}
+					}
+					if ( ! found ) {
+						setTimeout( JetpackLikesWidgetQueueHandler, 500 );
+						return;
+					}
+				} else if ( jQuery( 'div.jetpack-likes-widget-unloaded' ).length > 0 ) {
+					// Grab any unloaded widgets for a batch request
+					JetpackLikesBatchHandler();
+
+					// Get the next unloaded widget
+					wrapperID = jQuery( 'div.jetpack-likes-widget-unloaded' ).first()[0].id;
+					if ( ! wrapperID ) {
+						// Everything is currently loaded
+						setTimeout( JetpackLikesWidgetQueueHandler, 500 );
+						return;
+					}
+				}
+
+				if ( 'undefined' === typeof wrapperID ) {
+					setTimeout( JetpackLikesWidgetQueueHandler, 500 );
+					return;
+				}
+
+				var $wrapper = jQuery( '#' + wrapperID );
+				$wrapper.find( 'iframe' ).remove();
+
+				if ( $wrapper.hasClass( 'slim-likes-widget' ) ) {
+					$wrapper.find( '.post-likes-widget-placeholder' ).after( "<iframe class='post-likes-widget jetpack-likes-widget' name='" + $wrapper.data( 'name' ) + "' height='22px' width='68px' frameBorder='0' scrolling='no' src='" + $wrapper.data( 'src' ) + "'></iframe>" );
+				} else {
+					$wrapper.find( '.post-likes-widget-placeholder' ).after( "<iframe class='post-likes-widget jetpack-likes-widget' name='" + $wrapper.data( 'name' ) + "' height='55px' width='100%' frameBorder='0' src='" + $wrapper.data( 'src' ) + "'></iframe>" );
+				}
+
+				$wrapper.removeClass( 'jetpack-likes-widget-unloaded' ).addClass( 'jetpack-likes-widget-loading' );
+
+				$wrapper.find( 'iframe' ).load( function( e ) {
+					var $iframe = jQuery( e.target );
+					$wrapper.removeClass( 'jetpack-likes-widget-loading' ).addClass( 'jetpack-likes-widget-loaded' );
+
+					JetpackLikespostMessage( { event: 'loadLikeWidget', name: $iframe.attr( 'name' ), width: $iframe.width() }, window.frames[ 'likes-master' ] );
+
+					if ( $wrapper.hasClass( 'slim-likes-widget' ) ) {
+						$wrapper.find( 'iframe' ).Jetpack( 'resizeable' );
+					}
+				});
+				setTimeout( JetpackLikesWidgetQueueHandler, 250 );
+			}
+			JetpackLikesWidgetQueueHandler();
+		//]]>
+		</script>
+<script type='text/javascript' src='http://s0.wp.com/wp-content/js/devicepx.js?m=1389017300g'></script>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script><script src="http://s.stats.wordpress.com/w.js?21" type="text/javascript"></script>
+<script type="text/javascript">
+st_go({'blog':'1985485','v':'wpcom','tz':'0','user_id':'0','post':'923','subd':'codeghar'});
+ex_go({'crypt':'UE5XaGUuOTlwaD85flAmcm1mcmZsaDhkV11YdWFnNncxc1tjZG9XVXhRVz1bVXJlWWRQcV1qUnZ3MWVCZW1zXUtaNVF3UkJZNlpOMC83Z1Q4K3ZNcEdaJSU2Wk9HM3NGd3NSOHFoWF8ubj9tWHF4d0FncmFLT0dHMHRWLGFlWFhKTTdsMUdRU2REcnxkOS5YNVdnZXl1LmFlTUVkTlpQZnIwRHFdVS9aL2J1aFJ4fDhBKyZ8bWlKQV1hNTJzUVZKW2I5STljPXQtMEMwLEtmNnh1W3FQJU1UeENKc3owcGJ4WEZlfCw3Y2hrajVGZUZLdnhTOXFna1gwVC5yT0hDdWM2T29+OFlbUVQxYmhPPyxDa1dLclt0LnlbbGV0RC9GNGdHdmJoN3c5R2Y5VThPQmh0Z2xKNC5rNDAwc20='});
+addLoadEvent(function(){linktracker_init('1985485',923);});
+	</script>
+<noscript><img src="http://stats.wordpress.com/b.gif?v=noscript" style="height:0px;width:0px;overflow:hidden" alt="" /></noscript>
+<script>
+if ( 'object' === typeof wpcom_mobile_user_agent_info ) {
+
+	wpcom_mobile_user_agent_info.init();
+	var mobileStatsQueryString = "";
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedPlatformName )
+		mobileStatsQueryString += "&x_" + 'mobile_platforms' + '=' + wpcom_mobile_user_agent_info.matchedPlatformName;
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedUserAgentName )
+		mobileStatsQueryString += "&x_" + 'mobile_devices' + '=' + wpcom_mobile_user_agent_info.matchedUserAgentName;
+	
+	if( wpcom_mobile_user_agent_info.isIPad() )
+		mobileStatsQueryString += "&x_" + 'ipad_views' + '=' + 'views';
+
+	if( "" != mobileStatsQueryString ) {
+		new Image().src = document.location.protocol + '//stats.wordpress.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba=' + Math.random();
+	}
+	
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+###
+How to configure remote desktop for ubuntu
+###
+Follow the topic @URL https://help.ubuntu.com/community/VNC
+We call the computer you want to login is remote PC, the computer you currently use to log into the remote PC is host PC
+Step 1: on remote PC, install x11vnc and openssh-server package
+Step 2: on remote PC, If you reconfigure the firewall, need to make sure ssh can use on remote PC. In other words, port 22 should be accpeted by the firewall;
+Step 3: on remote PC, Add you host PC's public key to your remote PC's ~/.ssh/authorized_keys
+Step 4: on host PC, edit a shell script as below:
+---
+#!/bin/sh
+
+ssh -C -f -L 5900:localhost:5900 rebecca@rebeccas-pc.dyndns.org \
+        x11vnc -safer -localhost -nopw -once -display :0 \
+        && sleep 5 \
+        && vncviewer localhost:0
+---
+Everytime, when you want to remote desktop to your remote PC, just run the script. 
+Note: the script actually log into your remote PC and set up the vncserver fist; and then run vncviewer on your host PC to connect to your remote PC. 
+On Mac, vncviewer command does not exist. Need to change vncviewer command to Real VNC's VNC Viewer. (Run the software by using open command.)

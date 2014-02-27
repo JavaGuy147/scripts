@@ -89,3 +89,16 @@ Step 8: Configure domU
 
 Step 9: check network configruation is correct?
     ping www.google.com in dom0 and domU
+
+=====
+How to diagnose the network connectivity problem if it still cannot connect?
+Use `traceroute -I ipaddress`
+It will return all of the hops to connect to the ipaddress. It sends a package with TTL of 0 first, and the first device will return to traceroute; then it sends a package with TTL of 1, and the second device will return to traceroute, etc. The returned ip address is the functioning device. So the next device which shoudl be returned by not is the broken device!
+(ref: http://www.linuxhomenetworking.com/wiki/index.php/Quick_HOWTO_:_Ch04_:_Simple_Network_Troubleshooting#.Uw6DFHVdWr8)
+
+====
+How to fix a network problem?
+Step 1) ping ipaddress to check if it's DNS problem. DNS problem can be fixed by adding the DNS server in /etc/resolv.conf or /etc/resolvconf/resolv.conf.d/base
+Step 2) If ipaddress in outer network cannot be pinged, ping subnetwork's net gate;
+Step 3) use traceroute -I ipaddress to see which router is down! 
+Principle: Just like how to detect the problem in electrical circuit (You need to check if each pair of points are connected), you need to check the connection to each router (gateway, dns server, webserver) and find the problem! When you find the non-connection problem, you just need to find the tutorial about how to correctly configure the corresponding unconnected device.

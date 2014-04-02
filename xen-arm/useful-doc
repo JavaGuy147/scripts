@@ -1,0 +1,7 @@
+---
+How to install Xen-ARM on the ARM v7/v8 Fast Model(hw simulator) on a x86 machine?
+Tutorial of how to install Xen on ARM (ARM v7 and ARM v8)
+http://blog.xen.org/index.php/2014/04/01/virtualization-on-arm-with-xen/?utm_source=rss&utm_medium=rss&utm_campaign=virtualization-on-arm-with-xen
+
+---
+xen 4.4 has supported th ARM v7 and v8

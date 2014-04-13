@@ -37,11 +37,11 @@ xc: detail:     virt_kend        = 0xffffffff82060000
 xc: detail:     virt_entry       = 0xffffffff81cfc200
 xc: detail:     p2m_base         = 0xffffffffffffffff
 domainbuilder: detail: xc_dom_parse_elf_kernel: xen-3.0-x86_64: 0xffffffff81000000 -> 0xffffffff82060000
-domainbuilder: detail: xc_dom_mem_init: mem 1024 MB, pages 0x40000 pages, 4k each
+domainbuilder: detail: xc_dom_mem_init: mem 1024 MB, pages 0x40000 pages, 4k each /* Meng:parse domU's memory info, but not really allocate memory */
 domainbuilder: detail: xc_dom_mem_init: 0x40000 pages
 domainbuilder: detail: xc_dom_boot_mem_init: called
 domainbuilder: detail: x86_compat: guest xen-3.0-x86_64, address size 64
-domainbuilder: detail: xc_dom_malloc            : 2048 kB
+domainbuilder: detail: xc_dom_malloc            : 2048 kB /* Meng: called by xc_dom_boot_mem_init */
 domainbuilder: detail: xc_dom_build_image: called
 domainbuilder: detail: xc_dom_alloc_segment:   kernel       : 0xffffffff81000000 -> 0xffffffff82060000  (pfn 0x1000 + 0x1060 pages)
 domainbuilder: detail: xc_dom_pfn_to_ptr_retcount: domU mapping: pfn 0x1000+0x1060 at 0x7f15e5dca000
@@ -62,11 +62,12 @@ domainbuilder: detail: nr_page_tables: 0x0000ffffffffffff/48: 0xffff000000000000
 domainbuilder: detail: nr_page_tables: 0x0000007fffffffff/39: 0xffffff8000000000 -> 0xffffffffffffffff, 1 table(s)
 domainbuilder: detail: nr_page_tables: 0x000000003fffffff/30: 0xffffffff80000000 -> 0xffffffffbfffffff, 1 table(s)
 domainbuilder: detail: nr_page_tables: 0x00000000001fffff/21: 0xffffffff80000000 -> 0xffffffff84bfffff, 38 table(s)
-domainbuilder: detail: xc_dom_alloc_segment:   page tables  : 0xffffffff8487a000 -> 0xffffffff848a3000  (pfn 0x487a + 0x29 pages)
+domainbuilder: detail: xc_dom_alloc_segment:   page tables  : 0xffffffff8487a000 -> 0xffffffff848a3000  (pfn 0x487a + 0x29 pages) /* the func is called by xc_dom_build_image() in xc_dom_core.c */
 domainbuilder: detail: xc_dom_pfn_to_ptr_retcount: domU mapping: pfn 0x487a+0x29 at 0x7f15efab7000
 domainbuilder: detail: xc_dom_alloc_page   :   boot stack   : 0xffffffff848a3000 (pfn 0x48a3)
 domainbuilder: detail: xc_dom_build_image  : virt_alloc_end : 0xffffffff848a4000
 domainbuilder: detail: xc_dom_build_image  : virt_pgtab_end : 0xffffffff84c00000
+/* Meng: finish place domU's kernel into memory. Now start booting the system */
 domainbuilder: detail: xc_dom_boot_image: called
 domainbuilder: detail: arch_setup_bootearly: doing nothing
 domainbuilder: detail: xc_dom_compat_check: supported guest type: xen-3.0-x86_64 <= matches

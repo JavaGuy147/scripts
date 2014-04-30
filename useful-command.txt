@@ -25,6 +25,18 @@ git config --global user.name "Your Name Here"
 #set email 
 git config --global user.email "your_email@example.com"
 
+##git repository locally##
+How to create a git repository locally
+http://treeleaf.be/blog/2011/03/creating-a-new-git-repository-on-a-local-file-system/
+Step 1) create remote repo. 
+    mkdir /path/to/remote/repo/
+    cd /path/to/remote/repo/
+    git init --bare # bare measn it is remote repo
+Step 2) create the local/working repo, which can be an existing project
+    cd /path/to/local/working/repo
+    git init 
+    git remote add origin url:/path/to/remote/repo
+    #then you can use git add/commit/push to push to remote repo.
 
 
 ##shell##

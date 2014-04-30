@@ -1,0 +1,104 @@
+###########
+This document describes step-by-step manual about how to set up xen's network so that each domU can access to WAN via a LAN address
+
+All of the workable configuration files, like /etc/network/interfaces are in the same folder
+###########
+Goal
+Each domU has a inner sub-network LAN address, like 192.168.0.1; domU has one network card eth1 with WAL ip address, like 158.130.xxx.xxx; domU can ssh to another domU or dom0; dom0 can ssh to domU via the LAN address. 
+---
+Basic Principles
+The worklable network topology is:
+xenbr0(bridge with LAN gateway ip 192.168.0.1) <---NAT MASQUERADE---> eth1 (158.130.xxx.xxx)
+(>>eth1 will forwad message from xenbr0 via NAT)
+Each domU has ip address 192.168.0.xxx (the ip address in the same subnetwork of xenbr0). domU will send message to xenbr0 (gateway), xenbr0 will use NAT to send msg to eth1, eth1 will send out the msg to WAN via NAT.
+
+If you view the domUs as a machine in a sub network, dom0 as the gateway of the sub network, configuring Xen is exactly the same as you configure the dom0 as the gateway of a subnetwork and let all other machines (domU) to use NAT to connet to WAN. In the sub network construction case, dom0 needs two network card device: one to connect to WAN, like eth1, the other to perform like a gateway, like xenbr0.
+---
+How to configure the NAT in dom0
+(I followed the instruction on http://codeghar.wordpress.com/2012/05/02/ubuntu-12-04-ipv4-nat-gateway-and-dhcp-server/)
+Step 1: configure dom0's network interface; dom0 needs to have two network interface: eth1 and xenbr0.
+    sudo vim /etc/network/interfaces
+        #eth1 will be allocated to a WAN address, like 158.130.xxx.xxx
+        auto eth1
+        iface eth1 inet dhcp
+        
+        auto xenbr0
+        iface xenbr0 inet static
+        address 192.168.0.1
+        netmask 255.255.255.0
+        network 192.168.0.0
+        broadcast 192.168.0.255
+
+Step 2: enable IPv4 forwarding. To do so, edit the file /etc/sysctl.conf as follows:
+    sudo vim /etc/sysctl.conf
+    uncomment this line
+    # net.ipv4.ip_forward=1
+    
+    Save the file and run the following command to make the change effective without a reboot.
+    sudo sysctl -w net.ipv4.ip_forward=1
+
+Step 3: change the iptables policy permanently via file /etc/rc.local.
+    You’ll need to allow iptables rules for NAT to work. Edit the file and save it.
+        sudo vim /etc/rc.local
+    Make sure the following two lines appear before the exit 0 line in the file.
+        /sbin/iptables -P FORWARD ACCEPT
+        /sbin/iptables --table nat -A POSTROUTING -o eth0 -j MASQUERADE
+    To make these iptables rules active without rebooting, run the following commands:
+        sudo iptables -P FORWARD ACCEPT
+        sudo iptables –-table nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+Step 4: Install DHCP server
+    sudo aptitude install isc-dhcp-server
+
+Step 5: Configure DHCP server
+    sudo vim /etc/dhcp/dhcpd.conf
+    add the following subnet description.
+    # This is a very basic subnet declaration.
+
+        subnet 192.168.0.1 netmask 255.255.255.0 {
+            range 192.168.0.10 192.168.0.50;
+            option subnet-mask 255.255.255.0;
+            option broadcast-address 192.168.0.255
+            option routers 192.168.0.1;
+        }
+
+Step 6: We want to server DHCP only on xenbr0 by using the following configuration.
+    sudo vim /etc/default/isc-dhcp-server
+    The line will look like this before you change it
+        INTERFACES=""
+    And after you change it, it will look like this:
+        INTERFACES="eth1"
+    
+Step 7: Stop and start the DHCP server.
+    sudo service isc-dhcp-server stop (if the service is already running; skip if it’s not running)
+    sudo service isc-dhcp-server start
+
+(Now the configuration on dom0 finishes.)
+
+Step 8: Configure domU
+    start domU and attach into the domU
+        xl console domU-name
+    configure its static ip address 192.168.0.xxx which is in the sub network of xenbr0's ip.
+        sudo vim /etc/network/interfaces
+            iface eth0 inet static
+            address 192.168.0.11
+            gateway 192.168.0.1
+            netmask 255.255.255.0
+
+    restart domU's network and check if its ip address becomes 192.168.0.xxx.
+
+Step 9: check network configruation is correct?
+    ping www.google.com in dom0 and domU
+
+=====
+How to diagnose the network connectivity problem if it still cannot connect?
+Use `traceroute -I ipaddress`
+It will return all of the hops to connect to the ipaddress. It sends a package with TTL of 0 first, and the first device will return to traceroute; then it sends a package with TTL of 1, and the second device will return to traceroute, etc. The returned ip address is the functioning device. So the next device which shoudl be returned by not is the broken device!
+(ref: http://www.linuxhomenetworking.com/wiki/index.php/Quick_HOWTO_:_Ch04_:_Simple_Network_Troubleshooting#.Uw6DFHVdWr8)
+
+====
+How to fix a network problem?
+Step 1) ping ipaddress to check if it's DNS problem. DNS problem can be fixed by adding the DNS server in /etc/resolv.conf or /etc/resolvconf/resolv.conf.d/base
+Step 2) If ipaddress in outer network cannot be pinged, ping subnetwork's net gate;
+Step 3) use traceroute -I ipaddress to see which router is down! 
+Principle: Just like how to detect the problem in electrical circuit (You need to check if each pair of points are connected), you need to check the connection to each router (gateway, dns server, webserver) and find the problem! When you find the non-connection problem, you just need to find the tutorial about how to correctly configure the corresponding unconnected device.

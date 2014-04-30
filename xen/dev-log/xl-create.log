@@ -1,0 +1,97 @@
+libxl: detail: libxl_dom.c:195:numa_place_domain: NUMA placement candidate with 1 nodes, 12 cpus and 28185 KB free selected
+domainbuilder: detail: xc_dom_allocate: cmdline="root=UUID=a918078e-1f1e-40c2-8a13-8dfabcd4b1ed ro   quiet splash $vt_handoff console=hvc0 earlyprintk=xen", features="(null)"
+domainbuilder: detail: xc_dom_kernel_mem: called
+domainbuilder: detail: xc_dom_ramdisk_mem: called
+domainbuilder: detail: xc_dom_boot_xen_init: ver 4.3, caps xen-3.0-x86_64 xen-3.0-x86_32p hvm-3.0-x86_32 hvm-3.0-x86_32p hvm-3.0-x86_64 
+domainbuilder: detail: xc_dom_parse_image: called
+domainbuilder: detail: xc_dom_find_loader: trying multiboot-binary loader ... 
+domainbuilder: detail: loader probe failed
+domainbuilder: detail: xc_dom_find_loader: trying Linux bzImage loader ... 
+domainbuilder: detail: xc_dom_malloc            : 18262 kB
+domainbuilder: detail: xc_dom_do_gunzip: unzip ok, 0x4b7289 -> 0x11d5aa0
+domainbuilder: detail: loader probe OK
+xc: detail: elf_parse_binary: phdr: paddr=0x1000000 memsz=0xad7000
+xc: detail: elf_parse_binary: phdr: paddr=0x1c00000 memsz=0xe60e0
+xc: detail: elf_parse_binary: phdr: paddr=0x1ce7000 memsz=0x144c0
+xc: detail: elf_parse_binary: phdr: paddr=0x1cfc000 memsz=0x364000
+xc: detail: elf_parse_binary: memory: 0x1000000 -> 0x2060000
+xc: detail: elf_xen_parse_note: GUEST_OS = "linux"
+xc: detail: elf_xen_parse_note: GUEST_VERSION = "2.6"
+xc: detail: elf_xen_parse_note: XEN_VERSION = "xen-3.0"
+xc: detail: elf_xen_parse_note: VIRT_BASE = 0xffffffff80000000
+xc: detail: elf_xen_parse_note: ENTRY = 0xffffffff81cfc200
+xc: detail: elf_xen_parse_note: HYPERCALL_PAGE = 0xffffffff81001000
+xc: detail: elf_xen_parse_note: FEATURES = "!writable_page_tables|pae_pgdir_above_4gb"
+xc: detail: elf_xen_parse_note: PAE_MODE = "yes"
+xc: detail: elf_xen_parse_note: LOADER = "generic"
+xc: detail: elf_xen_parse_note: unknown xen elf note (0xd)
+xc: detail: elf_xen_parse_note: SUSPEND_CANCEL = 0x1
+xc: detail: elf_xen_parse_note: HV_START_LOW = 0xffff800000000000
+xc: detail: elf_xen_parse_note: PADDR_OFFSET = 0x0
+xc: detail: elf_xen_addr_calc_check: addresses:
+xc: detail:     virt_base        = 0xffffffff80000000
+xc: detail:     elf_paddr_offset = 0x0
+xc: detail:     virt_offset      = 0xffffffff80000000
+xc: detail:     virt_kstart      = 0xffffffff81000000
+xc: detail:     virt_kend        = 0xffffffff82060000
+xc: detail:     virt_entry       = 0xffffffff81cfc200
+xc: detail:     p2m_base         = 0xffffffffffffffff
+domainbuilder: detail: xc_dom_parse_elf_kernel: xen-3.0-x86_64: 0xffffffff81000000 -> 0xffffffff82060000
+domainbuilder: detail: xc_dom_mem_init: mem 1024 MB, pages 0x40000 pages, 4k each
+domainbuilder: detail: xc_dom_mem_init: 0x40000 pages
+domainbuilder: detail: xc_dom_boot_mem_init: called
+domainbuilder: detail: x86_compat: guest xen-3.0-x86_64, address size 64
+domainbuilder: detail: xc_dom_malloc            : 2048 kB
+domainbuilder: detail: xc_dom_build_image: called
+domainbuilder: detail: xc_dom_alloc_segment:   kernel       : 0xffffffff81000000 -> 0xffffffff82060000  (pfn 0x1000 + 0x1060 pages)
+domainbuilder: detail: xc_dom_pfn_to_ptr_retcount: domU mapping: pfn 0x1000+0x1060 at 0x7f15e5dca000
+xc: detail: elf_load_binary: phdr 0 at 0x7f15e5dca000 -> 0x7f15e68a1000
+xc: detail: elf_load_binary: phdr 1 at 0x7f15e69ca000 -> 0x7f15e6ab00e0
+xc: detail: elf_load_binary: phdr 2 at 0x7f15e6ab1000 -> 0x7f15e6ac54c0
+xc: detail: elf_load_binary: phdr 3 at 0x7f15e6ac6000 -> 0x7f15e6b9f000
+domainbuilder: detail: xc_dom_alloc_segment:   ramdisk      : 0xffffffff82060000 -> 0xffffffff84677000  (pfn 0x2060 + 0x2617 pages)
+domainbuilder: detail: xc_dom_malloc            : 228 kB
+domainbuilder: detail: xc_dom_pfn_to_ptr_retcount: domU mapping: pfn 0x2060+0x2617 at 0x7f15e37b3000
+domainbuilder: detail: xc_dom_do_gunzip: unzip ok, 0xd97422 -> 0x2616010
+domainbuilder: detail: xc_dom_alloc_segment:   phys2mach    : 0xffffffff84677000 -> 0xffffffff84877000  (pfn 0x4677 + 0x200 pages)
+domainbuilder: detail: xc_dom_pfn_to_ptr_retcount: domU mapping: pfn 0x4677+0x200 at 0x7f15ec3e6000
+domainbuilder: detail: xc_dom_alloc_page   :   start info   : 0xffffffff84877000 (pfn 0x4877)
+domainbuilder: detail: xc_dom_alloc_page   :   xenstore     : 0xffffffff84878000 (pfn 0x4878)
+domainbuilder: detail: xc_dom_alloc_page   :   console      : 0xffffffff84879000 (pfn 0x4879)
+domainbuilder: detail: nr_page_tables: 0x0000ffffffffffff/48: 0xffff000000000000 -> 0xffffffffffffffff, 1 table(s)
+domainbuilder: detail: nr_page_tables: 0x0000007fffffffff/39: 0xffffff8000000000 -> 0xffffffffffffffff, 1 table(s)
+domainbuilder: detail: nr_page_tables: 0x000000003fffffff/30: 0xffffffff80000000 -> 0xffffffffbfffffff, 1 table(s)
+domainbuilder: detail: nr_page_tables: 0x00000000001fffff/21: 0xffffffff80000000 -> 0xffffffff84bfffff, 38 table(s)
+domainbuilder: detail: xc_dom_alloc_segment:   page tables  : 0xffffffff8487a000 -> 0xffffffff848a3000  (pfn 0x487a + 0x29 pages)
+domainbuilder: detail: xc_dom_pfn_to_ptr_retcount: domU mapping: pfn 0x487a+0x29 at 0x7f15efab7000
+domainbuilder: detail: xc_dom_alloc_page   :   boot stack   : 0xffffffff848a3000 (pfn 0x48a3)
+domainbuilder: detail: xc_dom_build_image  : virt_alloc_end : 0xffffffff848a4000
+domainbuilder: detail: xc_dom_build_image  : virt_pgtab_end : 0xffffffff84c00000
+domainbuilder: detail: xc_dom_boot_image: called
+domainbuilder: detail: arch_setup_bootearly: doing nothing
+domainbuilder: detail: xc_dom_compat_check: supported guest type: xen-3.0-x86_64 <= matches
+domainbuilder: detail: xc_dom_compat_check: supported guest type: xen-3.0-x86_32p
+domainbuilder: detail: xc_dom_compat_check: supported guest type: hvm-3.0-x86_32
+domainbuilder: detail: xc_dom_compat_check: supported guest type: hvm-3.0-x86_32p
+domainbuilder: detail: xc_dom_compat_check: supported guest type: hvm-3.0-x86_64
+domainbuilder: detail: xc_dom_update_guest_p2m: dst 64bit, pages 0x40000
+domainbuilder: detail: clear_page: pfn 0x4879, mfn 0x714b53
+domainbuilder: detail: clear_page: pfn 0x4878, mfn 0x714b54
+domainbuilder: detail: xc_dom_pfn_to_ptr_retcount: domU mapping: pfn 0x4877+0x1 at 0x7f15efb3d000
+domainbuilder: detail: start_info_x86_64: called
+domainbuilder: detail: setup_hypercall_page: vaddr=0xffffffff81001000 pfn=0x1001
+domainbuilder: detail: domain builder memory footprint
+domainbuilder: detail:    allocated
+domainbuilder: detail:       malloc             : 20653 kB
+domainbuilder: detail:       anon mmap          : 0 bytes
+domainbuilder: detail:    mapped
+domainbuilder: detail:       file mmap          : 0 bytes
+domainbuilder: detail:       domU mmap          : 56 MB
+domainbuilder: detail: arch_setup_bootlate: shared_info: pfn 0x0, mfn 0x8ccfa
+domainbuilder: detail: shared_info_x86_64: called
+domainbuilder: detail: vcpu_x86_64: called
+domainbuilder: detail: vcpu_x86_64: cr3: pfn 0x487a mfn 0x714b52
+domainbuilder: detail: launch_vm: called, ctxt=0x7fffd636bc40
+domainbuilder: detail: xc_dom_release: called
+Parsing config from ubuntu-install.config
+Daemon running with PID 2658

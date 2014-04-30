@@ -1,0 +1,26 @@
+ tools/libxc/Makefile                      |    2 +
+ tools/libxc/xc_rtglobal.c                 |   63 ++
+ tools/libxc/xc_rtpartition.c              |   63 ++
+ tools/libxc/xenctrl.h                     |   13 +-
+ tools/libxl/libxl.c                       |  173 ++++++
+ tools/libxl/libxl.h                       |   13 +
+ tools/libxl/libxl_types.idl               |    5 +
+ tools/libxl/xl.h                          |    2 +
+ tools/libxl/xl_cmdimpl.c                  |  236 +++++++-
+ tools/libxl/xl_cmdtable.c                 |   20 +
+ tools/python/xen/lowlevel/xc/xc.c         |  148 ++++-
+ tools/python/xen/xend/XendConfig.py       |   27 +
+ tools/python/xen/xend/XendDomain.py       |  201 ++++++-
+ tools/python/xen/xend/XendDomainInfo.py   |   38 ++
+ tools/python/xen/xend/XendNode.py         |    9 +
+ tools/python/xen/xend/server/SrvDomain.py |   36 ++
+ tools/python/xen/xm/main.py               |  244 ++++++++
+ xen/arch/x86/domain.c                     |   20 +
+ xen/common/Makefile                       |    2 +
+ xen/common/sched_rtglobal.c               |  931 +++++++++++++++++++++++++++++
+ xen/common/sched_rtpartition.c            |  809 +++++++++++++++++++++++++
+ xen/common/schedule.c                     |   39 +-
+ xen/include/public/domctl.h               |   16 +-
+ xen/include/public/trace.h                |   20 +-
+ xen/include/xen/sched-if.h                |    3 +-
+ 25 files changed, 3120 insertions(+), 13 deletions(-)

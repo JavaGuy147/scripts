@@ -1,0 +1,2233 @@
+                  Boot Info Script 0.61      [1 April 2012]
+
+
+============================= Boot Info Summary: ===============================
+
+ => Grub2 (v1.99) is installed in the MBR of /dev/sda and looks at sector 
+    1402537984 of the same hard drive for core.img. core.img is at this 
+    location and looks for (,gpt11)/boot/grub on this drive.
+
+sda1: __________________________________________________________________________
+
+    File system:       vfat
+    Boot sector type:  FAT32
+    Boot sector info:  According to the info in the boot sector, sda1 starts 
+                       at sector 0. But according to the info from fdisk, 
+                       sda1 starts at sector 2048.
+    Operating System:  
+    Boot files:        /efi/Boot/bootx64.efi /efi/ubuntu/grubx64.efi 
+                       /efi/ubuntu/shimx64.efi 
+                       /efi/Microsoft/Boot/bootmgfw.efi 
+                       /efi/Microsoft/Boot/bootx64.efi
+
+sda2: __________________________________________________________________________
+
+    File system:       ext4
+    Boot sector type:  -
+    Boot sector info: 
+    Operating System:  Ubuntu 12.04.3 LTS 
+    Boot files:        /etc/fstab
+
+sda3: __________________________________________________________________________
+
+    File system:       swap
+    Boot sector type:  -
+    Boot sector info: 
+
+sda4: __________________________________________________________________________
+
+    File system:       ext4
+    Boot sector type:  -
+    Boot sector info: 
+    Operating System:  
+    Boot files:        /grub/grub.cfg
+
+sda5: __________________________________________________________________________
+
+    File system:       ext4
+    Boot sector type:  -
+    Boot sector info: 
+    Operating System:  
+    Boot files:        
+
+sda6: __________________________________________________________________________
+
+    File system:       ext4
+    Boot sector type:  -
+    Boot sector info: 
+    Operating System:  
+    Boot files:        
+
+sda7: __________________________________________________________________________
+
+    File system:       ext4
+    Boot sector type:  -
+    Boot sector info: 
+    Operating System:  Ubuntu 12.04.3 LTS 
+    Boot files:        /boot/grub/grub.cfg /etc/fstab /boot/grub/core.img
+
+sda8: __________________________________________________________________________
+
+    File system:       ext4
+    Boot sector type:  -
+    Boot sector info: 
+    Operating System:  
+    Boot files:        
+
+sda9: __________________________________________________________________________
+
+    File system:       swap
+    Boot sector type:  -
+    Boot sector info: 
+
+sda10: _________________________________________________________________________
+
+    File system:       BIOS Boot partition
+    Boot sector type:  Grub2's core.img
+    Boot sector info: 
+
+sda11: _________________________________________________________________________
+
+    File system:       ext4
+    Boot sector type:  -
+    Boot sector info: 
+    Operating System:  Ubuntu 12.04.4 LTS 
+    Boot files:        /boot/grub/grub.cfg /etc/fstab /boot/grub/core.img
+
+sda12: _________________________________________________________________________
+
+    File system:       swap
+    Boot sector type:  -
+    Boot sector info: 
+
+sda13: _________________________________________________________________________
+
+    File system:       ext4
+    Boot sector type:  -
+    Boot sector info: 
+    Operating System:  Ubuntu 12.04.3 LTS 
+    Boot files:        /boot/grub/grub.cfg /etc/fstab /boot/grub/core.img
+
+============================ Drive/Partition Info: =============================
+
+Drive: sda _____________________________________________________________________
+
+Disk /dev/sda: 1000.2 GB, 1000204886016 bytes
+255 heads, 63 sectors/track, 121601 cylinders, total 1953525168 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+
+Partition  Boot  Start Sector    End Sector  # of Sectors  Id System
+
+/dev/sda1                   1 1,953,525,167 1,953,525,167  ee GPT
+
+
+GUID Partition Table detected.
+
+Partition    Start Sector    End Sector  # of Sectors System
+/dev/sda1           2,048       194,559       192,512 EFI System partition
+/dev/sda2         194,560    97,851,391    97,656,832 Data partition (Windows/Linux)
+/dev/sda3      97,851,392   101,756,927     3,905,536 Swap partition (Linux)
+/dev/sda4     101,756,928   105,662,463     3,905,536 Data partition (Windows/Linux)
+/dev/sda5     105,662,464   125,194,239    19,531,776 Data partition (Windows/Linux)
+/dev/sda6     125,194,240 1,101,756,415   976,562,176 Data partition (Windows/Linux)
+/dev/sda7   1,101,756,416 1,199,413,247    97,656,832 Data partition (Windows/Linux)
+/dev/sda8   1,199,413,248 1,394,724,863   195,311,616 Data partition (Windows/Linux)
+/dev/sda9   1,394,724,864 1,402,537,983     7,813,120 Swap partition (Linux)
+/dev/sda10  1,402,537,984 1,403,514,879       976,896 BIOS Boot partition
+/dev/sda11  1,403,514,880 1,501,171,711    97,656,832 Data partition (Windows/Linux)
+/dev/sda12  1,501,171,712 1,508,984,831     7,813,120 Swap partition (Linux)
+/dev/sda13  1,508,984,832 1,626,171,391   117,186,560 Data partition (Windows/Linux)
+
+"blkid" output: ________________________________________________________________
+
+Device           UUID                                   TYPE       LABEL
+
+/dev/sda1        E36C-B8D9                              vfat       
+/dev/sda11       f1df61f0-f012-499c-986a-1c152d6e0265   ext4       
+/dev/sda12       004a2537-9aa4-4d54-9ab2-e13893d0e9f0   swap       
+/dev/sda13       a3d64716-9965-4988-959e-f6168aa226f7   ext4       
+/dev/sda2        8aee2f26-e533-4bee-9a39-c16712a4ce1f   ext4       
+/dev/sda3        da531ce8-c479-41c0-afa9-ef749abe1088   swap       
+/dev/sda4        5cd66231-ad05-4e18-b743-cf210cebde5a   ext4       
+/dev/sda5        95d97624-8025-4bd8-9979-75fd1b5d2542   ext4       
+/dev/sda6        6558d936-3875-44a8-b2cd-f50a8e45d5ff   ext4       
+/dev/sda7        7a1e340f-41c8-423b-873f-dc12ede7ec08   ext4       
+/dev/sda8        5e192234-4701-4f22-ab80-166292f6f5dc   ext4       
+/dev/sda9        8a331d10-6476-4fe5-8222-c857f03c1319   swap       
+
+================================ Mount points: =================================
+
+Device           Mount_Point              Type       Options
+
+/dev/sda11       /                        ext4       (rw,errors=remount-ro)
+
+
+=============================== sda2/etc/fstab: ================================
+
+--------------------------------------------------------------------------------
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+proc            /proc           proc    nodev,noexec,nosuid 0       0
+# / was on /dev/sda2 during installation
+UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f /               ext4    errors=remount-ro 0       1
+# /boot was on /dev/sda4 during installation
+UUID=5cd66231-ad05-4e18-b743-cf210cebde5a /boot           ext4    defaults        0       2
+# /boot/efi was on /dev/sda1 during installation
+#UUID=E36C-B8D9  /boot/efi       vfat    defaults        0       1
+# /home was on /dev/sda6 during installation
+UUID=6558d936-3875-44a8-b2cd-f50a8e45d5ff /home           ext4    defaults        0       2
+# /tmp was on /dev/sda5 during installation
+UUID=95d97624-8025-4bd8-9979-75fd1b5d2542 /tmp            ext4    defaults        0       2
+# swap was on /dev/sda3 during installation
+UUID=da531ce8-c479-41c0-afa9-ef749abe1088 none            swap    sw              0       0
+UUID=E36C-B8D9	/boot/efi	vfat	defaults	0	1
+--------------------------------------------------------------------------------
+
+=================== sda2: Location of files loaded by Grub: ====================
+
+           GiB - GB             File                                 Fragment(s)
+
+   4.697391510 = 5.043785728    initrd.img.old                                 1
+
+============================= sda4/grub/grub.cfg: ==============================
+
+--------------------------------------------------------------------------------
+#
+# DO NOT EDIT THIS FILE
+#
+# It is automatically generated by grub-mkconfig using templates
+# from /etc/grub.d and settings from /etc/default/grub
+#
+
+### BEGIN /etc/grub.d/00_header ###
+if [ -s $prefix/grubenv ]; then
+  set have_grubenv=true
+  load_env
+fi
+set default="0"
+if [ "${prev_saved_entry}" ]; then
+  set saved_entry="${prev_saved_entry}"
+  save_env saved_entry
+  set prev_saved_entry=
+  save_env prev_saved_entry
+  set boot_once=true
+fi
+
+function savedefault {
+  if [ -z "${boot_once}" ]; then
+    saved_entry="${chosen}"
+    save_env saved_entry
+  fi
+}
+
+function recordfail {
+  set recordfail=1
+  if [ -n "${have_grubenv}" ]; then if [ -z "${boot_once}" ]; then save_env recordfail; fi; fi
+}
+
+function load_video {
+  insmod efi_gop
+  insmod efi_uga
+  insmod video_bochs
+  insmod video_cirrus
+}
+
+insmod part_gpt
+insmod ext2
+set root='(hd0,gpt2)'
+search --no-floppy --fs-uuid --set=root 8aee2f26-e533-4bee-9a39-c16712a4ce1f
+if loadfont /usr/share/grub/unicode.pf2 ; then
+  set gfxmode=auto
+  load_video
+  insmod gfxterm
+  insmod part_gpt
+  insmod ext2
+  set root='(hd0,gpt4)'
+  search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+  set locale_dir=($root)/grub/locale
+  set lang=en_US
+  insmod gettext
+fi
+terminal_output gfxterm
+if [ "${recordfail}" = 1 ]; then
+  set timeout=-1
+else
+  set timeout=10
+fi
+### END /etc/grub.d/00_header ###
+
+### BEGIN /etc/grub.d/05_debian_theme ###
+set menu_color_normal=white/black
+set menu_color_highlight=black/light-gray
+if background_color 44,0,30; then
+  clear
+fi
+### END /etc/grub.d/05_debian_theme ###
+
+### BEGIN /etc/grub.d/10_linux ###
+function gfxmode {
+	set gfxpayload="${1}"
+	if [ "${1}" = "keep" ]; then
+		set vt_handoff=vt.handoff=7
+	else
+		set vt_handoff=
+	fi
+}
+if [ "${recordfail}" != 1 ]; then
+  if [ -e ${prefix}/gfxblacklist.txt ]; then
+    if hwmatch ${prefix}/gfxblacklist.txt 3; then
+      if [ ${match} = 0 ]; then
+        set linux_gfx_mode=keep
+      else
+        set linux_gfx_mode=text
+      fi
+    else
+      set linux_gfx_mode=text
+    fi
+  else
+    set linux_gfx_mode=keep
+  fi
+else
+  set linux_gfx_mode=text
+fi
+export linux_gfx_mode
+if [ "${linux_gfx_mode}" != "text" ]; then load_video; fi
+menuentry 'Ubuntu, with Linux 3.8.0-31-generic' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	gfxmode $linux_gfx_mode
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux	/vmlinuz-3.8.0-31-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro   quiet splash $vt_handoff
+	initrd	/initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu, with Linux 3.8.0-31-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Linux 3.8.0-31-generic ...'
+	linux	/vmlinuz-3.8.0-31-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro recovery nomodeset 
+	echo	'Loading initial ramdisk ...'
+	initrd	/initrd.img-3.8.0-31-generic
+}
+submenu "Previous Linux versions" {
+menuentry 'Ubuntu, with Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	gfxmode $linux_gfx_mode
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux	/vmlinuz-3.8.0-29-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro   quiet splash $vt_handoff
+	initrd	/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu, with Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	linux	/vmlinuz-3.8.0-29-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro recovery nomodeset 
+	echo	'Loading initial ramdisk ...'
+	initrd	/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu, with Linux 2.6.38.8-rk' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	gfxmode $linux_gfx_mode
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux	/vmlinuz-2.6.38.8-rk root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro   quiet splash $vt_handoff
+	initrd	/initrd.img-2.6.38.8-rk
+}
+menuentry 'Ubuntu, with Linux 2.6.38.8-rk (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Linux 2.6.38.8-rk ...'
+	linux	/vmlinuz-2.6.38.8-rk root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro recovery nomodeset 
+	echo	'Loading initial ramdisk ...'
+	initrd	/initrd.img-2.6.38.8-rk
+}
+}
+### END /etc/grub.d/10_linux ###
+
+### BEGIN /etc/grub.d/20_linux_xen ###
+submenu "Xen xen" {
+menuentry 'Ubuntu GNU/Linux, with Xen xen and Linux 3.8.0-31-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen xen ...'
+	multiboot	/xen.gz placeholder  
+	echo	'Loading Linux 3.8.0-31-generic ...'
+	module	/vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen xen and Linux 3.8.0-31-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen xen ...'
+	multiboot	/xen.gz placeholder 
+	echo	'Loading Linux 3.8.0-31-generic ...'
+	module	/vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen xen and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen xen ...'
+	multiboot	/xen.gz placeholder  
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/vmlinuz-3.8.0-29-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen xen and Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen xen ...'
+	multiboot	/xen.gz placeholder 
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/vmlinuz-3.8.0-29-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen xen and Linux 2.6.38.8-rk' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen xen ...'
+	multiboot	/xen.gz placeholder  
+	echo	'Loading Linux 2.6.38.8-rk ...'
+	module	/vmlinuz-2.6.38.8-rk placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-2.6.38.8-rk
+}
+menuentry 'Ubuntu GNU/Linux, with Xen xen and Linux 2.6.38.8-rk (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen xen ...'
+	multiboot	/xen.gz placeholder 
+	echo	'Loading Linux 2.6.38.8-rk ...'
+	module	/vmlinuz-2.6.38.8-rk placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-2.6.38.8-rk
+}
+}
+submenu "Xen syms-4.3.0" {
+menuentry 'Ubuntu GNU/Linux, with Xen syms-4.3.0 and Linux 3.8.0-31-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen syms-4.3.0 ...'
+	multiboot	/xen-syms-4.3.0 placeholder  
+	echo	'Loading Linux 3.8.0-31-generic ...'
+	module	/vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen syms-4.3.0 and Linux 3.8.0-31-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen syms-4.3.0 ...'
+	multiboot	/xen-syms-4.3.0 placeholder 
+	echo	'Loading Linux 3.8.0-31-generic ...'
+	module	/vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen syms-4.3.0 and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen syms-4.3.0 ...'
+	multiboot	/xen-syms-4.3.0 placeholder  
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/vmlinuz-3.8.0-29-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen syms-4.3.0 and Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen syms-4.3.0 ...'
+	multiboot	/xen-syms-4.3.0 placeholder 
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/vmlinuz-3.8.0-29-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen syms-4.3.0 and Linux 2.6.38.8-rk' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen syms-4.3.0 ...'
+	multiboot	/xen-syms-4.3.0 placeholder  
+	echo	'Loading Linux 2.6.38.8-rk ...'
+	module	/vmlinuz-2.6.38.8-rk placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-2.6.38.8-rk
+}
+menuentry 'Ubuntu GNU/Linux, with Xen syms-4.3.0 and Linux 2.6.38.8-rk (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen syms-4.3.0 ...'
+	multiboot	/xen-syms-4.3.0 placeholder 
+	echo	'Loading Linux 2.6.38.8-rk ...'
+	module	/vmlinuz-2.6.38.8-rk placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-2.6.38.8-rk
+}
+}
+submenu "Xen 4" {
+menuentry 'Ubuntu GNU/Linux, with Xen 4 and Linux 3.8.0-31-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4 ...'
+	multiboot	/xen-4.gz placeholder  
+	echo	'Loading Linux 3.8.0-31-generic ...'
+	module	/vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4 and Linux 3.8.0-31-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4 ...'
+	multiboot	/xen-4.gz placeholder 
+	echo	'Loading Linux 3.8.0-31-generic ...'
+	module	/vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4 and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4 ...'
+	multiboot	/xen-4.gz placeholder  
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/vmlinuz-3.8.0-29-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4 and Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4 ...'
+	multiboot	/xen-4.gz placeholder 
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/vmlinuz-3.8.0-29-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4 and Linux 2.6.38.8-rk' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4 ...'
+	multiboot	/xen-4.gz placeholder  
+	echo	'Loading Linux 2.6.38.8-rk ...'
+	module	/vmlinuz-2.6.38.8-rk placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-2.6.38.8-rk
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4 and Linux 2.6.38.8-rk (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4 ...'
+	multiboot	/xen-4.gz placeholder 
+	echo	'Loading Linux 2.6.38.8-rk ...'
+	module	/vmlinuz-2.6.38.8-rk placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-2.6.38.8-rk
+}
+}
+submenu "Xen 4.3" {
+menuentry 'Ubuntu GNU/Linux, with Xen 4.3 and Linux 3.8.0-31-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4.3 ...'
+	multiboot	/xen-4.3.gz placeholder  
+	echo	'Loading Linux 3.8.0-31-generic ...'
+	module	/vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4.3 and Linux 3.8.0-31-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4.3 ...'
+	multiboot	/xen-4.3.gz placeholder 
+	echo	'Loading Linux 3.8.0-31-generic ...'
+	module	/vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4.3 and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4.3 ...'
+	multiboot	/xen-4.3.gz placeholder  
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/vmlinuz-3.8.0-29-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4.3 and Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4.3 ...'
+	multiboot	/xen-4.3.gz placeholder 
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/vmlinuz-3.8.0-29-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4.3 and Linux 2.6.38.8-rk' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4.3 ...'
+	multiboot	/xen-4.3.gz placeholder  
+	echo	'Loading Linux 2.6.38.8-rk ...'
+	module	/vmlinuz-2.6.38.8-rk placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-2.6.38.8-rk
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4.3 and Linux 2.6.38.8-rk (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4.3 ...'
+	multiboot	/xen-4.3.gz placeholder 
+	echo	'Loading Linux 2.6.38.8-rk ...'
+	module	/vmlinuz-2.6.38.8-rk placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-2.6.38.8-rk
+}
+}
+submenu "Xen 4.3.0" {
+menuentry 'Ubuntu GNU/Linux, with Xen 4.3.0 and Linux 3.8.0-31-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4.3.0 ...'
+	multiboot	/xen-4.3.0.gz placeholder  
+	echo	'Loading Linux 3.8.0-31-generic ...'
+	module	/vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4.3.0 and Linux 3.8.0-31-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4.3.0 ...'
+	multiboot	/xen-4.3.0.gz placeholder 
+	echo	'Loading Linux 3.8.0-31-generic ...'
+	module	/vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4.3.0 and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4.3.0 ...'
+	multiboot	/xen-4.3.0.gz placeholder  
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/vmlinuz-3.8.0-29-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4.3.0 and Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4.3.0 ...'
+	multiboot	/xen-4.3.0.gz placeholder 
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/vmlinuz-3.8.0-29-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4.3.0 and Linux 2.6.38.8-rk' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4.3.0 ...'
+	multiboot	/xen-4.3.0.gz placeholder  
+	echo	'Loading Linux 2.6.38.8-rk ...'
+	module	/vmlinuz-2.6.38.8-rk placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-2.6.38.8-rk
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4.3.0 and Linux 2.6.38.8-rk (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	echo	'Loading Xen 4.3.0 ...'
+	multiboot	/xen-4.3.0.gz placeholder 
+	echo	'Loading Linux 2.6.38.8-rk ...'
+	module	/vmlinuz-2.6.38.8-rk placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/initrd.img-2.6.38.8-rk
+}
+}
+### END /etc/grub.d/20_linux_xen ###
+
+### BEGIN /etc/grub.d/20_memtest86+ ###
+menuentry "Memory test (memtest86+)" {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux16	/memtest86+.bin
+}
+menuentry "Memory test (memtest86+, serial console 115200)" {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux16	/memtest86+.bin console=ttyS0,115200n8
+}
+### END /etc/grub.d/20_memtest86+ ###
+
+### BEGIN /etc/grub.d/30_os-prober ###
+menuentry "Ubuntu, with Linux 3.8.0-35-generic (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.8.0-35-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-35-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-35-generic (recovery mode) (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.8.0-35-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro recovery nomodeset
+	initrd /boot/initrd.img-3.8.0-35-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (recovery mode) (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro recovery nomodeset
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.2.0-58-generic-pae (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.2.0-58-generic-pae root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.2.0-58-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.2.0-58-generic-pae (recovery mode) (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.2.0-58-generic-pae root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro recovery nomodeset
+	initrd /boot/initrd.img-3.2.0-58-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (recovery mode) (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro recovery nomodeset
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu (32bit with mit-os), with Linux 3.8.0-35-generic (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.8.0-35-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-35-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda13)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (recovery mode) (on /dev/sda13)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro recovery nomodeset
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (recovery mode) (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro recovery nomodeset
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (recovery mode) (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro recovery nomodeset
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (gpt7) (32bit) (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda11) (gpt11) (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda13) (gpt13) (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+### END /etc/grub.d/30_os-prober ###
+
+### BEGIN /etc/grub.d/30_uefi-firmware ###
+### END /etc/grub.d/30_uefi-firmware ###
+
+### BEGIN /etc/grub.d/40_custom ###
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+submenu "RT-Xen 2.0" {
+menuentry 'Ubuntu GNU/Linux, with RT-Xen 2.0(rtglobal) and Linux 3.8.0-31-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+    insmod part_gpt
+    insmod ext2
+    set root='(hd0,gpt4)'
+    search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+    echo    'Loading RT-Xen 2.0 ...'
+    multiboot   /xen-4.3.0.gz placeholder dom0_max_vcpus=4 dom0_vcpus_pin dom0_mem=2048M sched=rtglobal
+    echo    'Loading Linux 3.8.0-31-generic ...'
+    module  /vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+    echo    'Loading initial ramdisk ...'
+    module  /initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu GNU/Linux, with RT-Xen 2.0(rtpartition) and Linux 3.8.0-31-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+    insmod part_gpt
+    insmod ext2
+    set root='(hd0,gpt4)'
+    search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+    echo    'Loading RT-Xen 2.0 ...'
+    multiboot   /xen-4.3.0.gz placeholder dom0_max_vcpus=4 dom0_vcpus_pin dom0_mem=2048M sched=rtpartition
+    echo    'Loading Linux 3.8.0-31-generic ...'
+    module  /vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+    echo    'Loading initial ramdisk ...'
+    module  /initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu GNU/Linux, with RT-Xen 2.0(credit) and Linux 3.8.0-31-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+    insmod part_gpt
+    insmod ext2
+    set root='(hd0,gpt4)'
+    search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+    echo    'Loading RT-Xen 2.0 ...'
+    multiboot   /xen-4.3.0.gz placeholder dom0_max_vcpus=4 dom0_vcpus_pin dom0_mem=2048M sched=credit
+    echo    'Loading Linux 3.8.0-31-generic ...'
+    module  /vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+    echo    'Loading initial ramdisk ...'
+    module  /initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu GNU/Linux, with RT-Xen 2.0(credit2) and Linux 3.8.0-31-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+    insmod part_gpt
+    insmod ext2
+    set root='(hd0,gpt4)'
+    search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+    echo    'Loading RT-Xen 2.0 ...'
+    multiboot   /xen-4.3.0.gz placeholder dom0_max_vcpus=4 dom0_vcpus_pin dom0_mem=2048M sched=credit2
+    echo    'Loading Linux 3.8.0-31-generic ...'
+    module  /vmlinuz-3.8.0-31-generic placeholder root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro  quiet splash
+    echo    'Loading initial ramdisk ...'
+    module  /initrd.img-3.8.0-31-generic
+}
+}
+### END /etc/grub.d/40_custom ###
+
+### BEGIN /etc/grub.d/41_custom ###
+if [ -f  $prefix/custom.cfg ]; then
+  source $prefix/custom.cfg;
+fi
+### END /etc/grub.d/41_custom ###
+--------------------------------------------------------------------------------
+
+=================== sda4: Location of files loaded by Grub: ====================
+
+           GiB - GB             File                                 Fragment(s)
+
+  48.697299957 = 52.288327680   grub/grub.cfg                                  1
+  48.782184601 = 52.379471872   vmlinuz-2.6.38.8-rk                            1
+  48.659351349 = 52.247580672   vmlinuz-3.8.0-29-generic                       1
+  48.674980164 = 52.264361984   vmlinuz-3.8.0-31-generic                       1
+  48.706230164 = 52.297916416   vmlinuz-3.8.0-31-generic.efi.signed            1
+  48.858901978 = 52.461846528   initrd.img-2.6.38.8-rk                         3
+  48.730201721 = 52.323655680   initrd.img-3.8.0-29-generic                    1
+  48.747356415 = 52.342075392   initrd.img-3.8.0-31-generic                    1
+
+=========================== sda7/boot/grub/grub.cfg: ===========================
+
+--------------------------------------------------------------------------------
+#
+# DO NOT EDIT THIS FILE
+#
+# It is automatically generated by grub-mkconfig using templates
+# from /etc/grub.d and settings from /etc/default/grub
+#
+
+### BEGIN /etc/grub.d/00_header ###
+if [ -s $prefix/grubenv ]; then
+  set have_grubenv=true
+  load_env
+fi
+set default="0"
+if [ "${prev_saved_entry}" ]; then
+  set saved_entry="${prev_saved_entry}"
+  save_env saved_entry
+  set prev_saved_entry=
+  save_env prev_saved_entry
+  set boot_once=true
+fi
+
+function savedefault {
+  if [ -z "${boot_once}" ]; then
+    saved_entry="${chosen}"
+    save_env saved_entry
+  fi
+}
+
+function recordfail {
+  set recordfail=1
+  if [ -n "${have_grubenv}" ]; then if [ -z "${boot_once}" ]; then save_env recordfail; fi; fi
+}
+
+function load_video {
+  insmod vbe
+  insmod vga
+  insmod video_bochs
+  insmod video_cirrus
+}
+
+insmod part_gpt
+insmod ext2
+set root='(hd0,gpt7)'
+search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+if loadfont /usr/share/grub/unicode.pf2 ; then
+  set gfxmode=auto
+  load_video
+  insmod gfxterm
+  insmod part_gpt
+  insmod ext2
+  set root='(hd0,gpt7)'
+  search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+  set locale_dir=($root)/boot/grub/locale
+  set lang=en_US
+  insmod gettext
+fi
+terminal_output gfxterm
+if [ "${recordfail}" = 1 ]; then
+  set timeout=-1
+else
+  set timeout=10
+fi
+### END /etc/grub.d/00_header ###
+
+### BEGIN /etc/grub.d/05_debian_theme ###
+set menu_color_normal=white/black
+set menu_color_highlight=black/light-gray
+if background_color 44,0,30; then
+  clear
+fi
+### END /etc/grub.d/05_debian_theme ###
+
+### BEGIN /etc/grub.d/10_linux ###
+function gfxmode {
+	set gfxpayload="${1}"
+	if [ "${1}" = "keep" ]; then
+		set vt_handoff=vt.handoff=7
+	else
+		set vt_handoff=
+	fi
+}
+if [ "${recordfail}" != 1 ]; then
+  if [ -e ${prefix}/gfxblacklist.txt ]; then
+    if hwmatch ${prefix}/gfxblacklist.txt 3; then
+      if [ ${match} = 0 ]; then
+        set linux_gfx_mode=keep
+      else
+        set linux_gfx_mode=text
+      fi
+    else
+      set linux_gfx_mode=text
+    fi
+  else
+    set linux_gfx_mode=keep
+  fi
+else
+  set linux_gfx_mode=text
+fi
+export linux_gfx_mode
+if [ "${linux_gfx_mode}" != "text" ]; then load_video; fi
+menuentry 'Ubuntu, with Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	gfxmode $linux_gfx_mode
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux	/boot/vmlinuz-3.8.0-29-generic root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro   quiet splash $vt_handoff
+	initrd	/boot/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu, with Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	linux	/boot/vmlinuz-3.8.0-29-generic root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro recovery nomodeset 
+	echo	'Loading initial ramdisk ...'
+	initrd	/boot/initrd.img-3.8.0-29-generic
+}
+submenu "Previous Linux versions" {
+menuentry 'Ubuntu, with Linux 3.2.0-55-generic-pae' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	gfxmode $linux_gfx_mode
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux	/boot/vmlinuz-3.2.0-55-generic-pae root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro   quiet splash $vt_handoff
+	initrd	/boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry 'Ubuntu, with Linux 3.2.0-55-generic-pae (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	echo	'Loading Linux 3.2.0-55-generic-pae ...'
+	linux	/boot/vmlinuz-3.2.0-55-generic-pae root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro recovery nomodeset 
+	echo	'Loading initial ramdisk ...'
+	initrd	/boot/initrd.img-3.2.0-55-generic-pae
+}
+}
+### END /etc/grub.d/10_linux ###
+
+### BEGIN /etc/grub.d/20_linux_xen ###
+### END /etc/grub.d/20_linux_xen ###
+
+### BEGIN /etc/grub.d/20_memtest86+ ###
+menuentry "Memory test (memtest86+)" {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux16	/boot/memtest86+.bin
+}
+menuentry "Memory test (memtest86+, serial console 115200)" {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux16	/boot/memtest86+.bin console=ttyS0,115200n8
+}
+### END /etc/grub.d/20_memtest86+ ###
+
+### BEGIN /etc/grub.d/30_os-prober ###
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (recovery mode) (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro recovery nomodeset
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (recovery mode) (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro recovery nomodeset
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda13)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (recovery mode) (on /dev/sda13)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro recovery nomodeset
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-31-generic (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-3.8.0-31-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro quiet splash $vt_handoff
+	initrd /initrd.img-3.8.0-31-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-31-generic (recovery mode) (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-3.8.0-31-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro recovery nomodeset
+	initrd /initrd.img-3.8.0-31-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-3.8.0-29-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro quiet splash $vt_handoff
+	initrd /initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (recovery mode) (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-3.8.0-29-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro recovery nomodeset
+	initrd /initrd.img-3.8.0-29-generic
+}
+### END /etc/grub.d/30_os-prober ###
+
+### BEGIN /etc/grub.d/30_uefi-firmware ###
+### END /etc/grub.d/30_uefi-firmware ###
+
+### BEGIN /etc/grub.d/40_custom ###
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+submenu "Customized Linux" {
+menuentry "Ubuntu, with Linux 3.8.0-31-generic (on /dev/sda2) (gpt4)" --class gnu-linux --class gnu --class os {
+        insmod part_gpt
+        insmod ext2
+        set root='(hd0,gpt4)'
+        search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+        linux /vmlinuz-3.8.0-31-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro quiet splash $vt_handoff
+        initrd /initrd.img-3.8.0-31-generic
+}
+menuentry 'Ubuntu, with Linux 3.2.0-55-generic-pae (gpt7) (32bit)' --class ubuntu --class gnu-linux --class gnu --class os {
+        recordfail
+        gfxmode $linux_gfx_mode
+        insmod gzio
+        insmod part_gpt
+        insmod ext2
+        set root='(hd0,gpt7)'
+        search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+        linux   /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro   quiet splash $vt_handoff
+        initrd  /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda11) (gpt11)" --class gnu-linux --class gnu --class os {
+        insmod part_gpt
+        insmod ext2
+        set root='(hd0,gpt11)'
+        search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+        linux /boot/vmlinuz-3.8.0-29-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro quiet splash $vt_handoff
+        initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda13) (gpt13)" --class gnu-linux --class gnu --class os {
+        insmod part_gpt
+        insmod ext2
+        set root='(hd0,gpt13)'
+        search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+        linux /boot/vmlinuz-3.8.0-29-generic root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro quiet splash $vt_handoff
+        initrd /boot/initrd.img-3.8.0-29-generic
+}
+}
+
+### END /etc/grub.d/40_custom ###
+
+### BEGIN /etc/grub.d/41_custom ###
+if [ -f  $prefix/custom.cfg ]; then
+  source $prefix/custom.cfg;
+fi
+### END /etc/grub.d/41_custom ###
+--------------------------------------------------------------------------------
+
+=============================== sda7/etc/fstab: ================================
+
+--------------------------------------------------------------------------------
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+proc            /proc           proc    nodev,noexec,nosuid 0       0
+# / was on /dev/sda7 during installation
+UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 /               ext4    errors=remount-ro 0       1
+# /home was on /dev/sda8 during installation
+UUID=5e192234-4701-4f22-ab80-166292f6f5dc /home           ext4    defaults        0       2
+# swap was on /dev/sda3 during installation
+UUID=da531ce8-c479-41c0-afa9-ef749abe1088 none            swap    sw              0       0
+# swap was on /dev/sda9 during installation
+UUID=8a331d10-6476-4fe5-8222-c857f03c1319 none            swap    sw              0       0
+--------------------------------------------------------------------------------
+
+=================== sda7: Location of files loaded by Grub: ====================
+
+           GiB - GB             File                                 Fragment(s)
+
+ 541.676807404 = 581.621043200  boot/grub/grub.cfg                             1
+ 537.609104156 = 577.253380096  boot/grub/core.img                             1
+ 526.324024200 = 565.136117760  boot/vmlinuz-3.2.0-55-generic-pae              2
+ 569.492198944 = 611.487592448  boot/vmlinuz-3.8.0-29-generic                  1
+ 569.492198944 = 611.487592448  vmlinuz                                        1
+ 526.427627563 = 565.247361024  boot/initrd.img-3.2.0-55-generic-pae           1
+ 526.576297760 = 565.406994432  boot/initrd.img-3.8.0-29-generic               2
+ 526.576297760 = 565.406994432  initrd.img                                     2
+ 529.963016510 = 569.043456000  initrd.img.old                                 1
+
+========================== sda11/boot/grub/grub.cfg: ===========================
+
+--------------------------------------------------------------------------------
+#
+# DO NOT EDIT THIS FILE
+#
+# It is automatically generated by grub-mkconfig using templates
+# from /etc/grub.d and settings from /etc/default/grub
+#
+
+### BEGIN /etc/grub.d/00_header ###
+if [ -s $prefix/grubenv ]; then
+  set have_grubenv=true
+  load_env
+fi
+set default="0"
+if [ "${prev_saved_entry}" ]; then
+  set saved_entry="${prev_saved_entry}"
+  save_env saved_entry
+  set prev_saved_entry=
+  save_env prev_saved_entry
+  set boot_once=true
+fi
+
+function savedefault {
+  if [ -z "${boot_once}" ]; then
+    saved_entry="${chosen}"
+    save_env saved_entry
+  fi
+}
+
+function recordfail {
+  set recordfail=1
+  if [ -n "${have_grubenv}" ]; then if [ -z "${boot_once}" ]; then save_env recordfail; fi; fi
+}
+
+function load_video {
+  insmod vbe
+  insmod vga
+  insmod video_bochs
+  insmod video_cirrus
+}
+
+insmod part_gpt
+insmod ext2
+set root='(hd0,gpt11)'
+search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+if loadfont /usr/share/grub/unicode.pf2 ; then
+  set gfxmode=auto
+  load_video
+  insmod gfxterm
+  insmod part_gpt
+  insmod ext2
+  set root='(hd0,gpt11)'
+  search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+  set locale_dir=($root)/boot/grub/locale
+  set lang=en_US
+  insmod gettext
+fi
+terminal_output gfxterm
+if [ "${recordfail}" = 1 ] ; then
+  set timeout=-1
+else
+  set timeout=10
+fi
+### END /etc/grub.d/00_header ###
+
+### BEGIN /etc/grub.d/05_debian_theme ###
+set menu_color_normal=white/black
+set menu_color_highlight=black/light-gray
+if background_color 44,0,30; then
+  clear
+fi
+### END /etc/grub.d/05_debian_theme ###
+
+### BEGIN /etc/grub.d/10_linux ###
+function gfxmode {
+	set gfxpayload="${1}"
+	if [ "${1}" = "keep" ]; then
+		set vt_handoff=vt.handoff=7
+	else
+		set vt_handoff=
+	fi
+}
+if [ "${recordfail}" != 1 ]; then
+  if [ -e ${prefix}/gfxblacklist.txt ]; then
+    if hwmatch ${prefix}/gfxblacklist.txt 3; then
+      if [ ${match} = 0 ]; then
+        set linux_gfx_mode=keep
+      else
+        set linux_gfx_mode=text
+      fi
+    else
+      set linux_gfx_mode=text
+    fi
+  else
+    set linux_gfx_mode=keep
+  fi
+else
+  set linux_gfx_mode=text
+fi
+export linux_gfx_mode
+if [ "${linux_gfx_mode}" != "text" ]; then load_video; fi
+menuentry 'Ubuntu, with Linux 3.8.0-35-generic' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	gfxmode $linux_gfx_mode
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux	/boot/vmlinuz-3.8.0-35-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro   quiet splash $vt_handoff
+	initrd	/boot/initrd.img-3.8.0-35-generic
+}
+menuentry 'Ubuntu, with Linux 3.8.0-35-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	echo	'Loading Linux 3.8.0-35-generic ...'
+	linux	/boot/vmlinuz-3.8.0-35-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro recovery nomodeset 
+	echo	'Loading initial ramdisk ...'
+	initrd	/boot/initrd.img-3.8.0-35-generic
+}
+submenu "Previous Linux versions" {
+menuentry 'Ubuntu, with Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	gfxmode $linux_gfx_mode
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux	/boot/vmlinuz-3.8.0-29-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro   quiet splash $vt_handoff
+	initrd	/boot/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu, with Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	linux	/boot/vmlinuz-3.8.0-29-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro recovery nomodeset 
+	echo	'Loading initial ramdisk ...'
+	initrd	/boot/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu, with Linux 3.2.0-58-generic-pae' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	gfxmode $linux_gfx_mode
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux	/boot/vmlinuz-3.2.0-58-generic-pae root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro   quiet splash $vt_handoff
+	initrd	/boot/initrd.img-3.2.0-58-generic-pae
+}
+menuentry 'Ubuntu, with Linux 3.2.0-58-generic-pae (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	echo	'Loading Linux 3.2.0-58-generic-pae ...'
+	linux	/boot/vmlinuz-3.2.0-58-generic-pae root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro recovery nomodeset 
+	echo	'Loading initial ramdisk ...'
+	initrd	/boot/initrd.img-3.2.0-58-generic-pae
+}
+menuentry 'Ubuntu, with Linux 3.2.0-55-generic-pae' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	gfxmode $linux_gfx_mode
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux	/boot/vmlinuz-3.2.0-55-generic-pae root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro   quiet splash $vt_handoff
+	initrd	/boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry 'Ubuntu, with Linux 3.2.0-55-generic-pae (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	echo	'Loading Linux 3.2.0-55-generic-pae ...'
+	linux	/boot/vmlinuz-3.2.0-55-generic-pae root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro recovery nomodeset 
+	echo	'Loading initial ramdisk ...'
+	initrd	/boot/initrd.img-3.2.0-55-generic-pae
+}
+}
+### END /etc/grub.d/10_linux ###
+
+### BEGIN /etc/grub.d/20_linux_xen ###
+### END /etc/grub.d/20_linux_xen ###
+
+### BEGIN /etc/grub.d/20_memtest86+ ###
+menuentry "Memory test (memtest86+)" {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux16	/boot/memtest86+.bin
+}
+menuentry "Memory test (memtest86+, serial console 115200)" {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux16	/boot/memtest86+.bin console=ttyS0,115200n8
+}
+### END /etc/grub.d/20_memtest86+ ###
+
+### BEGIN /etc/grub.d/30_os-prober ###
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda13)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (recovery mode) (on /dev/sda13)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro recovery nomodeset
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-31-generic (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-3.8.0-31-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro quiet splash $vt_handoff
+	initrd /initrd.img-3.8.0-31-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-31-generic (recovery mode) (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-3.8.0-31-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro recovery nomodeset
+	initrd /initrd.img-3.8.0-31-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-3.8.0-29-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro quiet splash $vt_handoff
+	initrd /initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (recovery mode) (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-3.8.0-29-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro recovery nomodeset
+	initrd /initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 2.6.38.8-rk (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-2.6.38.8-rk root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro quiet splash $vt_handoff
+	initrd /initrd.img-2.6.38.8-rk
+}
+menuentry "Ubuntu, with Linux 2.6.38.8-rk (recovery mode) (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-2.6.38.8-rk root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro recovery nomodeset
+	initrd /initrd.img-2.6.38.8-rk
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (recovery mode) (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro recovery nomodeset
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (recovery mode) (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro recovery nomodeset
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (gpt7) (32bit) (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda11) (gpt11) (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda13) (gpt13) (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+set timeout_style=menu
+if [ "${timeout}" = 0 ]; then
+  set timeout=10
+fi
+### END /etc/grub.d/30_os-prober ###
+
+### BEGIN /etc/grub.d/30_uefi-firmware ###
+### END /etc/grub.d/30_uefi-firmware ###
+
+### BEGIN /etc/grub.d/40_custom ###
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+menuentry 'Ubuntu (32bit with mit-os), with Linux 3.8.0-35-generic' --class ubuntu --class gnu-linux --class gnu --class os {
+        recordfail
+        gfxmode $linux_gfx_mode
+        insmod gzio
+        insmod part_gpt
+        insmod ext2
+        set root='(hd0,gpt11)'
+        search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+        linux   /boot/vmlinuz-3.8.0-35-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro   quiet splash $vt_handoff
+        initrd  /boot/initrd.img-3.8.0-35-generic
+}
+menuentry "Ubuntu (64bit), with Linux 3.8.0-29-generic (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+        insmod part_gpt
+        insmod ext2
+        set root='(hd0,gpt4)'
+        search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+        linux /vmlinuz-3.8.0-29-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro quiet splash $vt_handoff
+        initrd /initrd.img-3.8.0-29-generic
+}
+menuentry "(hd0, gpt2) Chain Loader (second virtual hard disk)" {
+    insmod ext2
+    set root='(hd0,2)'
+    search --no-floppy --fs-uuid --set 8aee2f26-e533-4bee-9a39-c16712a4ce1f
+    chainloader +1
+}
+menuentry "(hd0, gpt4) Chain Loader (second virtual hard disk)" {
+    insmod ext2
+    set root='(hd0,4)'
+    search --no-floppy --fs-uuid --set 5cd66231-ad05-4e18-b743-cf210cebde5a
+    chainloader +1
+}
+menuentry "(hd0, gpt5) Chain Loader (second virtual hard disk)" {
+    insmod ext2
+    set root='(hd0,5)'
+    search --no-floppy --fs-uuid --set 95d97624-8025-4bd8-9979-75fd1b5d2542
+    chainloader +1
+}
+menuentry "(hd0, gpt6) Chain Loader (second virtual hard disk)" {
+    insmod ext2
+    set root='(hd0,6)'
+    search --no-floppy --fs-uuid --set 6558d936-3875-44a8-b2cd-f50a8e45d5ff
+    chainloader +1
+}
+menuentry "(hd0, gpt7) Chain Loader (second virtual hard disk)" {
+    insmod ext2
+    set root='(hd0,7)'
+    search --no-floppy --fs-uuid --set 7a1e340f-41c8-423b-873f-dc12ede7ec08
+    chainloader +1
+}
+menuentry "(hd0, gpt8) Chain Loader (second virtual hard disk)" {
+    insmod ext2
+    set root='(hd0,8)'
+    search --no-floppy --fs-uuid --set 5e192234-4701-4f22-ab80-166292f6f5dc
+    chainloader +1
+}
+menuentry "(hd0, gpt11) Chain Loader (second virtual hard disk)" {
+    insmod ext2
+    set root='(hd0,11)'
+    search --no-floppy --fs-uuid --set f1df61f0-f012-499c-986a-1c152d6e0265
+    chainloader +1
+}
+menuentry "(hd0, gpt13) Chain Loader (second virtual hard disk)" {
+    insmod ext2
+    set root='(hd0,13)'
+    search --no-floppy --fs-uuid --set a3d64716-9965-4988-959e-f6168aa226f7
+    chainloader +1
+}
+
+### END /etc/grub.d/40_custom ###
+
+### BEGIN /etc/grub.d/41_custom ###
+if [ -f  $prefix/custom.cfg ]; then
+  source $prefix/custom.cfg;
+fi
+### END /etc/grub.d/41_custom ###
+--------------------------------------------------------------------------------
+
+=============================== sda11/etc/fstab: ===============================
+
+--------------------------------------------------------------------------------
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+proc            /proc           proc    nodev,noexec,nosuid 0       0
+# / was on /dev/sda11 during installation
+UUID=f1df61f0-f012-499c-986a-1c152d6e0265 /               ext4    errors=remount-ro 0       1
+# swap was on /dev/sda12 during installation
+UUID=004a2537-9aa4-4d54-9ab2-e13893d0e9f0 none            swap    sw              0       0
+# swap was on /dev/sda3 during installation
+UUID=da531ce8-c479-41c0-afa9-ef749abe1088 none            swap    sw              0       0
+# swap was on /dev/sda9 during installation
+UUID=8a331d10-6476-4fe5-8222-c857f03c1319 none            swap    sw              0       0
+--------------------------------------------------------------------------------
+
+=================== sda11: Location of files loaded by Grub: ===================
+
+           GiB - GB             File                                 Fragment(s)
+
+ 709.582324982 = 761.908219904  boot/grub/grub.cfg                             1
+ 703.417537689 = 755.288829952  boot/grub/core.img                             1
+ 670.303516388 = 719.732920320  boot/vmlinuz-3.2.0-55-generic-pae              1
+ 675.127735138 = 724.912885760  boot/vmlinuz-3.2.0-58-generic-pae              1
+ 687.419662476 = 738.111242240  boot/vmlinuz-3.8.0-29-generic                  1
+ 675.194549561 = 724.984627200  boot/vmlinuz-3.8.0-35-generic                  1
+ 675.194549561 = 724.984627200  vmlinuz                                        1
+ 675.127735138 = 724.912885760  vmlinuz.old                                    1
+ 670.418842316 = 719.856750592  boot/initrd.img-3.2.0-55-generic-pae           1
+ 675.964412689 = 725.811261440  boot/initrd.img-3.2.0-58-generic-pae           2
+ 673.852664948 = 723.543789568  boot/initrd.img-3.8.0-29-generic               1
+ 680.990234375 = 731.207696384  boot/initrd.img-3.8.0-35-generic               2
+ 680.990234375 = 731.207696384  initrd.img                                     2
+ 675.964412689 = 725.811261440  initrd.img.old                                 2
+
+========================== sda13/boot/grub/grub.cfg: ===========================
+
+--------------------------------------------------------------------------------
+#
+# DO NOT EDIT THIS FILE
+#
+# It is automatically generated by grub-mkconfig using templates
+# from /etc/grub.d and settings from /etc/default/grub
+#
+
+### BEGIN /etc/grub.d/00_header ###
+if [ -s $prefix/grubenv ]; then
+  set have_grubenv=true
+  load_env
+fi
+set default="0"
+if [ "${prev_saved_entry}" ]; then
+  set saved_entry="${prev_saved_entry}"
+  save_env saved_entry
+  set prev_saved_entry=
+  save_env prev_saved_entry
+  set boot_once=true
+fi
+
+function savedefault {
+  if [ -z "${boot_once}" ]; then
+    saved_entry="${chosen}"
+    save_env saved_entry
+  fi
+}
+
+function recordfail {
+  set recordfail=1
+  if [ -n "${have_grubenv}" ]; then if [ -z "${boot_once}" ]; then save_env recordfail; fi; fi
+}
+
+function load_video {
+  insmod vbe
+  insmod vga
+  insmod video_bochs
+  insmod video_cirrus
+}
+
+insmod part_gpt
+insmod ext2
+set root='(hd0,gpt13)'
+search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+if loadfont /usr/share/grub/unicode.pf2 ; then
+  set gfxmode=auto
+  load_video
+  insmod gfxterm
+  insmod part_gpt
+  insmod ext2
+  set root='(hd0,gpt13)'
+  search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+  set locale_dir=($root)/boot/grub/locale
+  set lang=en_US
+  insmod gettext
+fi
+terminal_output gfxterm
+if [ "${recordfail}" = 1 ]; then
+  set timeout=-1
+else
+  set timeout=10
+fi
+### END /etc/grub.d/00_header ###
+
+### BEGIN /etc/grub.d/05_debian_theme ###
+set menu_color_normal=white/black
+set menu_color_highlight=black/light-gray
+if background_color 44,0,30; then
+  clear
+fi
+### END /etc/grub.d/05_debian_theme ###
+
+### BEGIN /etc/grub.d/10_linux ###
+function gfxmode {
+	set gfxpayload="${1}"
+	if [ "${1}" = "keep" ]; then
+		set vt_handoff=vt.handoff=7
+	else
+		set vt_handoff=
+	fi
+}
+if [ "${recordfail}" != 1 ]; then
+  if [ -e ${prefix}/gfxblacklist.txt ]; then
+    if hwmatch ${prefix}/gfxblacklist.txt 3; then
+      if [ ${match} = 0 ]; then
+        set linux_gfx_mode=keep
+      else
+        set linux_gfx_mode=text
+      fi
+    else
+      set linux_gfx_mode=text
+    fi
+  else
+    set linux_gfx_mode=keep
+  fi
+else
+  set linux_gfx_mode=text
+fi
+export linux_gfx_mode
+if [ "${linux_gfx_mode}" != "text" ]; then load_video; fi
+menuentry 'Ubuntu, with Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	gfxmode $linux_gfx_mode
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	linux	/boot/vmlinuz-3.8.0-29-generic root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro   quiet splash $vt_handoff
+	initrd	/boot/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu, with Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os {
+	recordfail
+	insmod gzio
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	linux	/boot/vmlinuz-3.8.0-29-generic root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro recovery nomodeset 
+	echo	'Loading initial ramdisk ...'
+	initrd	/boot/initrd.img-3.8.0-29-generic
+}
+### END /etc/grub.d/10_linux ###
+
+### BEGIN /etc/grub.d/20_linux_xen ###
+submenu "Xen xen" {
+menuentry 'Ubuntu GNU/Linux, with Xen xen and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	echo	'Loading Xen xen ...'
+	multiboot	/boot/xen.gz placeholder  
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/boot/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen xen and Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	echo	'Loading Xen xen ...'
+	multiboot	/boot/xen.gz placeholder 
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/boot/initrd.img-3.8.0-29-generic
+}
+}
+submenu "Xen syms-4.1.4" {
+menuentry 'Ubuntu GNU/Linux, with Xen syms-4.1.4 and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	echo	'Loading Xen syms-4.1.4 ...'
+	multiboot	/boot/xen-syms-4.1.4 placeholder  
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/boot/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen syms-4.1.4 and Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	echo	'Loading Xen syms-4.1.4 ...'
+	multiboot	/boot/xen-syms-4.1.4 placeholder 
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/boot/initrd.img-3.8.0-29-generic
+}
+}
+submenu "Xen 4" {
+menuentry 'Ubuntu GNU/Linux, with Xen 4 and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	echo	'Loading Xen 4 ...'
+	multiboot	/boot/xen-4.gz placeholder  
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/boot/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4 and Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	echo	'Loading Xen 4 ...'
+	multiboot	/boot/xen-4.gz placeholder 
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/boot/initrd.img-3.8.0-29-generic
+}
+}
+submenu "Xen 4.1" {
+menuentry 'Ubuntu GNU/Linux, with Xen 4.1 and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	echo	'Loading Xen 4.1 ...'
+	multiboot	/boot/xen-4.1.gz placeholder  
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/boot/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4.1 and Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	echo	'Loading Xen 4.1 ...'
+	multiboot	/boot/xen-4.1.gz placeholder 
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/boot/initrd.img-3.8.0-29-generic
+}
+}
+submenu "Xen 4.1.4" {
+menuentry 'Ubuntu GNU/Linux, with Xen 4.1.4 and Linux 3.8.0-29-generic' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	echo	'Loading Xen 4.1.4 ...'
+	multiboot	/boot/xen-4.1.4.gz placeholder  
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro  quiet splash
+	echo	'Loading initial ramdisk ...'
+	module	/boot/initrd.img-3.8.0-29-generic
+}
+menuentry 'Ubuntu GNU/Linux, with Xen 4.1.4 and Linux 3.8.0-29-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os --class xen {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	echo	'Loading Xen 4.1.4 ...'
+	multiboot	/boot/xen-4.1.4.gz placeholder 
+	echo	'Loading Linux 3.8.0-29-generic ...'
+	module	/boot/vmlinuz-3.8.0-29-generic placeholder root=UUID=a3d64716-9965-4988-959e-f6168aa226f7 ro single 
+	echo	'Loading initial ramdisk ...'
+	module	/boot/initrd.img-3.8.0-29-generic
+}
+}
+### END /etc/grub.d/20_linux_xen ###
+
+### BEGIN /etc/grub.d/20_memtest86+ ###
+menuentry "Memory test (memtest86+)" {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	linux16	/boot/memtest86+.bin
+}
+menuentry "Memory test (memtest86+, serial console 115200)" {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt13)'
+	search --no-floppy --fs-uuid --set=root a3d64716-9965-4988-959e-f6168aa226f7
+	linux16	/boot/memtest86+.bin console=ttyS0,115200n8
+}
+### END /etc/grub.d/20_memtest86+ ###
+
+### BEGIN /etc/grub.d/30_os-prober ###
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (recovery mode) (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro recovery nomodeset
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (recovery mode) (on /dev/sda11)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt11)'
+	search --no-floppy --fs-uuid --set=root f1df61f0-f012-499c-986a-1c152d6e0265
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=f1df61f0-f012-499c-986a-1c152d6e0265 ro recovery nomodeset
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.8.0-31-generic-64bit (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-3.8.0-31-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro quiet splash $vt_handoff
+	initrd /initrd.img-3.8.0-31-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-31-generic (recovery mode) (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-3.8.0-31-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro recovery nomodeset
+	initrd /initrd.img-3.8.0-31-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-3.8.0-29-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro quiet splash $vt_handoff
+	initrd /initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (recovery mode) (on /dev/sda2)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt4)'
+	search --no-floppy --fs-uuid --set=root 5cd66231-ad05-4e18-b743-cf210cebde5a
+	linux /vmlinuz-3.8.0-29-generic root=UUID=8aee2f26-e533-4bee-9a39-c16712a4ce1f ro recovery nomodeset
+	initrd /initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.8.0-29-generic (recovery mode) (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.8.0-29-generic root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro recovery nomodeset
+	initrd /boot/initrd.img-3.8.0-29-generic
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro quiet splash $vt_handoff
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+menuentry "Ubuntu, with Linux 3.2.0-55-generic-pae (recovery mode) (on /dev/sda7)" --class gnu-linux --class gnu --class os {
+	insmod part_gpt
+	insmod ext2
+	set root='(hd0,gpt7)'
+	search --no-floppy --fs-uuid --set=root 7a1e340f-41c8-423b-873f-dc12ede7ec08
+	linux /boot/vmlinuz-3.2.0-55-generic-pae root=UUID=7a1e340f-41c8-423b-873f-dc12ede7ec08 ro recovery nomodeset
+	initrd /boot/initrd.img-3.2.0-55-generic-pae
+}
+### END /etc/grub.d/30_os-prober ###
+
+### BEGIN /etc/grub.d/30_uefi-firmware ###
+### END /etc/grub.d/30_uefi-firmware ###
+
+### BEGIN /etc/grub.d/40_custom ###
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+### END /etc/grub.d/40_custom ###
+
+### BEGIN /etc/grub.d/41_custom ###
+if [ -f  $prefix/custom.cfg ]; then
+  source $prefix/custom.cfg;
+fi
+### END /etc/grub.d/41_custom ###
+--------------------------------------------------------------------------------
+
+=============================== sda13/etc/fstab: ===============================
+
+--------------------------------------------------------------------------------
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+proc            /proc           proc    nodev,noexec,nosuid 0       0
+# / was on /dev/sda13 during installation
+UUID=a3d64716-9965-4988-959e-f6168aa226f7 /               ext4    errors=remount-ro 0       1
+# swap was on /dev/sda12 during installation
+UUID=004a2537-9aa4-4d54-9ab2-e13893d0e9f0 none            swap    sw              0       0
+# swap was on /dev/sda3 during installation
+UUID=da531ce8-c479-41c0-afa9-ef749abe1088 none            swap    sw              0       0
+# swap was on /dev/sda9 during installation
+UUID=8a331d10-6476-4fe5-8222-c857f03c1319 none            swap    sw              0       0
+--------------------------------------------------------------------------------
+
+=================== sda13: Location of files loaded by Grub: ===================
+
+           GiB - GB             File                                 Fragment(s)
+
+ 757.708995819 = 813.583839232  boot/grub/grub.cfg                             1
+ 725.784378052 = 779.305041920  boot/grub/core.img                             1
+ 720.099781036 = 773.201252352  boot/vmlinuz-3.8.0-29-generic                  1
+ 720.099781036 = 773.201252352  vmlinuz                                        1
+ 720.742469788 = 773.891334144  boot/initrd.img-3.8.0-29-generic               1
+ 720.742469788 = 773.891334144  initrd.img                                     1
+
+=============================== StdErr Messages: ===============================
+
+  No volume groups found
+

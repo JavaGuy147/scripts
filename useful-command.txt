@@ -51,4 +51,6 @@ find . -type d \( -path "./stubdom/" -o -path "./dist/" \) -prune -o -name '*.[c
 
 ##Xen##
 #show the dependence of libraries
-ldd `which xl` 
+ldd `which xl`
+#if some program's dependent lib is not detected but it's installed( you can check if it's there by `whereis lib-name`)
+/sbin/ldconfig 

@@ -1,0 +1,3594 @@
+diff --git a/tools/libxc/Makefile b/tools/libxc/Makefile
+index a74b19e..061582d 100644
+--- a/tools/libxc/Makefile
++++ b/tools/libxc/Makefile
+@@ -1,4 +1,4 @@
+-XEN_ROOT = $(CURDIR)/../..
++EN_ROOT = $(CURDIR)/../..
+ include $(XEN_ROOT)/tools/Rules.mk
+ 
+ MAJOR    = 4.4
+@@ -20,6 +20,8 @@ CTRL_SRCS-y       += xc_sedf.c
+ CTRL_SRCS-y       += xc_csched.c
+ CTRL_SRCS-y       += xc_csched2.c
+ CTRL_SRCS-y       += xc_arinc653.c
++CTRL_SRCS-y       += xc_rtglobal.c
++CTRL_SRCS-y       += xc_rtpartition.c
+ CTRL_SRCS-y       += xc_tbuf.c
+ CTRL_SRCS-y       += xc_pm.c
+ CTRL_SRCS-y       += xc_cpu_hotplug.c
+diff --git a/tools/libxc/xc_dom_core.c b/tools/libxc/xc_dom_core.c
+index baa62a1..32bff20 100644
+--- a/tools/libxc/xc_dom_core.c
++++ b/tools/libxc/xc_dom_core.c
+@@ -243,6 +243,7 @@ static void xc_dom_free_all(struct xc_dom_image *dom)
+ {
+     struct xc_dom_mem *block;
+ 
++    DOMPRINTF_CALLED(dom->xch);
+     while ( (block = dom->memblocks) != NULL )
+     {
+         dom->memblocks = block->next;
+@@ -609,6 +610,7 @@ void xc_dom_unmap_one(struct xc_dom_image *dom, xen_pfn_t pfn)
+ 
+ void xc_dom_unmap_all(struct xc_dom_image *dom)
+ {
++    DOMPRINTF_CALLED(dom->xch);
+     while ( dom->phys_pages )
+         xc_dom_unmap_one(dom, dom->phys_pages->first);
+ }
+diff --git a/tools/libxc/xc_rtglobal.c b/tools/libxc/xc_rtglobal.c
+new file mode 100755
+index 0000000..2f83c4a
+--- /dev/null
++++ b/tools/libxc/xc_rtglobal.c
+@@ -0,0 +1,121 @@
++/****************************************************************************
++ * (C) 2006 - Emmanuel Ackaouy - XenSource Inc.
++ ****************************************************************************
++ *
++ *        File: xc_rtglobal.c
++ *      Author: Sisu Xi
++ *
++ * Description: XC Interface to the rtglobal scheduler
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation;
++ * version 2.1 of the License.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++ */
++
++#include "xc_private.h"
++
++int
++xc_sched_rtglobal_domain_set(
++    xc_interface *xch,
++    uint32_t domid,
++    struct xen_domctl_sched_rtglobal_params *sdom)
++{
++    int rc;
++    DECLARE_DOMCTL;
++    DECLARE_HYPERCALL_BOUNCE(sdom, 
++        sizeof(*sdom), 
++        XC_HYPERCALL_BUFFER_BOUNCE_IN);
++
++    if ( xc_hypercall_bounce_pre(xch, sdom) )
++        return -1;
++
++    domctl.cmd = XEN_DOMCTL_scheduler_op;
++    domctl.domain = (domid_t) domid;
++    domctl.u.scheduler_op.sched_id = XEN_SCHEDULER_RTGLOBAL;
++    domctl.u.scheduler_op.cmd = XEN_DOMCTL_SCHEDOP_putinfo;
++    set_xen_guest_handle(domctl.u.scheduler_op.u.rtglobal.schedule, sdom);
++
++    rc = do_domctl(xch, &domctl);
++
++    xc_hypercall_bounce_post(xch, sdom);
++
++    return rc;
++}
++
++int
++xc_sched_rtglobal_domain_get(
++    xc_interface *xch,
++    uint32_t domid,
++    struct xen_domctl_sched_rtglobal_params *sdom)
++{
++    int rc;
++    DECLARE_DOMCTL;
++    DECLARE_HYPERCALL_BOUNCE(sdom, 
++        sizeof(*sdom), 
++        XC_HYPERCALL_BUFFER_BOUNCE_OUT);
++
++    if ( xc_hypercall_bounce_pre(xch, sdom) )
++        return -1;
++
++    domctl.cmd = XEN_DOMCTL_scheduler_op;
++    domctl.domain = (domid_t) domid;
++    domctl.u.scheduler_op.sched_id = XEN_SCHEDULER_RTGLOBAL;
++    domctl.u.scheduler_op.cmd = XEN_DOMCTL_SCHEDOP_getinfo;
++    set_xen_guest_handle(domctl.u.scheduler_op.u.rtglobal.schedule, sdom);
++
++    rc = do_domctl(xch, &domctl);
++
++    xc_hypercall_bounce_post(xch, sdom);
++
++    return rc;
++}
++
++int
++xc_sched_rtglobal_params_set(
++    xc_interface *xch,
++    struct xen_sysctl_rtglobal_schedule *schedule)
++{
++    int rc;
++    DECLARE_SYSCTL; 
++    
++    sysctl.cmd = XEN_SYSCTL_scheduler_op;
++    sysctl.u.scheduler_op.sched_id = XEN_SCHEDULER_RTGLOBAL;
++    sysctl.u.scheduler_op.cmd = XEN_SYSCTL_SCHEDOP_putinfo;
++
++    sysctl.u.scheduler_op.u.sched_rtglobal = *schedule;
++    
++    rc = do_sysctl(xch, &sysctl);
++
++    *schedule = sysctl.u.scheduler_op.u.sched_rtglobal;
++    
++    return rc;
++}
++
++int
++xc_sched_rtglobal_params_get(
++    xc_interface *xch,
++    struct xen_sysctl_rtglobal_schedule *schedule)
++{
++    int rc;
++    DECLARE_SYSCTL;
++
++    sysctl.cmd = XEN_SYSCTL_scheduler_op;
++    sysctl.u.scheduler_op.sched_id = XEN_SCHEDULER_RTGLOBAL;
++    sysctl.u.scheduler_op.cmd = XEN_SYSCTL_SCHEDOP_getinfo;
++
++    rc = do_sysctl(xch, &sysctl);
++    if ( rc == 0 )
++        *schedule = sysctl.u.scheduler_op.u.sched_rtglobal;
++
++    return rc;
++}
+diff --git a/tools/libxc/xc_rtpartition.c b/tools/libxc/xc_rtpartition.c
+new file mode 100755
+index 0000000..5cbbddb
+--- /dev/null
++++ b/tools/libxc/xc_rtpartition.c
+@@ -0,0 +1,63 @@
++/****************************************************************************
++ * (C) 2006 - Emmanuel Ackaouy - XenSource Inc.
++ ****************************************************************************
++ *
++ *        File: xc_rtpartition.c
++ *      Author: Sisu Xi
++ *
++ * Description: XC Interface to the rtpartition scheduler
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation;
++ * version 2.1 of the License.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++ */
++
++#include "xc_private.h"
++
++int
++xc_sched_rtpartition_domain_set(
++    xc_interface *xch,
++    uint32_t domid,
++    struct xen_domctl_sched_rtpartition *sdom)
++{
++    DECLARE_DOMCTL;
++
++    domctl.cmd = XEN_DOMCTL_scheduler_op;
++    domctl.domain = (domid_t) domid;
++    domctl.u.scheduler_op.sched_id = XEN_SCHEDULER_RTPARTITION;
++    domctl.u.scheduler_op.cmd = XEN_DOMCTL_SCHEDOP_putinfo;
++    domctl.u.scheduler_op.u.rtpartition = *sdom;
++
++    return do_domctl(xch, &domctl);
++}
++
++int
++xc_sched_rtpartition_domain_get(
++    xc_interface *xch,
++    uint32_t domid,
++    struct xen_domctl_sched_rtpartition *sdom)
++{
++    DECLARE_DOMCTL;
++    int err;
++
++    domctl.cmd = XEN_DOMCTL_scheduler_op;
++    domctl.domain = (domid_t) domid;
++    domctl.u.scheduler_op.sched_id = XEN_SCHEDULER_RTPARTITION;
++    domctl.u.scheduler_op.cmd = XEN_DOMCTL_SCHEDOP_getinfo;
++
++    err = do_domctl(xch, &domctl);
++    if ( err == 0 )
++        *sdom = domctl.u.scheduler_op.u.rtpartition;
++
++    return err;
++}
+diff --git a/tools/libxc/xenctrl.h b/tools/libxc/xenctrl.h
+index 02129f7..f59d1d4 100644
+--- a/tools/libxc/xenctrl.h
++++ b/tools/libxc/xenctrl.h
+@@ -38,6 +38,7 @@
+ #include <xen/domctl.h>
+ #include <xen/physdev.h>
+ #include <xen/sysctl.h>
++#include <xen/domctl.h>
+ #include <xen/version.h>
+ #include <xen/event_channel.h>
+ #include <xen/sched.h>
+@@ -795,6 +796,24 @@ int xc_sched_credit2_domain_set(xc_interface *xch,
+ int xc_sched_credit2_domain_get(xc_interface *xch,
+                                uint32_t domid,
+                                struct xen_domctl_sched_credit2 *sdom);
++int xc_sched_rtglobal_domain_set(xc_interface *xch,
++                               uint32_t domid,
++                               struct xen_domctl_sched_rtglobal_params *sdom);
++int xc_sched_rtglobal_domain_get(xc_interface *xch,
++                               uint32_t domid,
++                               struct xen_domctl_sched_rtglobal_params *sdom);
++int xc_sched_rtglobal_params_set(
++                               xc_interface *xch,
++                               struct xen_sysctl_rtglobal_schedule *schedule);
++int xc_sched_rtglobal_params_get(
++                               xc_interface *xch,
++                               struct xen_sysctl_rtglobal_schedule *schedule);
++int xc_sched_rtpartition_domain_set(xc_interface *xch,
++                               uint32_t domid,
++                               struct xen_domctl_sched_rtpartition *sdom);
++int xc_sched_rtpartition_domain_get(xc_interface *xch,
++                               uint32_t domid,
++                               struct xen_domctl_sched_rtpartition *sdom); 
+ 
+ int
+ xc_sched_arinc653_schedule_set(
+diff --git a/tools/libxl/libxl.c b/tools/libxl/libxl.c
+index 4ea7abb..b914560 100644
+--- a/tools/libxl/libxl.c
++++ b/tools/libxl/libxl.c
+@@ -4931,6 +4931,249 @@ static int sched_credit2_domain_set(libxl__gc *gc, uint32_t domid,
+     return 0;
+ }
+ 
++static int sched_rtglobal_domain_get(libxl__gc *gc, uint32_t domid,
++                                    libxl_domain_sched_params *scinfo)
++{
++    struct xen_domctl_sched_rtglobal_params sdom;
++    int rc, i;
++
++    rc = xc_sched_rtglobal_domain_get(CTX->xch, domid, &sdom);
++    if (rc != 0) {
++        LOGE(ERROR, "getting domain sched rtglobal");
++        return ERROR_FAIL;
++    }
++
++    libxl_domain_sched_params_init(scinfo);
++    scinfo->sched = LIBXL_SCHEDULER_RTGLOBAL;
++    scinfo->rtglobal.sched = LIBXL_SCHEDULER_RTGLOBAL; //TODO: SHOULD BE SCHEDULE Policy scheme. Need to add an extra field for sdom
++    scinfo->rtglobal.max_vcpus = LIBXL_XEN_LEGACY_MAX_VCPUS; 
++    scinfo->rtglobal.vcpus = (libxl_vcpu *) 
++                    malloc( sizeof(libxl_vcpu) * scinfo->rtglobal.max_vcpus );
++    if ( !scinfo->rtglobal.vcpus ){
++        LOGE(ERROR, "Allocate lib_vcpu array fails\n");
++        return ERROR_INVAL;
++    }
++    scinfo->rtglobal.num_vcpus = sdom.num_vcpus;
++    for( i = 0; i < sdom.num_vcpus; ++i)
++    {
++        scinfo->rtglobal.vcpus[i].period = sdom.vcpus[i].period;
++        scinfo->rtglobal.vcpus[i].budget = sdom.vcpus[i].budget;
++        scinfo->rtglobal.vcpus[i].extra = 0;
++//        scinfo->vcpus[i].extra = sdom.vcpus[i].extra;
++    }
++    //scinfo->period = sdom.period;
++    //scinfo->budget = sdom.budget;
++    //scinfo->vcpu = sdom.vcpu;
++    //scinfo->extra = sdom.extra;
++
++    return 0;
++}
++
++static int sched_rtglobal_domain_set(libxl__gc *gc, uint32_t domid,
++                                    const libxl_domain_sched_params *scinfo)
++{
++    struct xen_domctl_sched_rtglobal_params sdom;
++    int vcpu_index;
++    int rc;
++ 
++    rc = xc_sched_rtglobal_domain_get(CTX->xch, domid, &sdom);
++    if (rc != 0) {
++        LOGE(ERROR, "getting domain sched rtglobal");
++        return ERROR_FAIL;
++    }
++    
++    if (scinfo->rtglobal.vcpu_index 
++            != LIBXL_DOMAIN_SCHED_PARAM_VCPU_DEFAULT) {
++        if (scinfo->rtglobal.vcpu_index < 0 || 
++            scinfo->rtglobal.vcpu_index > 65535) {
++            LOG(ERROR, "Cpu vcpu out of range, "
++                     "valid values are within range from 0 to 65535");
++            return ERROR_INVAL;
++        }
++        sdom.vcpu_index = scinfo->rtglobal.vcpu_index;
++        vcpu_index = scinfo->rtglobal.vcpu_index;
++
++        if (scinfo->rtglobal.vcpus != NULL &&
++            vcpu_index >= 0 &&
++            vcpu_index < scinfo->rtglobal.num_vcpus) {
++            if (scinfo->rtglobal.vcpus[vcpu_index].period 
++                    != LIBXL_DOMAIN_SCHED_PARAM_PERIOD_DEFAULT) {
++                if (scinfo->rtglobal.vcpus[vcpu_index].period < 1 || 
++                        scinfo->rtglobal.vcpus[vcpu_index].period > 65535) {
++                    LOG(ERROR, "Cpu period out of range, "
++                               "valid values are within range from 1 to 65535");
++                    return ERROR_INVAL;
++                }
++                sdom.vcpus[vcpu_index].period = scinfo->rtglobal.vcpus[vcpu_index].period;
++            }
++
++            if (scinfo->rtglobal.vcpus[vcpu_index].budget 
++                    != LIBXL_DOMAIN_SCHED_PARAM_BUDGET_DEFAULT) {
++                if (scinfo->rtglobal.vcpus[vcpu_index].budget < 1 ||
++                     scinfo->rtglobal.vcpus[vcpu_index].budget > 65535) {
++                    LOG(ERROR, "Cpu budget out of range, "
++                               "valid values are within range from 1 to 65535");
++                    return ERROR_INVAL;
++                }
++                sdom.vcpus[vcpu_index].budget = scinfo->rtglobal.vcpus[vcpu_index].budget;
++            }
++        }
++    }
++
++
++/*
++    if (scinfo->rtglobal->vcpus[vcpu_index].extra != LIBXL_DOMAIN_SCHED_PARAM_EXTRA_DEFAULT) {
++        if (scinfo->rtglobal->vcpus[vcpu_index].extra < 0 || scinfo->rtglobal->vcpus[vcpu_index].extra > 65535) {
++            LOG(ERROR, "Cpu extra out of range, "
++                     "valid values are within range from 0 to 65535");
++            return ERROR_INVAL;
++        }
++        sdom->vcpus[vcpu_index].extra = scinfo->rtglobal->vcpus[vcpu_index].extra;
++    }    
++*/
++    if (sdom.vcpu_index >= 0 && sdom.vcpu_index < sdom.num_vcpus )
++    {
++        LIBXL__LOG(CTX, LIBXL__LOG_INFO, "domid=%d, vcpu=%d, period=%d, budget=%d\n",
++                    domid, sdom.vcpu_index, sdom.vcpus[sdom.vcpu_index].period, 
++                    sdom.vcpus[sdom.vcpu_index].budget);
++    } else {
++        LIBXL__LOG(CTX, LIBXL__LOG_INFO, "domid=%d, vcpu=%d\n", domid, sdom.vcpu_index);
++    }
++    rc = xc_sched_rtglobal_domain_set(CTX->xch, domid, &sdom);
++    if ( rc < 0 ) {
++        LOGE(ERROR, "setting domain sched rtglobal");
++        return ERROR_FAIL;
++    }
++
++    return 0;
++}
++
++int libxl_sched_rtglobal_params_get(libxl_ctx *ctx,
++                                    libxl_sched_rtglobal_params *scinfo)
++{
++    struct xen_sysctl_rtglobal_schedule sparam;
++    int rc;
++
++    rc = xc_sched_rtglobal_params_get(ctx->xch, &sparam);
++    if (rc != 0){
++        LIBXL__LOG_ERRNO(ctx, LIBXL__LOG_ERROR, "getting sched rtglobal param");
++        return ERROR_FAIL;
++    }
++
++//    LIBXL__LOG(ctx, LIBXL__LOG_INFO, "get sched rtglobal policy_scheme is %d\n",
++//               sparam.priority_scheme);
++    scinfo->schedule_scheme = sparam.priority_scheme;
++
++    return 0;
++}
++
++int libxl_sched_rtglobal_params_set(libxl_ctx *ctx,
++                                    libxl_sched_rtglobal_params *scinfo)
++{
++    struct xen_sysctl_rtglobal_schedule sparam;
++    int rc=0;
++
++    if( scinfo->schedule_scheme != XEN_SCHEDULER_RTGLOBAL_EDF &&
++        scinfo->schedule_scheme != XEN_SCHEDULER_RTGLOBAL_RM) {
++        LIBXL__LOG_ERRNO(ctx, LIBXL__LOG_ERROR,
++             "Only support EDF or RM as schedule scheme");
++        return ERROR_INVAL;
++    }
++
++    sparam.priority_scheme = scinfo->schedule_scheme;
++    
++    rc = xc_sched_rtglobal_params_set(ctx->xch, &sparam);
++    if ( rc < 0 ) {
++        LIBXL__LOG_ERRNO(ctx, LIBXL__LOG_ERROR, "setting sched rtglobal param");
++        return ERROR_FAIL;
++    }
++
++    scinfo->schedule_scheme = sparam.priority_scheme;
++//    LIBXL__LOG(ctx, LIBXL__LOG_INFO, "set sched rtglobal policy_scheme is %d\n",
++//               scinfo->schedule_scheme);
++    
++    return 0;
++}
++// rtpartition
++static int sched_rtpartition_domain_get(libxl__gc *gc, uint32_t domid,
++                                    libxl_domain_sched_params *scinfo)
++{
++    struct xen_domctl_sched_rtpartition sdom;
++    int rc;
++
++    rc = xc_sched_rtpartition_domain_get(CTX->xch, domid, &sdom);
++    if (rc != 0) {
++        LOGE(ERROR, "getting domain sched rtpartition");
++        return ERROR_FAIL;
++    }
++
++    libxl_domain_sched_params_init(scinfo);
++    scinfo->sched = LIBXL_SCHEDULER_RTPARTITION;
++    scinfo->period = sdom.period;
++    scinfo->budget = sdom.budget;
++    scinfo->vcpu = sdom.vcpu;
++    scinfo->extra = sdom.extra;
++
++    return 0;
++}
++
++static int sched_rtpartition_domain_set(libxl__gc *gc, uint32_t domid,
++                                    const libxl_domain_sched_params *scinfo)
++{
++    struct xen_domctl_sched_rtpartition sdom;
++    int rc;
++
++    rc = xc_sched_rtpartition_domain_get(CTX->xch, domid, &sdom);
++    if (rc != 0) {
++        LOGE(ERROR, "getting domain sched rtpartition");
++        return ERROR_FAIL;
++    }
++
++    if (scinfo->period != LIBXL_DOMAIN_SCHED_PARAM_PERIOD_DEFAULT) {
++        if (scinfo->period < 1 || scinfo->period > 65535) {
++            LOG(ERROR, "Cpu period out of range, "
++                       "valid values are within range from 1 to 65535");
++            return ERROR_INVAL;
++        }
++        sdom.period = scinfo->period;
++    }
++
++    if (scinfo->budget != LIBXL_DOMAIN_SCHED_PARAM_BUDGET_DEFAULT) {
++        if (scinfo->budget < 1 || scinfo->budget > 65535) {
++            LOG(ERROR, "Cpu budget out of range, "
++                       "valid values are within range from 1 to 65535");
++            return ERROR_INVAL;
++        }
++        sdom.budget = scinfo->budget;
++    }
++
++    if (scinfo->vcpu != LIBXL_DOMAIN_SCHED_PARAM_VCPU_DEFAULT) {
++        if (scinfo->vcpu < 0 || scinfo->vcpu > 65535) {
++            LOG(ERROR, "Cpu vcpu out of range, "
++                       "valid values are within range from 0 to 65535");
++            return ERROR_INVAL;
++        }
++        sdom.vcpu = scinfo->vcpu;
++    }
++
++    if (scinfo->extra != LIBXL_DOMAIN_SCHED_PARAM_EXTRA_DEFAULT) {
++        if (scinfo->extra < 0 || scinfo->extra > 65535) {
++            LOG(ERROR, "Cpu extra out of range, "
++                       "valid values are within range from 0 to 65535");
++            return ERROR_INVAL;
++        }
++        sdom.extra = scinfo->extra;
++    }
++
++    rc = xc_sched_rtpartition_domain_set(CTX->xch, domid, &sdom);
++    if ( rc < 0 ) {
++        LOGE(ERROR, "setting domain sched rtpartition");
++        return ERROR_FAIL;
++    }
++
++    return 0;
++}
++
+ static int sched_sedf_domain_get(libxl__gc *gc, uint32_t domid,
+                                  libxl_domain_sched_params *scinfo)
+ {
+@@ -5018,6 +5261,12 @@ int libxl_domain_sched_params_set(libxl_ctx *ctx, uint32_t domid,
+     case LIBXL_SCHEDULER_CREDIT2:
+         ret=sched_credit2_domain_set(gc, domid, scinfo);
+         break;
++    case LIBXL_SCHEDULER_RTGLOBAL:
++        ret=sched_rtglobal_domain_set(gc, domid, scinfo);
++        break;
++    case LIBXL_SCHEDULER_RTPARTITION:
++        ret=sched_rtpartition_domain_set(gc, domid, scinfo);
++        break;     
+     case LIBXL_SCHEDULER_ARINC653:
+         ret=sched_arinc653_domain_set(gc, domid, scinfo);
+         break;
+@@ -5051,6 +5300,12 @@ int libxl_domain_sched_params_get(libxl_ctx *ctx, uint32_t domid,
+     case LIBXL_SCHEDULER_CREDIT2:
+         ret=sched_credit2_domain_get(gc, domid, scinfo);
+         break;
++    case LIBXL_SCHEDULER_RTGLOBAL:
++        ret=sched_rtglobal_domain_get(gc, domid, scinfo);
++        break;
++    case LIBXL_SCHEDULER_RTPARTITION:
++        ret=sched_rtpartition_domain_get(gc, domid, scinfo);
++        break;  
+     default:
+         LOG(ERROR, "Unknown scheduler");
+         ret=ERROR_INVAL;
+diff --git a/tools/libxl/libxl.h b/tools/libxl/libxl.h
+index c7aa817..54d0232 100644
+--- a/tools/libxl/libxl.h
++++ b/tools/libxl/libxl.h
+@@ -1099,6 +1099,15 @@ int libxl_sched_credit_params_get(libxl_ctx *ctx, uint32_t poolid,
+ int libxl_sched_credit_params_set(libxl_ctx *ctx, uint32_t poolid,
+                                   libxl_sched_credit_params *scinfo);
+ 
++int libxl_sched_rtglobal_params_get(libxl_ctx *ctx,
++                                   libxl_sched_rtglobal_params *scinfo);
++int libxl_sched_rtglobal_params_set(libxl_ctx *ctx,
++                                   libxl_sched_rtglobal_params *scinfo);
++// int libxl_sched_rtpartition_params_get(libxl_ctx *ctx, uint32_t poolid,
++//                                   libxl_sched_rtpartition_params *scinfo);
++// int libxl_sched_rtpartition_params_set(libxl_ctx *ctx, uint32_t poolid,
++//                                   libxl_sched_rtpartition_params *scinfo);
++
+ /* Scheduler Per-domain parameters */
+ 
+ #define LIBXL_DOMAIN_SCHED_PARAM_WEIGHT_DEFAULT    -1
+@@ -1108,6 +1117,14 @@ int libxl_sched_credit_params_set(libxl_ctx *ctx, uint32_t poolid,
+ #define LIBXL_DOMAIN_SCHED_PARAM_LATENCY_DEFAULT   -1
+ #define LIBXL_DOMAIN_SCHED_PARAM_EXTRATIME_DEFAULT -1
+ 
++#define LIBXL_DOMAIN_SCHED_PARAM_BUDGET_DEFAULT     -1
++#define LIBXL_DOMAIN_SCHED_PARAM_VCPU_DEFAULT       -1
++#define LIBXL_DOMAIN_SCHED_PARAM_EXTRA_DEFAULT      -1
++#define LIBXL_DOMAIN_SCHED_PARAM_NUM_VCPUS_DEFAULT  -1
++#define LIBXL_DOMAIN_SCHED_PARAM_VCPU_INDEX_DEFAULT -1
++/* Consistent with XEN_LEGACY_MAX_VCPUS xen/arch-x86/xen.h*/
++#define LIBXL_XEN_LEGACY_MAX_VCPUS                  32 
++
+ int libxl_domain_sched_params_get(libxl_ctx *ctx, uint32_t domid,
+                                   libxl_domain_sched_params *params);
+ int libxl_domain_sched_params_set(libxl_ctx *ctx, uint32_t domid,
+diff --git a/tools/libxl/libxl_types.idl b/tools/libxl/libxl_types.idl
+index 52f1aa9..f5b611a 100644
+--- a/tools/libxl/libxl_types.idl
++++ b/tools/libxl/libxl_types.idl
+@@ -24,6 +24,7 @@ libxl_hwcap = Builtin("hwcap", passby=PASS_BY_REFERENCE)
+ 
+ MemKB = UInt(64, init_val = "LIBXL_MEMKB_DEFAULT")
+ 
++
+ #
+ # Constants / Enumerations
+ #
+@@ -114,6 +115,12 @@ libxl_tsc_mode = Enumeration("tsc_mode", [
+     (3, "native_paravirt"),
+     ])
+ 
++# consistent with xen/include/public/domctl.h
++libxl_schedule_scheme = Enumeration("schedule_scheme", [
++    (81, "EDF"),
++    (82, "RM"),
++    ])
++
+ # Consistent with the values defined for HVM_PARAM_TIMER_MODE.
+ libxl_timer_mode = Enumeration("timer_mode", [
+     (-1, "unknown"),
+@@ -138,6 +145,8 @@ libxl_scheduler = Enumeration("scheduler", [
+     (5, "credit"),
+     (6, "credit2"),
+     (7, "arinc653"),
++    (8, "rtglobal"),
++    (9, "rtpartition"),
+     ])
+ 
+ # Consistent with SHUTDOWN_* in sched.h (apart from UNKNOWN)
+@@ -286,14 +295,40 @@ libxl_domain_restore_params = Struct("domain_restore_params", [
+ 
+ MemKB = UInt(64, init_val = "LIBXL_MEMKB_DEFAULT")
+ 
++#
++# libxl_xen_domctl_sched_rtglobal_params is consistent with 
++# xen_domctl_sched_rtglobal_params in xen/include/public/domctl.h
++#
++#libxl_vcpu = Struct("vcpu",[
++#    ("period",       uint16,  {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_PERIOD_DEFAULT'}),
++#    ("budget",       uint16,  {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_BUDGET_DEFAULT'}),
++#    ("extra",        uint16,  {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_EXTRA_DEFAULT'}),
++#    ])
++libxl_vcpu = Struct("vcpu",[
++    ("period",       integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_PERIOD_DEFAULT'}),
++    ("budget",       integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_BUDGET_DEFAULT'}),
++    ("extra",        integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_EXTRA_DEFAULT'}),
++    ])
++
++libxl_domain_sched_rtglobal_params = Struct("domain_sched_rtglobal_params",[
++    ("sched",        libxl_scheduler),
++    ("vcpus",        Array(libxl_vcpu, "max_vcpus")),
++    ("num_vcpus",    integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_NUM_VCPUS_DEFAULT'}),
++    ("vcpu_index",   integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_VCPU_INDEX_DEFAULT'}),
++    ])
++
+ libxl_domain_sched_params = Struct("domain_sched_params",[
+     ("sched",        libxl_scheduler),
+     ("weight",       integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_WEIGHT_DEFAULT'}),
+     ("cap",          integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_CAP_DEFAULT'}),
+     ("period",       integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_PERIOD_DEFAULT'}),
++    ("budget",       integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_BUDGET_DEFAULT'}),
++    ("vcpu",         integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_VCPU_DEFAULT'}),
++    ("extra",        integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_EXTRA_DEFAULT'}),
+     ("slice",        integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_SLICE_DEFAULT'}),
+     ("latency",      integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_LATENCY_DEFAULT'}),
+     ("extratime",    integer, {'init_val': 'LIBXL_DOMAIN_SCHED_PARAM_EXTRATIME_DEFAULT'}),
++    ("rtglobal",     libxl_domain_sched_rtglobal_params),
+     ])
+ 
+ libxl_domain_build_info = Struct("domain_build_info",[
+@@ -561,6 +596,12 @@ libxl_sched_credit_params = Struct("sched_credit_params", [
+     ("ratelimit_us", integer),
+     ], dispose_fn=None)
+ 
++# consistent with struct xen_sysctl_rtglobal_schedule 
++# in xen/include/public/sysctl.h
++libxl_sched_rtglobal_params = Struct("sched_rtglobal_params", [
++    ("schedule_scheme", uint16),
++    ], dispose_fn=None)
++
+ libxl_domain_remus_info = Struct("domain_remus_info",[
+     ("interval",     integer),
+     ("blackhole",    bool),
+diff --git a/tools/libxl/xl.h b/tools/libxl/xl.h
+index 10a2e66..11ba7fb 100644
+--- a/tools/libxl/xl.h
++++ b/tools/libxl/xl.h
+@@ -66,6 +66,8 @@ int main_memmax(int argc, char **argv);
+ int main_memset(int argc, char **argv);
+ int main_sched_credit(int argc, char **argv);
+ int main_sched_credit2(int argc, char **argv);
++int main_sched_rtglobal(int argc, char **argv);
++int main_sched_rtpartition(int argc, char **argv);
+ int main_sched_sedf(int argc, char **argv);
+ int main_domid(int argc, char **argv);
+ int main_domname(int argc, char **argv);
+diff --git a/tools/libxl/xl_cmdimpl.c b/tools/libxl/xl_cmdimpl.c
+index 5195914..b05fecb 100644
+--- a/tools/libxl/xl_cmdimpl.c
++++ b/tools/libxl/xl_cmdimpl.c
+@@ -227,6 +227,19 @@ static void console_child_report(xlchildnum child)
+         child_report(child);
+ }
+ 
++
++static uint16_t find_schedule_scheme(const char *p)
++{
++    if(!strcmp(p, "EDF")){
++        return LIBXL_SCHEDULE_SCHEME_EDF;
++    }else if(!strcmp(p, "RM")){
++        return LIBXL_SCHEDULE_SCHEME_RM;
++    }else{
++        fprintf(stderr, "%s is an invalid schedule policy\n", p);
++        exit(2);
++    }
++}
++
+ static int vncviewer(uint32_t domid, int autopass)
+ {
+     libxl_vncviewer_exec(ctx, domid, autopass);
+@@ -5173,6 +5186,87 @@ static int sched_credit2_domain_output(
+     return 0;
+ }
+ 
++//rtglobal
++static int sched_rtglobal_params_set(libxl_sched_rtglobal_params *scinfo)
++{
++    int rc;
++
++    rc = libxl_sched_rtglobal_params_set(ctx, scinfo);
++    if(rc)
++        fprintf(stderr, "libxl_sched_rtglobal_params_set failed.\n");
++
++    return rc;
++}
++
++static int sched_rtglobal_params_get(libxl_sched_rtglobal_params *scinfo)
++{
++    int rc;
++    rc = libxl_sched_rtglobal_params_get(ctx, scinfo);
++    if(rc)
++        fprintf(stderr, "libxl_rtglobal_rtglobal_get failed.\n");
++
++    return rc;
++}
++
++static int sched_rtglobal_domain_output(
++    int domid)
++{
++    char *domname;
++    libxl_domain_sched_params scinfo;
++    int rc, i;
++
++    if (domid < 0) {
++        printf("%-33s %4s %6s %6s %4s %5s\n", "Name", "ID", "Period", "Budget", "Vcpu", "Extra");
++        return 0;
++    }
++    libxl_domain_sched_params_init(&scinfo);
++    rc = sched_domain_get(LIBXL_SCHEDULER_RTGLOBAL, domid, &scinfo);
++    if (rc)
++        return rc;
++    domname = libxl_domid_to_name(ctx, domid);
++    for( i = 0; i < scinfo.rtglobal.num_vcpus; i++ )
++    {
++        printf("%-33s %4d %6d %6d %4d %5d\n",
++            domname,
++            domid,
++            scinfo.rtglobal.vcpus[i].period,
++            scinfo.rtglobal.vcpus[i].budget,
++            i,
++            scinfo.rtglobal.vcpus[i].extra);
++    }
++    free(domname);
++    libxl_domain_sched_params_dispose(&scinfo);
++    return 0;
++}
++
++// rtpartition
++static int sched_rtpartition_domain_output(
++    int domid)
++{
++    char *domname;
++    libxl_domain_sched_params scinfo;
++    int rc;
++
++    if (domid < 0) {
++        printf("%-33s %4s %6s %6s %4s %5s\n", "Name", "ID", "Period", "Budget", "Vcpu", "Extra");
++        return 0;
++    }
++    rc = sched_domain_get(LIBXL_SCHEDULER_RTPARTITION, domid, &scinfo);
++    if (rc)
++        return rc;
++    domname = libxl_domid_to_name(ctx, domid);
++    printf("%-33s %4d %6d %6d %4d %5d\n",
++        domname,
++        domid,
++        scinfo.period,
++        scinfo.budget,
++        scinfo.vcpu,
++        scinfo.extra);
++    free(domname);
++    libxl_domain_sched_params_dispose(&scinfo);
++    return 0;
++}
++
+ static int sched_sedf_domain_output(
+     int domid)
+ {
+@@ -5460,6 +5554,264 @@ int main_sched_credit2(int argc, char **argv)
+     return 0;
+ }
+ 
++/**
++ * TODO: FINISH the comment
++ * <nothing>        : list all domain paramters and sched params
++ * -d [domid]       : list domain params for domain
++ * -d []
++ *
++ *
++ *
++ */
++int main_sched_rtglobal(int argc, char **argv)
++{
++    const char *dom = NULL;
++    const char *cpupool = NULL;
++    const char * schedule_scheme = NULL;
++    int opt_s = 0;
++    int period = 10, opt_p = 0;
++    int budget = 4, opt_b = 0;
++    int vcpu_index = 0, opt_v = 0;
++    int extra = 0, opt_e = 0;
++    int opt, rc;
++    static struct option opts[] = {
++        {"domain", 1, 0, 'd'},
++        {"period", 1, 0, 'p'},
++        {"budget", 1, 0, 'b'},
++        {"vcpu", 1, 0, 'v'},
++        {"extra", 1, 0, 'e'},
++        {"schedule", 1, 0, 's'},
++        {"cpupool", 1, 0, 'c'},
++        COMMON_LONG_OPTS,
++        {0, 0, 0, 0}
++    };
++
++    SWITCH_FOREACH_OPT(opt, "d:p:b:v:e:c:s:h", opts, "sched-rtglobal", 0) {
++    case 'd':
++        dom = optarg;
++        break;
++    case 'p':
++        period = strtol(optarg, NULL, 10);
++        opt_p = 1;
++        break;
++    case 'b':
++        budget = strtol(optarg, NULL, 10);
++        opt_b = 1;
++        break;
++    case 'v':
++        vcpu_index = strtol(optarg, NULL, 10);
++        opt_v = 1;
++        break;
++    case 'e':
++        extra = strtol(optarg, NULL, 10);
++        opt_e = 1;
++        break;
++    case 'c':
++        cpupool = optarg;
++        break;
++    case 's':
++        schedule_scheme = optarg;
++        opt_s = 1;
++       // printf("SWITCH_FOREACH_OPT: schedule_scheme is %s = %s\n", schedule_scheme, optarg);
++        break;
++    }
++
++    if ( opt_e ) {
++        fprintf(stderr, "-e not supported yet.\n");
++        return 1;
++    }
++    if (cpupool && (dom || opt_p || opt_b || opt_v || opt_e)) {
++        fprintf(stderr, "Specifying a cpupool is not allowed with other "
++                "options.\n");
++        return 1;
++    }
++    if (!dom && (opt_p || opt_b || opt_v || opt_e)) {
++        fprintf(stderr, "Must specify a domain.\n");
++        return 1;
++    }
++    if ( (opt_v || opt_p || opt_b) && (opt_p + opt_b + opt_v != 3) ) {
++        fprintf(stderr, "Must specify vcpu, period, budget\n");
++        return 1;
++    }
++    if ( opt_s && (opt_p || opt_b || opt_v || opt_e || dom || cpupool)) {
++        fprintf(stderr, "Specifying scheduling algorithm is not allowed "
++                "with other options.\n");
++        return 1;
++    }
++    if ( (opt_p || opt_b) && (!opt_v || !dom) ) {
++        fprintf(stderr, "Must specify a domain and its vcpu index\n");
++        return 1;
++    }
++    
++    if ( opt_s ) {
++        libxl_sched_rtglobal_params scparam;
++        if ( !schedule_scheme || !strcmp(schedule_scheme, "show")) { /* Output schedule scheme */
++            rc = sched_rtglobal_params_get(&scparam);
++            if ( rc ) {
++                fprintf(stderr, "sched_rtglobal_params_get fails\n");
++            }
++        } else {
++            if( !strcmp(schedule_scheme, "EDF") && 
++                !strcmp(schedule_scheme, "RM") ) {
++                fprintf(stderr, "Invalid schedule scheme."
++                                "Only support schedule scheme EDF or RM\n");
++            }
++
++            printf("Input schedule scheme from user is: %s\n", schedule_scheme);
++            scparam.schedule_scheme = find_schedule_scheme(schedule_scheme);
++            rc = sched_rtglobal_params_set(&scparam);
++            if ( rc ) {
++                fprintf(stderr, "sched_rtglobal_params_set fails\n");
++                return -rc;
++            }
++        }
++
++        if ( scparam.schedule_scheme == LIBXL_SCHEDULE_SCHEME_EDF ) {
++            printf("Schedule scheme is EDF now\n");
++        } else if ( scparam.schedule_scheme == LIBXL_SCHEDULE_SCHEME_RM ) {
++            printf("Schedule scheme is RM now\n");
++        } else {
++            printf("(Set schedule might fail) Set schedule scheme to not EDF or RM\n");
++        }
++        
++        return 0;
++
++    } else if (!dom) { /* list all domain's rtglobal scheduler info */
++        return -sched_domain_output(LIBXL_SCHEDULER_RTGLOBAL,
++                                    sched_rtglobal_domain_output,
++                                    sched_default_pool_output,
++                                    cpupool);
++    } else {
++        uint32_t domid = find_domain(dom);
++        if (!opt_p && !opt_b && !opt_v && !opt_e) { /* output rtglobal scheduler info */
++            sched_rtglobal_domain_output(-1);
++            return -sched_rtglobal_domain_output(domid);
++        } else { /* set rtglobal scheduler paramaters */
++            libxl_domain_sched_params scinfo;
++            libxl_domain_sched_params_init(&scinfo);
++            scinfo.rtglobal.max_vcpus = LIBXL_XEN_LEGACY_MAX_VCPUS;
++             /* TODO: change to the vcpu number of this domain*/
++            scinfo.rtglobal.num_vcpus = LIBXL_XEN_LEGACY_MAX_VCPUS;
++            scinfo.rtglobal.vcpus = 
++                (libxl_vcpu*) malloc( sizeof(libxl_vcpu) * scinfo.rtglobal.max_vcpus );
++            if ( scinfo.rtglobal.vcpus == NULL ) {
++                fprintf(stderr, "Alloc memory for scinfo.rtglobal.vcpus fails\n");
++                return 1;
++            }
++            scinfo.sched = LIBXL_SCHEDULER_RTGLOBAL;
++            /* TODO: Change to record the sched scheme */
++            scinfo.rtglobal.sched = LIBXL_SCHEDULER_RTGLOBAL; 
++            if (opt_v)
++                scinfo.rtglobal.vcpu_index = vcpu_index;
++            if (opt_p)
++                scinfo.rtglobal.vcpus[vcpu_index].period = period;
++            if (opt_b)
++                scinfo.rtglobal.vcpus[vcpu_index].budget = budget;
++            if (opt_e)
++                scinfo.rtglobal.vcpus[vcpu_index].extra = extra;
++            printf("User input is -d=%d, -v=%d, -p=%d, -b=%d\n", 
++                    domid, scinfo.rtglobal.vcpu_index, 
++                    scinfo.rtglobal.vcpus[vcpu_index].period,
++                    scinfo.rtglobal.vcpus[vcpu_index].budget);
++            rc = sched_domain_set(domid, &scinfo);
++            libxl_domain_sched_params_dispose(&scinfo);
++            if (rc)
++                return -rc;
++        }
++    }
++
++    return 0;
++}
++
++// rtpartition
++int main_sched_rtpartition(int argc, char **argv)
++{
++    const char *dom = NULL;
++    const char *cpupool = NULL;
++    int period = 10, opt_p = 0;
++    int budget = 4, opt_b = 0;
++    int vcpu = 0, opt_v = 0;
++    int extra = 0, opt_e = 0;
++    int opt, rc;
++    static struct option opts[] = {
++        {"domain", 1, 0, 'd'},
++        {"period", 1, 0, 'p'},
++        {"budget", 1, 0, 'b'},
++        {"vcpu", 1, 0, 'v'},
++        {"extra", 1, 0, 'e'},
++        {"cpupool", 1, 0, 'c'},
++        COMMON_LONG_OPTS,
++        {0, 0, 0, 0}
++    };
++
++    SWITCH_FOREACH_OPT(opt, "d:p:b:v:e:c", opts, "sched-rtpartition", 0) {
++    case 'd':
++        dom = optarg;
++        break;
++    case 'p':
++        period = strtol(optarg, NULL, 10);
++        opt_p = 1;
++        break;
++    case 'b':
++        budget = strtol(optarg, NULL, 10);
++        opt_b = 1;
++        break;
++    case 'v':
++        vcpu = strtol(optarg, NULL, 10);
++        opt_v = 1;
++        break;
++    case 'e':
++        extra = strtol(optarg, NULL, 10);
++        opt_e = 1;
++        break;
++    case 'c':
++        cpupool = optarg;
++        break;
++    }
++
++    if (cpupool && (dom || opt_p || opt_b || opt_v || opt_e)) {
++        fprintf(stderr, "Specifying a cpupool is not allowed with other "
++                "options.\n");
++        return 1;
++    }
++    if (!dom && (opt_p || opt_b || opt_v || opt_e)) {
++        fprintf(stderr, "Must specify a domain.\n");
++        return 1;
++    }
++
++    if (!dom) { /* list all domain's rtpartition scheduler info */
++        return -sched_domain_output(LIBXL_SCHEDULER_RTPARTITION,
++                                    sched_rtpartition_domain_output,
++                                    sched_default_pool_output,
++                                    cpupool);
++    } else {
++        uint32_t domid = find_domain(dom);
++
++        if (!opt_p && !opt_b && !opt_v && !opt_e) { /* output rtpartition scheduler info */
++            sched_rtpartition_domain_output(-1);
++            return -sched_rtpartition_domain_output(domid);
++        } else { /* set rtpartition scheduler paramaters */
++            libxl_domain_sched_params scinfo;
++            libxl_domain_sched_params_init(&scinfo);
++            scinfo.sched = LIBXL_SCHEDULER_RTPARTITION;
++            if (opt_p)
++                scinfo.period = period;
++            if (opt_b)
++                scinfo.budget = budget;
++            if (opt_v)
++                scinfo.vcpu = vcpu;
++            if (opt_e)
++                scinfo.extra = extra;
++            rc = sched_domain_set(domid, &scinfo);
++            libxl_domain_sched_params_dispose(&scinfo);
++            if (rc)
++                return -rc;
++        }
++    }
++
++    return 0;
++}
++
+ int main_sched_sedf(int argc, char **argv)
+ {
+     const char *dom = NULL;
+@@ -5524,7 +5876,7 @@ int main_sched_sedf(int argc, char **argv)
+                 "allowed.\n");
+     }
+ 
+-    if (!dom) { /* list all domain's credit scheduler info */
++    if (!dom) { /* list all domain's sedf scheduler info */
+         return -sched_domain_output(LIBXL_SCHEDULER_SEDF,
+                                     sched_sedf_domain_output,
+                                     sched_default_pool_output,
+diff --git a/tools/libxl/xl_cmdtable.c b/tools/libxl/xl_cmdtable.c
+index 4279b9f..5d5bdf6 100644
+--- a/tools/libxl/xl_cmdtable.c
++++ b/tools/libxl/xl_cmdtable.c
+@@ -261,6 +261,27 @@ struct cmd_spec cmd_table[] = {
+       "-w WEIGHT, --weight=WEIGHT     Weight (int)\n"
+       "-p CPUPOOL, --cpupool=CPUPOOL  Restrict output to CPUPOOL"
+     },
++    { "sched-rtglobal",
++      &main_sched_rtglobal, 0, 1,
++      "Get/set rtglobal scheduler parameters",
++      "[-d <Domain> [-w[=WEIGHT]]] [-p CPUPOOL] [-s <ALG>]",
++      "-d DOMAIN, --domain=DOMAIN     Domain to modify\n"
++      "-p PERIOD, --period=PERIOD     Period (int)\n"
++      "-b BUDGET, --budget=BUDGET     Budget (int)\n"
++      "-v VCPU,   --vcpu=VCPU         Vcpu (int)\n"
++      "-e EXTRA,  --extra=EXTRA       Extra (int)\n"
++      "-s ALG,    --schedule=ALG      Real time algorithm (EDF/RM)\n"
++    },
++    { "sched-rtpartition",
++      &main_sched_rtpartition, 0, 1,
++      "Get/set rtpartition scheduler parameters",
++      "[-d <Domain> [-w[=WEIGHT]]] [-p CPUPOOL]",
++      "-d DOMAIN, --domain=DOMAIN     Domain to modify\n"
++      "-p PERIOD, --period=PERIOD     Period (int)\n"
++      "-b BUDGET, --budget=BUDGET     Budget (int)\n"
++      "-v VCPU,   --vcpu=VCPU         Vcpu (int)\n"
++      "-e EXTRA,  --extra=EXTRA       Extra (int)\n"
++    },
+     { "sched-sedf",
+       &main_sched_sedf, 0, 1,
+       "Get/set sedf scheduler parameters",
+diff --git a/tools/ocaml/libs/xl/genwrap.py b/tools/ocaml/libs/xl/genwrap.py
+index 5e43831..08d0e66 100644
+--- a/tools/ocaml/libs/xl/genwrap.py
++++ b/tools/ocaml/libs/xl/genwrap.py
+@@ -524,7 +524,7 @@ if __name__ == '__main__':
+     for ty in types:
+         if ty.private:
+             continue
+-        #sys.stdout.write(" TYPE    %-20s " % ty.rawname)
++        sys.stdout.write(" TYPE    %-20s " % ty.rawname)
+         ml.write(gen_ocaml_ml(ty, False))
+         ml.write("\n")
+ 
+diff --git a/tools/python/xen/lowlevel/xc/xc.c b/tools/python/xen/lowlevel/xc/xc.c
+index cb34446..bcd1b22 100644
+--- a/tools/python/xen/lowlevel/xc/xc.c
++++ b/tools/python/xen/lowlevel/xc/xc.c
+@@ -1654,6 +1654,106 @@ static PyObject *pyxc_sched_credit2_domain_get(XcObject *self, PyObject *args)
+                          "weight",  sdom.weight);
+ }
+ 
++/* rtglobal */
++/*
++static PyObject *pyxc_sched_rtglobal_domain_set(XcObject *self,
++                                              PyObject *args,
++                                              PyObject *kwds)
++{
++    uint32_t domid = 0;
++    uint64_t period = 0;
++    uint64_t budget = 0;
++    uint16_t vcpu = 0;
++    uint16_t extra = 0;
++    static char *kwd_list[] = { "domid", "period", "budget", "vcpu", "extra", NULL };
++    static char kwd_type[] = "I|LLhh";
++    struct xen_domctl_sched_rtglobal_params sdom;
++
++    if( !PyArg_ParseTupleAndKeywords(args, kwds, kwd_type, kwd_list,
++                                     &domid, &period, &budget, &vcpu, &extra) )
++        return NULL;
++
++    sdom.vcpu_index = vcpu;
++    sdom.vcpus[vcpu].period = period;
++    sdom.vcpus[vcpu].budget = budget;
++    sdom.vcpus[vcpu].extra = extra;
++
++    if ( xc_sched_rtglobal_domain_set(self->xc_handle, domid, &sdom) != 0 )
++        return pyxc_error_to_exception(self->xc_handle);
++
++    Py_INCREF(zero);
++    return zero;
++}
++
++static PyObject *pyxc_sched_rtglobal_domain_get(XcObject *self, PyObject *args)
++{
++    uint32_t domid;
++    uint16_t vcpu_index;
++    struct xen_domctl_sched_rtglobal_params sdom;
++
++    if( !PyArg_ParseTuple(args, "I", &domid) )
++        return NULL;
++
++    if ( xc_sched_rtglobal_domain_get(self->xc_handle, domid, &sdom) != 0 )
++        return pyxc_error_to_exception(self->xc_handle);
++
++    vcpu_index = sdom.vcpu_index;
++    return Py_BuildValue("{s:L,s:L,s:H,s:H}",
++                         "period",  sdom.vcpus[vcpu_index].period,
++                         "budget",  sdom.vcpus[vcpu_index].budget,
++                         "vcpu",    sdom.vcpu_index,
++                         "extra",   sdom.vcpus[vcpu_index].extra);
++}
++*/
++/* rtpartition */
++/*
++static PyObject *pyxc_sched_rtpartition_domain_set(XcObject *self,
++                                              PyObject *args,
++                                              PyObject *kwds)
++{
++    uint32_t domid = 0;
++    uint64_t period = 0;
++    uint64_t budget = 0;
++    uint16_t vcpu = 0;
++    uint16_t extra = 0;
++    static char *kwd_list[] = { "domid", "period", "budget", "vcpu", "extra", NULL };
++    static char kwd_type[] = "I|LLhh";
++    struct xen_domctl_sched_rtpartition sdom;
++
++    if( !PyArg_ParseTupleAndKeywords(args, kwds, kwd_type, kwd_list,
++                                     &domid, &period, &budget, &vcpu, &extra) )
++        return NULL;
++
++    sdom.period = period;
++    sdom.budget = budget;
++    sdom.vcpu = vcpu;
++    sdom.extra = extra;
++
++    if ( xc_sched_rtpartition_domain_set(self->xc_handle, domid, &sdom) != 0 )
++        return pyxc_error_to_exception(self->xc_handle);
++
++    Py_INCREF(zero);
++    return zero;
++}
++
++static PyObject *pyxc_sched_rtpartition_domain_get(XcObject *self, PyObject *args)
++{
++    uint32_t domid;
++    struct xen_domctl_sched_rtpartition sdom;
++
++    if( !PyArg_ParseTuple(args, "I", &domid) )
++        return NULL;
++
++    if ( xc_sched_rtpartition_domain_get(self->xc_handle, domid, &sdom) != 0 )
++        return pyxc_error_to_exception(self->xc_handle);
++
++    return Py_BuildValue("{s:L,s:L,s:H,s:H}",
++                         "period",  sdom.period,
++                         "budget",  sdom.budget,
++                         "vcpu",    sdom.vcpu,
++                         "extra",   sdom.extra);
++}
++*/
+ static PyObject *pyxc_domain_setmaxmem(XcObject *self, PyObject *args)
+ {
+     uint32_t dom;
+diff --git a/tools/xcutils/xc_restore b/tools/xcutils/xc_restore
+new file mode 100755
+index 0000000..2867e84
+Binary files /dev/null and b/tools/xcutils/xc_restore differ
+diff --git a/tools/xcutils/xc_save b/tools/xcutils/xc_save
+new file mode 100755
+index 0000000..4e9cc30
+Binary files /dev/null and b/tools/xcutils/xc_save differ
+diff --git a/xen/arch/x86/domain.c b/xen/arch/x86/domain.c
+index e896210..2e505aa 100644
+--- a/xen/arch/x86/domain.c
++++ b/xen/arch/x86/domain.c
+@@ -60,6 +60,8 @@
+ #include <xen/numa.h>
+ #include <xen/iommu.h>
+ #include <compat/vcpu.h>
++#include <xen/trace.h>          /* trace schedule overhead */
++
+ 
+ DEFINE_PER_CPU(struct vcpu *, curr_vcpu);
+ DEFINE_PER_CPU(unsigned long, cr4);
+@@ -1464,6 +1466,10 @@ void context_switch(struct vcpu *prev, struct vcpu *next)
+ {
+     unsigned int cpu = smp_processor_id();
+     cpumask_t dirty_mask;
++    /* trace overhead */
++    s_time_t t1, t2;
++    int flush_tlb = 0;
++    t1 = NOW();
+ 
+     ASSERT(local_irq_is_enabled());
+ 
+@@ -1475,6 +1481,7 @@ void context_switch(struct vcpu *prev, struct vcpu *next)
+     {
+         /* Other cpus call __sync_local_execstate from flush ipi handler. */
+         flush_tlb_mask(&dirty_mask);
++        flush_tlb = 1;
+     }
+ 
+     if ( prev != next )
+@@ -1530,7 +1537,20 @@ void context_switch(struct vcpu *prev, struct vcpu *next)
+         /* Must be done with interrupts enabled */
+         vpmu_load(next);
+ 
++    t2 = NOW();
++    TRACE_6D(TRC_SCHED_OVERHEAD_CONTEXT_SWITCH,
++             prev->domain->domain_id,
++             prev->vcpu_id,
++             next->domain->domain_id,
++             next->vcpu_id,
++             flush_tlb,
++             t2-t1);
++
++    t1 = NOW();
+     context_saved(prev);
++    t2 = NOW();
++    TRACE_3D(TRC_SCHED_OVERHEAD_CONTEXT_SAVED, prev->domain->domain_id, prev->vcpu_id, t2-t1);
++
+ 
+     if ( prev != next )
+         _update_runstate_area(next);
+diff --git a/xen/common/Makefile b/xen/common/Makefile
+index 3683ae3..9bdc185 100644
+--- a/xen/common/Makefile
++++ b/xen/common/Makefile
+@@ -25,6 +25,8 @@ obj-y += rangeset.o
+ obj-y += sched_credit.o
+ obj-y += sched_credit2.o
+ obj-y += sched_sedf.o
++obj-y += sched_rtglobal.o
++obj-y += sched_rtpartition.o
+ obj-y += sched_arinc653.o
+ obj-y += schedule.o
+ obj-y += shutdown.o
+diff --git a/xen/common/sched_rtglobal.c b/xen/common/sched_rtglobal.c
+new file mode 100644
+index 0000000..9ad6c7f
+--- /dev/null
++++ b/xen/common/sched_rtglobal.c
+@@ -0,0 +1,1160 @@
++/******************************************************************************
++ * Preemptive Global EDF/RM scheduler for xen
++ *
++ * by Sisu Xi, 2013, Washington University in Saint Louis
++ * based on code of credite Scheduler
++ */
++
++#include <xen/config.h>
++#include <xen/init.h>
++#include <xen/lib.h>
++#include <xen/sched.h>
++#include <xen/domain.h>
++#include <xen/delay.h>
++#include <xen/event.h>
++#include <xen/time.h>
++#include <xen/perfc.h>
++#include <xen/sched-if.h>
++#include <xen/softirq.h>
++#include <asm/atomic.h>
++#include <xen/errno.h>
++#include <xen/trace.h>
++#include <xen/cpu.h>
++#include <xen/keyhandler.h>
++#include <xen/trace.h>
++#include <xen/guest_access.h> 
++
++/*
++ * TODO:
++ *
++ * How to show individual VCPU info?
++ * Migration compensation and resist like credit2
++ * Lock Holder Problem, using yield?
++ * Self switch problem?
++ * More testing with xentrace and xenanalyze
++ */
++
++/*
++ * Design:
++ *
++ * Follows the pre-emptive Global EDF/RM theory.
++ * Each VCPU can have a dedicated period/budget pair of parameter. When a VCPU is running, it burns its budget, and when there are no budget, the VCPU need to wait unitl next period to get replensihed. Any unused budget is discarded in the end of period.
++ * Server mechanism: deferrable server is used here. Therefore, when a VCPU has no task but with budget left, the budget is preserved.
++ * Priority scheme: a global variable called priority_scheme is used to switch between EDF and RM
++ * Queue scheme: a global runqueue is used here. It holds all runnable VCPUs. VCPUs are divided into two parts: with and without remaining budget. Among each part, VCPUs are sorted by their current deadlines.
++ * Scheduling quanta: 1 ms is picked as the scheduling quanta, but the accounting is done in microsecond level.
++ * Other: cpumask is also supported, as a result, although the runq is sorted, the scheduler also need to verify whether the cpumask is allowed or not.
++ */
++
++/*
++ * Locking:
++ * Just like credit2, a global system lock is used to protect the RunQ.
++ *
++ * The lock is already grabbed when calling wake/sleep/schedule/ functions in schedule.c
++ *
++ * The functions involes RunQ and needs to grab locks are:
++ *    dump, vcpu_insert, vcpu_remove, context_saved,
++ */
++
++/*
++ * Default parameters
++ */
++#define RTGLOBAL_DEFAULT_PERIOD     10
++#define RTGLOBAL_DEFAULT_BUDGET      4
++
++
++/*
++ * Useful macros
++ */
++#define RTGLOBAL_PRIV(_ops)     ((struct rtglobal_private *)((_ops)->sched_data))
++#define RTGLOBAL_VCPU(_vcpu)    ((struct rtglobal_vcpu *)(_vcpu)->sched_priv)
++#define RTGLOBAL_DOM(_dom)      ((struct rtglobal_dom *)(_dom)->sched_priv)
++#define RUNQ(_ops)          	(&RTGLOBAL_PRIV(_ops)->runq)
++
++/*
++ * Flags
++ */
++#define __RTGLOBAL_scheduled            1  /* This vcpu is scheduled to run (has been removed from runq) */
++#define RTGLOBAL_scheduled (1<<__RTGLOBAL_scheduled)
++#define __RTGLOBAL_delayed_runq_add     2  /* This vcpu is scheduled to be preempted (will be added back to runq) */
++#define RTGLOBAL_delayed_runq_add (1<<__RTGLOBAL_delayed_runq_add)
++
++/*
++ * Used to limit debug output
++ */
++#define RTXEN_DEBUG
++#ifdef RTXEN_DEBUG
++#define RTXEN_MAX       10  /* at most output 10 msgs for each func */
++#define RTXEN_WAKE      0
++#define RTXEN_SLEEP     1
++#define RTXEN_PICK      2
++#define RTXEN_SCHED     3
++#define RTXEN_MIGRATE   4
++#define RTXEN_CONTEXT   5
++#define RTXEN_YIELD     6
++static int rtxen_counter[7] = {0};
++#endif
++
++/*
++ * Used to printout debug information
++ */
++#define printtime()     ( printk("%d : %3ld.%3ld : %-19s ", smp_processor_id(), NOW()/MILLISECS(1), NOW()%MILLISECS(1)/1000, __func__) )
++
++/*
++ * Systme-wide private data, include a global RunQueue
++ * The global lock is referenced by schedule_data.schedule_lock from all physical cpus.
++ * It can be grabbed via vcpu_schedule_lock_irq()
++ */
++struct rtglobal_private {
++    spinlock_t lock;        /* The global coarse grand lock */
++    struct list_head sdom;  /* list of availalbe domains, used for dump */
++    struct list_head runq;  /* Ordered list of runnable VMs */
++    cpumask_t cpus;         /* cpumask_t of available physical cpus */
++    cpumask_t tickled;      /* another vcpu in the queue already ticked these cpus */
++    uint16_t priority_scheme;
++};
++
++/*
++ * Virtual CPU for scheduler
++ */
++struct rtglobal_vcpu {
++    struct list_head runq_elem; /* On the runqueue list */
++    struct list_head sdom_elem; /* On the domain VCPU list */
++
++    /* Up-pointers */
++    struct rtglobal_dom *sdom;
++    struct vcpu *vcpu;
++
++    /* VCPU parameters, in milliseconds */
++    int period;
++    int budget;
++
++    /* VCPU current infomation */
++    long cur_budget;             /* current budget in microseconds, if none, should not schedule unless extra */
++    s_time_t last_start;        /* last start time, used to calculate budget */
++    s_time_t cur_deadline;      /* current deadline, used to do EDF */
++    unsigned flags;             /* mark __RTGLOBAL_scheduled, etc.. */
++};
++
++/*
++ * Domain
++ */
++struct rtglobal_dom {
++    struct list_head vcpu;      /* link its VCPUs */
++    struct list_head sdom_elem; /* link list on rtglobal_priv */
++    struct domain *dom;         /* pointer to upper domain */
++    int    extra;               /* not evaluated */
++};
++
++/*
++ * RunQueue helper functions
++ */
++static int
++__vcpu_on_runq(struct rtglobal_vcpu *svc)
++{
++   return !list_empty(&svc->runq_elem);
++}
++
++static struct rtglobal_vcpu *
++__runq_elem(struct list_head *elem)
++{
++    return list_entry(elem, struct rtglobal_vcpu, runq_elem);
++}
++
++/*
++ * Debug related code, dump vcpu/pcpu
++ */
++static void
++rtglobal_dump_vcpu(struct rtglobal_vcpu *svc)
++{
++    if ( svc == NULL ) {
++        printk("NULL!\n");
++        return;
++    }
++// #define cpustr keyhandler_scratch
++    // cpumask_scnprintf(cpustr, sizeof(cpustr), svc->vcpu->cpu_affinity);
++    printk("[%5d.%-2d] cpu %d, (%-2d, %-2d), cur_b=%ld cur_d=%lu last_start=%lu onR=%d runnable=%d\n",
++        // , affinity=%s\n",
++            svc->vcpu->domain->domain_id,
++            svc->vcpu->vcpu_id,
++            svc->vcpu->processor,
++            svc->period,
++            svc->budget,
++            svc->cur_budget,
++            svc->cur_deadline,
++            svc->last_start,
++            __vcpu_on_runq(svc),
++            vcpu_runnable(svc->vcpu));
++            // cpustr);
++// #undef cpustr
++}
++
++/* lock is grabbed before calling this function */
++static inline void
++__runq_remove(struct rtglobal_vcpu *svc)
++{
++    if ( __vcpu_on_runq(svc) )
++        list_del_init(&svc->runq_elem);
++}
++
++/* lock is grabbed before calling this function */
++/* How to insert vcpu into runq depends on the scheduling algorithm: EDF or RM*/
++static void
++__runq_insert(const struct scheduler *ops, struct rtglobal_vcpu *svc)
++{
++    struct list_head *runq = RUNQ(ops);
++    struct list_head *iter;
++	struct rtglobal_private *prv = RTGLOBAL_PRIV(ops);
++    /* Meng? should use global lock? */
++    ASSERT( spin_is_locked(per_cpu(schedule_data, svc->vcpu->processor).schedule_lock) );
++
++    if ( __vcpu_on_runq(svc) )
++        return;
++    
++    printk("__runq_insert: to insert vcpu\n");
++    rtglobal_dump_vcpu(svc);
++    printk("__runq_insert: before list_for_each()\n");
++    list_for_each(iter, runq) {
++        struct rtglobal_vcpu * iter_svc = __runq_elem(iter);
++        
++        printk("__runq_insert: check runq's vcpu\n");
++        rtglobal_dump_vcpu(iter_svc);
++		if ( svc->cur_budget > 0 ) { // svc still has budget
++			if ( iter_svc->cur_budget == 0 ||
++			     ( ( prv->priority_scheme == EDF && svc->cur_deadline <= iter_svc->cur_deadline ) ||
++			       ( prv->priority_scheme == RM && svc->period <= iter_svc->period )) ) {
++					break;
++			}
++		} else { // svc has no budget
++			if ( iter_svc->cur_budget == 0 &&
++			     ( ( prv->priority_scheme == EDF && svc->cur_deadline <= iter_svc->cur_deadline ) ||
++			       ( prv->priority_scheme == RM && svc->period <= iter_svc->period )) ) {
++					break;
++			}
++		}
++    }
++    
++    printk("__runq_insert: to insert into runq before this vcpu\n");
++    if( iter == runq ) {
++        printk("__runq_insert: first vcpu added to runq!\n");
++    } else {
++        rtglobal_dump_vcpu(__runq_elem(iter));
++    }
++    list_add_tail(&svc->runq_elem, iter);
++}
++
++
++
++static void
++rtglobal_dump_pcpu(const struct scheduler *ops, int cpu)
++{
++    struct rtglobal_vcpu *svc = RTGLOBAL_VCPU(curr_on_cpu(cpu));
++
++    printtime();
++    rtglobal_dump_vcpu(svc);
++}
++
++/* should not need lock here. only showing stuff */
++static void
++rtglobal_dump(const struct scheduler *ops)
++{
++    struct list_head *iter_sdom, *iter_svc, *runq, *iter;
++    struct rtglobal_private *prv = RTGLOBAL_PRIV(ops);
++    struct rtglobal_vcpu *svc;
++    int cpu = 0;
++    int loop = 0;
++
++    printtime();
++    printk("Priority Scheme: ");
++    if ( prv->priority_scheme == EDF ) printk("EDF\n");
++    else printk ("RM\n");
++
++    printk("PCPU info: \n");
++    for_each_cpu(cpu, &prv->cpus) {
++        rtglobal_dump_pcpu(ops, cpu);
++    }
++
++    printk("Global RunQueue info: \n");
++    loop = 0;
++    runq = RUNQ(ops);
++    list_for_each( iter, runq ) {
++        svc = __runq_elem(iter);
++        printk("\t%3d: ", ++loop);
++        rtglobal_dump_vcpu(svc);
++    }
++
++    printk("Domain info: \n");
++    loop = 0;
++    list_for_each( iter_sdom, &prv->sdom ) {
++        struct rtglobal_dom *sdom;
++        sdom = list_entry(iter_sdom, struct rtglobal_dom, sdom_elem);
++        printk("\tdomain: %d\n", sdom->dom->domain_id);
++
++        list_for_each( iter_svc, &sdom->vcpu ) {
++            svc = list_entry(iter_svc, struct rtglobal_vcpu, sdom_elem);
++            printk("\t\t%3d: ", ++loop);
++            rtglobal_dump_vcpu(svc);
++        }
++    }
++
++    printk("\n");
++}
++
++/*
++ * Resort the runq when switch the priority scheme
++ * TODO: CAUSE FATAL PAGE FAULT BUG
++ */
++/*
++static void
++__runq_resort(const struct scheduler *ops)
++{
++    struct list_head *runq = RUNQ(ops);
++    struct list_head runq_tmp;
++    struct list_head *iter;
++	//struct rtglobal_private *prv = RTGLOBAL_PRIV(ops);
++    //unsigned long flags;
++    spinlock_t *lock;
++    int cpu = smp_processor_id();
++
++    printk("__runq_resort is called\n");
++    //add lock here!
++    //spin_lock_irqsave(&prv->lock, flags);
++    lock = pcpu_schedule_lock_irq(cpu); 
++
++    printk("__runq_resort, clear the runq now.\n");
++    INIT_LIST_HEAD(&runq_tmp);
++    runq_tmp = *runq;
++    INIT_LIST_HEAD(runq);
++
++    //for debug
++    rtglobal_dump(ops);
++    printk("__runq_resort, runq has been cleared");    
++
++    printk("__runq_resort, re-insert iter to prv->runq\n");
++    list_for_each(iter, &runq_tmp) {
++        ASSERT( iter != &runq_tmp );
++        __runq_insert(ops, __runq_elem(iter));
++    }
++
++    //spin_unlock_irqrestore(&prv->lock, flags);
++    pcpu_schedule_unlock_irq(lock, cpu);
++    //for debug
++    printk("__runq_resort, have re-insert into the runq now.\n");
++    rtglobal_dump(ops);
++}
++*/
++
++/*
++ * Init/Free related code
++ */
++static int
++rtglobal_init(struct scheduler *ops)
++{
++    struct rtglobal_private *prv;
++
++    prv = xmalloc(struct rtglobal_private);
++    if ( prv == NULL ) {
++        printk("malloc failed at rtglobal_private\n");
++        return -ENOMEM;
++    }
++    memset(prv, 0, sizeof(*prv));
++
++    ops->sched_data = prv;
++    spin_lock_init(&prv->lock);
++    INIT_LIST_HEAD(&prv->sdom);
++    INIT_LIST_HEAD(&prv->runq);
++    cpumask_clear(&prv->tickled);
++    cpumask_clear(&prv->cpus);
++    prv->priority_scheme = EDF;     /* by default, use EDF scheduler */
++
++    printk("This is the Deferrable Server version of the preemptive RTGLOBAL scheduler\n");
++    printk("If you want to use it as a periodic server, please run a background busy CPU task\n");
++    printk("----#########----\n");
++    printk("This is the bounced version! It will force vm wtih id 1 to bounce between PCPUs\n");
++    printk("----########----\n");
++
++    printtime();
++    printk("\n");
++
++    return 0;
++}
++
++static void
++rtglobal_deinit(const struct scheduler *ops)
++{
++    struct rtglobal_private *prv;
++
++    printtime();
++    printk("\n");
++
++    prv = RTGLOBAL_PRIV(ops);
++    if ( prv )
++        xfree(prv);
++}
++
++/* point per_cpu spinlock to the global system lock */
++static void *
++rtglobal_alloc_pdata(const struct scheduler *ops, int cpu)
++{
++    struct rtglobal_private *prv = RTGLOBAL_PRIV(ops);
++
++    cpumask_set_cpu(cpu, &prv->cpus);
++
++    per_cpu(schedule_data, cpu).schedule_lock = &prv->lock;
++
++    printtime();
++    printk("total cpus: %d", cpumask_weight(&prv->cpus));
++    return (void *)1;
++}
++
++static void
++rtglobal_free_pdata(const struct scheduler *ops, void *pcpu, int cpu)
++{
++    struct rtglobal_private * prv = RTGLOBAL_PRIV(ops);
++    cpumask_clear_cpu(cpu, &prv->cpus); /*Meng: why clear mask for free_pdata?*/
++    printtime();
++    printk("cpu=%d\n", cpu);
++}
++
++static void *
++rtglobal_alloc_domdata(const struct scheduler *ops, struct domain *dom)
++{
++    unsigned long flags;
++    struct rtglobal_dom *sdom;
++    struct rtglobal_private * prv = RTGLOBAL_PRIV(ops);
++
++    printtime();
++    printk("dom=%d\n", dom->domain_id);
++
++    sdom = xmalloc(struct rtglobal_dom);
++    if ( sdom == NULL ) {
++        printk("%s, xmalloc failed\n", __func__);
++        return NULL;
++    }
++    memset(sdom, 0, sizeof(*sdom));
++
++    INIT_LIST_HEAD(&sdom->vcpu);
++    INIT_LIST_HEAD(&sdom->sdom_elem);
++    sdom->dom = dom;
++    sdom->extra = 0;         /* by default, should not allow extra time */
++
++    /* spinlock here to insert the dom */
++    spin_lock_irqsave(&prv->lock, flags);
++    list_add_tail(&sdom->sdom_elem, &(prv->sdom));
++    spin_unlock_irqrestore(&prv->lock, flags);
++
++    return (void *)sdom;
++}
++
++static void
++rtglobal_free_domdata(const struct scheduler *ops, void *data)
++{
++    unsigned long flags;
++    struct rtglobal_dom *sdom = data;
++    struct rtglobal_private * prv = RTGLOBAL_PRIV(ops);
++
++    printtime();
++    printk("dom=%d\n", sdom->dom->domain_id);
++
++    spin_lock_irqsave(&prv->lock, flags);
++    list_del_init(&sdom->sdom_elem);
++    spin_unlock_irqrestore(&prv->lock, flags);
++    xfree(data);
++}
++
++static int
++rtglobal_dom_init(const struct scheduler *ops, struct domain *dom)
++{
++    struct rtglobal_dom *sdom;
++
++    printtime();
++    printk("dom=%d\n", dom->domain_id);
++
++    /* IDLE Domain does not link on rtglobal_private */
++    if ( is_idle_domain(dom) ) { return 0; }
++
++    sdom = rtglobal_alloc_domdata(ops, dom);
++    if ( sdom == NULL ) {
++        printk("%s, failed\n", __func__);
++        return -ENOMEM;
++    }
++    dom->sched_priv = sdom;
++
++    return 0;
++}
++
++static void
++rtglobal_dom_destroy(const struct scheduler *ops, struct domain *dom)
++{
++    printtime();
++    printk("dom=%d\n", dom->domain_id);
++
++    rtglobal_free_domdata(ops, RTGLOBAL_DOM(dom));
++}
++
++static void *
++rtglobal_alloc_vdata(const struct scheduler *ops, struct vcpu *vc, void *dd)
++{
++    struct rtglobal_vcpu *svc;
++    s_time_t now = NOW();
++    long count;
++
++    /* Allocate per-VCPU info */
++    svc = xmalloc(struct rtglobal_vcpu);
++    if ( svc == NULL ) {
++        printk("%s, xmalloc failed\n", __func__);
++        return NULL;
++    }
++    memset(svc, 0, sizeof(*svc));
++
++    INIT_LIST_HEAD(&svc->runq_elem);
++    INIT_LIST_HEAD(&svc->sdom_elem);
++    svc->flags = 0U;
++    svc->sdom = dd;
++    svc->vcpu = vc;
++    svc->last_start = 0;            /* init last_start is 0 */
++
++	svc->period = RTGLOBAL_DEFAULT_PERIOD;
++	if ( !is_idle_vcpu(vc) && vc->domain->domain_id != 0 ) {
++		svc->budget = RTGLOBAL_DEFAULT_BUDGET;
++	} else {
++		svc->budget = RTGLOBAL_DEFAULT_PERIOD;
++	}
++
++	count = (now/MILLISECS(svc->period)) + 1;
++	svc->cur_deadline += count*MILLISECS(svc->period); /* sync all VCPU's start time to 0 */
++
++    svc->cur_budget = svc->budget*1000; /* counting in microseconds level */
++    printtime();
++    rtglobal_dump_vcpu(svc);
++
++    return svc;
++}
++
++static void
++rtglobal_free_vdata(const struct scheduler *ops, void *priv)
++{
++    struct rtglobal_vcpu *svc = priv;
++    printtime();
++    rtglobal_dump_vcpu(svc);
++    xfree(svc);/*Meng: why don't need to delete the vcpu from vcpu list?*/
++}
++
++/* lock is grabbed before calling this function */
++static void
++rtglobal_vcpu_insert(const struct scheduler *ops, struct vcpu *vc)
++{
++    struct rtglobal_vcpu *svc = RTGLOBAL_VCPU(vc);
++
++    printtime();
++    rtglobal_dump_vcpu(svc);
++
++    /* IDLE VCPU not allowed on RunQ */
++    if ( is_idle_vcpu(vc) )
++        return;
++
++    list_add_tail(&svc->sdom_elem, &svc->sdom->vcpu);   /* add to dom vcpu list */
++}
++
++/* lock is grabbed before calling this function */
++static void
++rtglobal_vcpu_remove(const struct scheduler *ops, struct vcpu *vc)
++{
++    struct rtglobal_vcpu * const svc = RTGLOBAL_VCPU(vc);
++    struct rtglobal_dom * const sdom = svc->sdom;
++
++    printtime();
++    rtglobal_dump_vcpu(svc);
++
++    BUG_ON( sdom == NULL );
++    BUG_ON( __vcpu_on_runq(svc) );
++
++    if ( !is_idle_vcpu(vc) ) {
++        list_del_init(&svc->sdom_elem);
++    }
++}
++
++/*
++ * Other important functions
++ * Meng: This is for xen tool scheduler operation! Need to rewrite to privide more functions
++ * Return each vcpu's info
++ */
++/* do we need the lock here? Yes! */
++static int
++rtglobal_dom_cntl(const struct scheduler *ops, struct domain *d, struct xen_domctl_scheduler_op *op)
++{
++    xen_domctl_sched_rtglobal_params_t local_sched;
++    struct rtglobal_dom * const sdom = RTGLOBAL_DOM(d);
++    //struct rtglobal_private * prv = RTGLOBAL_PRIV(ops);
++    struct list_head *iter;
++    int vcpu_index = 0;
++    //unsigned long flags;
++    int rc = -EINVAL;
++
++    /* Must hold rtglobal_priv lock to read and update sdom,
++     * runq lock to update rtglobal vcs. */
++   // spin_lock_irqsave(&prv->lock, flags);
++
++    switch ( op->cmd )
++    {
++    case XEN_DOMCTL_SCHEDOP_getinfo:
++        /* for debug use, whenever adjust Dom0 parameter, do global dump */
++        if ( d->domain_id == 0 ) {
++            rtglobal_dump(ops);
++        }
++
++        //op->u.rtglobal.budget = 0;
++        //op->u.rtglobal.extra = sdom->extra;
++        local_sched.num_vcpus = 0;
++        list_for_each( iter, &sdom->vcpu ) {
++            struct rtglobal_vcpu * svc = list_entry(iter, struct rtglobal_vcpu, sdom_elem);
++           // spinlock_t *lock = vcpu_schedule_lock(svc->vcpu);
++
++            ASSERT(vcpu_index < XEN_LEGACY_MAX_VCPUS);
++            /* NB: Locking order is important here. refer credit2 for more info */
++            local_sched.vcpus[vcpu_index].budget = svc->budget;
++            local_sched.vcpus[vcpu_index].period = svc->period;
++            local_sched.vcpus[vcpu_index].extra = 0;
++
++           // vcpu_schedule_unlock(lock, svc->vcpu);
++
++            vcpu_index++;
++        }
++        local_sched.num_vcpus = vcpu_index;
++        copy_to_guest(op->u.rtglobal.schedule, &local_sched, 1);
++        rc = 0;
++        break;
++    case XEN_DOMCTL_SCHEDOP_putinfo:
++        copy_from_guest(&local_sched, op->u.rtglobal.schedule, 1);
++        //sdom->extra = op->u.rtglobal.extra;
++        list_for_each( iter, &sdom->vcpu ) {
++            struct rtglobal_vcpu * svc = list_entry(iter, struct rtglobal_vcpu, sdom_elem);
++            /* NB: Locking order is important here. */
++            //spinlock_t *lock = vcpu_schedule_lock(svc->vcpu);
++
++            if ( local_sched.vcpu_index == svc->vcpu->vcpu_id ) { /* adjust per VCPU parameter */
++                vcpu_index = local_sched.vcpu_index;
++
++                if ( vcpu_index < 0 || vcpu_index > XEN_LEGACY_MAX_VCPUS) {
++                    printk("XEN_DOMCTL_SCHEDOP_putinfo: vcpu_index=%d\n",
++                            vcpu_index);
++                }else{
++                    printk("XEN_DOMCTL_SCHEDOP_putinfo: vcpu_index=%d, period=%d, budget=%d\n",
++                            vcpu_index, local_sched.vcpus[vcpu_index].period, 
++                            local_sched.vcpus[vcpu_index].budget);
++                }
++
++                svc->period = local_sched.vcpus[vcpu_index].period;
++                svc->budget = local_sched.vcpus[vcpu_index].budget;
++
++               // vcpu_schedule_unlock(lock, svc->vcpu);
++
++                break;
++            }
++        }
++        rc = 0;
++        break;
++    }
++
++   // spin_unlock_irqrestore(&prv->lock, flags);
++
++    return rc;
++}
++
++/**
++ * Xen scheduler callback function to perform a global (not domain-specific) adjustment. It is used by the rglobal scheduelr to change or retrieve the priority scheme or the server mechanism.
++ *
++ * @param ops   Pointer to this instance of the scheduler structure
++ * @param sc    Pointer to the scheduler operation specified by Domain 0
++ *
++ */
++static int
++rtglobal_sys_cntl(const struct scheduler *ops,
++                       struct xen_sysctl_scheduler_op *sc)
++{
++    xen_sysctl_rtglobal_schedule_t *params = &sc->u.sched_rtglobal;
++    struct rtglobal_private * prv = RTGLOBAL_PRIV(ops);
++    int rc = -EINVAL;
++    
++    switch( sc->cmd )
++    {
++    case XEN_SYSCTL_SCHEDOP_putinfo:
++        if (params->priority_scheme == XEN_SCHEDULER_RTGLOBAL_EDF ) {
++            printk("Priority scheme changed to EDF\n");
++        } else if ( params->priority_scheme == XEN_SCHEDULER_RTGLOBAL_RM ) {
++            printk("Priority scheme changed to RM\n");
++        } else {
++            printk("Input priority scheme is %d (Not EDF or RM)\n", prv->priority_scheme);
++            rc = -EINVAL;
++        }
++        /*
++        if (prv->priority_scheme != params->priority_scheme)
++        {
++            __runq_resort(ops);
++        }
++        */
++        prv->priority_scheme = params->priority_scheme;
++        rc = 0;
++        break;
++    case XEN_SYSCTL_SCHEDOP_getinfo:
++        params->priority_scheme = prv->priority_scheme;
++        printk("Priority scheme is %d\n", params->priority_scheme);
++        rc = 0;
++        break;
++    default:
++        printk("sc->cmd: no such cmd %d\n", sc->cmd);
++        rc = -EINVAL;
++        break;
++    }
++
++    return rc;
++}
++
++/* return a CPU considering affinity */
++static int
++rtglobal_cpu_pick(const struct scheduler *ops, struct vcpu *vc)
++{
++    cpumask_t cpus;
++    int cpu;
++    struct rtglobal_private * prv = RTGLOBAL_PRIV(ops);
++
++    cpumask_copy(&cpus, vc->cpu_affinity);
++    cpumask_and(&cpus, &prv->cpus, &cpus);
++
++    cpu = cpumask_test_cpu(vc->processor, &cpus)
++            ? vc->processor 
++            : cpumask_cycle(vc->processor, &cpus);
++    ASSERT( !cpumask_empty(&cpus) && cpumask_test_cpu(cpu, &cpus) );
++
++#ifdef RTXEN_DEBUG
++    if ( vc->domain->domain_id != 0 && rtxen_counter[RTXEN_PICK] < RTXEN_MAX ) {
++        printtime();
++        rtglobal_dump_vcpu(RTGLOBAL_VCPU(vc));
++        rtxen_counter[RTXEN_PICK]++;
++    }
++#endif
++
++    return cpu;
++}
++
++/* Implemented as deferrable server. */
++/* burn budget at microsecond level */
++static void
++burn_budgets(const struct scheduler *ops, struct rtglobal_vcpu *svc, s_time_t now) {
++    s_time_t delta;
++    unsigned int consume;
++    long count = 0;
++
++    /* first time called for this svc, update last_start */
++    if ( svc->last_start == 0 ) {
++        svc->last_start = now;
++        return;
++    }
++
++    /* don't burn budget for idle VCPU */
++    if ( is_idle_vcpu(svc->vcpu) ) {
++        return;
++    }
++
++    /* update deadline info */
++    delta = now - svc->cur_deadline;
++    if ( delta >= 0 ) {
++        count = ( delta/MILLISECS(svc->period) ) + 1;
++        svc->cur_deadline += count * MILLISECS(svc->period);
++        svc->cur_budget = svc->budget * 1000;
++        return;
++    }
++
++    delta = now - svc->last_start;
++    if ( delta < 0 ) { /*Meng: should always later than last_start, why delta<0 can happen?Confirmed: should not happen*/
++        printk("%s, possible error! now < last_start; delta = now - last_start = %ld for ", __func__, delta);
++        rtglobal_dump_vcpu(svc);
++        svc->last_start = now;  /* update last_start */
++        svc->cur_budget = 0;
++        return;
++    }
++
++    if ( svc->cur_budget == 0 ) return;
++
++    /* burn at microseconds level */
++    consume = ( delta/MICROSECS(1) );
++    if ( delta%MICROSECS(1) > MICROSECS(1)/2 ) consume++; /*Meng: when burn budget, not burn the exact time? should we do this?*/
++
++    svc->cur_budget -= consume;
++    if ( svc->cur_budget < 0 ) svc->cur_budget = 0; /*Meng: we does not consume the exact time actually. can we bound the time drift?*/
++}
++
++/* RunQ is sorted. Pick first one within cpumask. If no one, return NULL */
++/* Meng: pick next vcpu for this cpu */
++/* lock is grabbed before calling this function */
++static struct rtglobal_vcpu *
++__runq_pick(const struct scheduler *ops, cpumask_t mask)
++{
++    struct list_head *runq = RUNQ(ops);
++    struct list_head *iter;
++    struct rtglobal_vcpu *svc = NULL;
++    struct rtglobal_vcpu *iter_svc = NULL;
++    cpumask_t cpu_common;
++
++    list_for_each(iter, runq) {
++        iter_svc = __runq_elem(iter);
++
++        cpumask_copy(&cpu_common, iter_svc->vcpu->cpu_affinity);
++        cpumask_and(&cpu_common, &mask, &cpu_common);
++        if ( cpumask_empty(&cpu_common) )
++            continue;
++
++        if ( iter_svc->cur_budget <= 0 && iter_svc->sdom->extra == 0 )
++            continue;
++
++        /* bounce for VMs with id 1 */
++        /* Meng: only for experiment. */
++/*        if ( iter_svc->sdom->dom->domain_id == 1 && iter_svc->vcpu->processor == smp_processor_id() )
++            continue;
++*/
++        svc = iter_svc;
++        break;
++    }
++
++    return svc;
++}
++
++/* lock is grabbed before calling this function */
++/* Meng: use runq_insert() to sort runq based on EDF or RM */
++/* Meng: update vcpus' deadline in runq*/
++static void
++__repl_update(const struct scheduler *ops, s_time_t now)
++{
++    struct list_head *runq = RUNQ(ops);
++    struct list_head *iter;
++    struct list_head *tmp;
++    struct rtglobal_vcpu *svc = NULL;
++
++    s_time_t diff;
++    long count;
++
++    list_for_each_safe(iter, tmp, runq) {
++        svc = __runq_elem(iter);
++
++        diff = now - svc->cur_deadline;
++        if ( diff > 0 ) {
++            count = (diff/MILLISECS(svc->period)) + 1; /*Meng: wrap-around issue? when one vcpu wrap around but others are not, how to compare their deadline?*/
++            svc->cur_deadline += count * MILLISECS(svc->period); /*Meng: TODO:deadline has the wrap around problem!*/
++            svc->cur_budget = svc->budget * 1000;
++            __runq_remove(svc); /* re-sort the updated runq */
++            __runq_insert(ops, svc);
++        }
++    }
++}
++
++/* The lock is already grabbed in schedule.c, no need to lock here */
++static struct task_slice
++rtglobal_schedule(const struct scheduler *ops, s_time_t now, bool_t tasklet_work_scheduled)
++{
++    const int cpu = smp_processor_id();
++    struct rtglobal_private * prv = RTGLOBAL_PRIV(ops);
++    struct rtglobal_vcpu * const scurr = RTGLOBAL_VCPU(current); /* current return the current vcpu on the core. The current running vcpu is not in runq */
++    struct rtglobal_vcpu * snext = NULL;
++    struct task_slice ret;
++
++    /* clear ticked bit now that we've been scheduled */
++    if ( cpumask_test_cpu(cpu, &prv->tickled) )
++        cpumask_clear_cpu(cpu, &prv->tickled);
++
++    /* burn_budget would return for IDLE VCPU */
++    burn_budgets(ops, scurr, now);
++
++#ifdef RTXEN_DEBUG
++    if ( !is_idle_vcpu(scurr->vcpu) && scurr->vcpu->domain->domain_id != 0 && rtxen_counter[RTXEN_SCHED] < RTXEN_MAX ) {
++    // if ( rtxen_counter[RTXEN_SCHED] < RTXEN_MAX ) {
++        printtime();
++        printk("from: ");
++        rtglobal_dump_vcpu(scurr);
++        rtxen_counter[RTXEN_SCHED]++;
++    }
++#endif
++
++    __repl_update(ops, now);
++
++    if ( tasklet_work_scheduled ) { /* Meng?: what is tasklet_work_schedule? not clear. */
++        snext = RTGLOBAL_VCPU(idle_vcpu[cpu]);
++    } else {
++        cpumask_t cur_cpu;
++        cpumask_clear(&cur_cpu);
++        cpumask_set_cpu(cpu, &cur_cpu);
++        snext = __runq_pick(ops, cur_cpu);
++        if ( snext == NULL )
++            snext = RTGLOBAL_VCPU(idle_vcpu[cpu]);
++
++        /* if scurr has higher priority and budget, still pick scurr */
++        if ( !is_idle_vcpu(current) &&
++             vcpu_runnable(current) && /*Meng:sisu said vcpu_runnable() check if the vcpu has task running or not*/
++             scurr->cur_budget > 0 &&
++             ( is_idle_vcpu(snext->vcpu) ||
++               scurr->cur_deadline <= snext->cur_deadline ) ) {
++               // scurr->vcpu->domain->domain_id == snext->vcpu->domain->domain_id ) ) {
++            snext = scurr;
++        }
++    }
++
++    /* snext has higher priority, pick snext */
++    /* Trace switch self problem */
++    // if ( snext != scurr &&
++    //      !is_idle_vcpu(snext->vcpu) &&
++    //      !is_idle_vcpu(scurr->vcpu) &&
++    //      snext->vcpu->domain->domain_id == scurr->vcpu->domain->domain_id &&
++    //      scurr->cur_budget > 0 &&
++    //      vcpu_runnable(current) &&
++    //      snext->cur_deadline < scurr->cur_deadline ) {
++    //     TRACE_3D(TRC_SCHED_RTGLOBAL_SWITCHSELF, scurr->vcpu->domain->domain_id, scurr->vcpu->vcpu_id, snext->vcpu->vcpu_id);
++    // }
++
++    if ( snext != scurr &&
++         !is_idle_vcpu(current) &&
++         vcpu_runnable(current) ) {
++        set_bit(__RTGLOBAL_delayed_runq_add, &scurr->flags);
++    }
++
++    snext->last_start = now;
++    ret.migrated = 0;
++    if ( !is_idle_vcpu(snext->vcpu) ) {
++        if ( snext != scurr ) {
++            __runq_remove(snext);
++            set_bit(__RTGLOBAL_scheduled, &snext->flags);
++        }
++        if ( snext->vcpu->processor != cpu ) {
++            snext->vcpu->processor = cpu;
++            ret.migrated = 1;
++        }
++    }
++
++    // if ( is_idle_vcpu(snext->vcpu) || snext->cur_budget > MILLISECS(1)) {
++    //     ret.time = MILLISECS(1);
++    // } else if ( snext->cur_budget > 0 ) {
++    //     ret.time = MICROSECS(snext->budget);
++    // }
++
++    ret.time = MILLISECS(1);
++    ret.task = snext->vcpu;
++
++#ifdef RTXEN_DEBUG
++    if ( !is_idle_vcpu(snext->vcpu) && snext->vcpu->domain->domain_id != 0 && rtxen_counter[RTXEN_SCHED] < RTXEN_MAX ) {
++        printtime();
++        printk(" to : ");
++        rtglobal_dump_vcpu(snext);
++    }
++#endif
++
++    return ret;
++}
++
++/* Remove VCPU from RunQ */
++/* The lock is already grabbed in schedule.c, no need to lock here */
++static void
++rtglobal_vcpu_sleep(const struct scheduler *ops, struct vcpu *vc)
++{
++    struct rtglobal_vcpu * const svc = RTGLOBAL_VCPU(vc);
++
++#ifdef RTXEN_DEBUG
++    if ( vc->domain->domain_id != 0 && rtxen_counter[RTXEN_SLEEP] < RTXEN_MAX ) {
++        printtime();
++        rtglobal_dump_vcpu(svc);
++        rtxen_counter[RTXEN_SLEEP]++;
++    }
++#endif
++
++    BUG_ON( is_idle_vcpu(vc) );
++
++    if ( curr_on_cpu(vc->processor) == vc ) {
++        cpu_raise_softirq(vc->processor, SCHEDULE_SOFTIRQ); /*Meng:callback of the SCHEDULE_SOFTIRQ is schedule()*/
++        return;
++    }
++
++    if ( __vcpu_on_runq(svc) ) {
++        __runq_remove(svc);
++    }
++
++    clear_bit(__RTGLOBAL_delayed_runq_add, &svc->flags);
++}
++
++/*
++ * runq_tickle(2)
++ * choose one cpu for the new (vcpu) to run on
++ * priority: previous cpu > idle cpu > busy cpu
++ * called by wake() and context_saved()
++ * we have a running candidate here, the kick logic is:
++ * Among all the cpus that are within the cpu affinity
++ * 1) if the new->cpu is idle, kick it. This could benefit cache hit
++ * 2) if there are any idle vcpu, kick it.
++ * 3) now all pcpus are busy, among all the running vcpus, pick lowest priority one
++ *    if snext has higher priority, kick it.
++ * TODO: what if these two vcpus belongs to the same domain?
++ * replace a vcpu belonging to the same domain does not make sense
++ */
++/* lock is grabbed before calling this function */
++static void
++runq_tickle(const struct scheduler *ops, struct rtglobal_vcpu *new)
++{
++    struct rtglobal_private * prv = RTGLOBAL_PRIV(ops);
++    struct rtglobal_vcpu * scheduled = NULL;    /* lowest priority scheduled */
++    struct rtglobal_vcpu * iter_svc;
++    struct vcpu * iter_vc;
++    int cpu = 0;
++    cpumask_t not_tickled;                  /* not tickled cpus */
++
++    if ( new == NULL || is_idle_vcpu(new->vcpu) ) return;
++
++    cpumask_copy(&not_tickled, new->vcpu->cpu_affinity);
++    cpumask_andnot(&not_tickled, &not_tickled, &prv->tickled);
++
++    /* 1) if new vcpu's previous cpu is idle, kick it for cache benefit */
++    if ( is_idle_vcpu(curr_on_cpu(new->vcpu->processor)) ) {
++        cpumask_set_cpu(new->vcpu->processor, &prv->tickled);
++        cpu_raise_softirq(new->vcpu->processor, SCHEDULE_SOFTIRQ);
++        return;
++    }
++
++    /* 2) if there are any idle pcpu, kick it */
++    /* the same loop also found the one with lowest priority */
++    for_each_cpu(cpu, &not_tickled) {
++        iter_vc = curr_on_cpu(cpu);
++        if ( is_idle_vcpu(iter_vc) ) {
++            cpumask_set_cpu(cpu, &prv->tickled);
++            cpu_raise_softirq(cpu, SCHEDULE_SOFTIRQ);
++            return;
++        }
++        iter_svc = RTGLOBAL_VCPU(iter_vc);
++        /* Meng: choose the cpu with lowest priority vcpu to schedule this task. BUG fixed */
++        /* Meng?: if it's RM, the priority decision is different! we should add the swith between RM and EDF. Confirmed */
++        if ( scheduled == NULL || iter_svc->cur_deadline > scheduled->cur_deadline ) { 
++            scheduled = iter_svc;
++        }
++    }
++
++    /* 3) new has higher priority, kick it */
++    if ( scheduled != NULL && new->cur_deadline < scheduled->cur_deadline ) {
++        cpumask_set_cpu(scheduled->vcpu->processor, &prv->tickled);
++        cpu_raise_softirq(scheduled->vcpu->processor, SCHEDULE_SOFTIRQ);
++    }
++    return;
++}
++
++/* Should always wake up runnable, put it back to RunQ. Check priority to raise interrupt */
++/* The lock is already grabbed in schedule.c, no need to lock here */
++/* TODO: what if these two vcpus belongs to the same domain? */
++static void
++rtglobal_vcpu_wake(const struct scheduler *ops, struct vcpu *vc)
++{
++    struct rtglobal_vcpu * const svc = RTGLOBAL_VCPU(vc);
++    s_time_t diff;
++    s_time_t now = NOW();
++    long count = 0;
++    struct rtglobal_private * prv = RTGLOBAL_PRIV(ops);
++    struct rtglobal_vcpu * snext = NULL;        /* highest priority on RunQ */
++
++#ifdef RTXEN_DEBUG
++    if ( vc->domain->domain_id != 0 && rtxen_counter[RTXEN_WAKE] < RTXEN_MAX ) {
++        printtime();
++        rtglobal_dump_vcpu(svc);
++        rtxen_counter[RTXEN_WAKE]++;
++    }
++#endif
++
++    BUG_ON( is_idle_vcpu(vc) );
++
++    if ( unlikely(curr_on_cpu(vc->processor) == vc) ) return;
++
++    /* on RunQ, just update info is ok */
++    if ( unlikely(__vcpu_on_runq(svc)) ) return;
++
++    /* if context hasn't been saved yet, set flag so it will add later */
++    if ( unlikely(test_bit(__RTGLOBAL_scheduled, &svc->flags)) ) { /* Meng?: not clear the reason of this condition. copy credit2. in credit2 has the same code */
++        set_bit(__RTGLOBAL_delayed_runq_add, &svc->flags);
++        return;
++    }
++
++    /* update deadline info */
++    diff = now - svc->cur_deadline;
++    if ( diff >= 0 ) {
++        count = ( diff/MILLISECS(svc->period) ) + 1;
++        svc->cur_deadline += count * MILLISECS(svc->period);
++        svc->cur_budget = svc->budget * 1000;
++    }
++
++    __runq_insert(ops, svc);
++    __repl_update(ops, now);
++    snext = __runq_pick(ops, prv->cpus);    /* pick snext from ALL cpus */
++    runq_tickle(ops, snext);
++
++    return;
++}
++
++/* scurr has finished context switch, insert it back to the RunQ*/
++static void
++rtglobal_context_saved(const struct scheduler *ops, struct vcpu *vc)
++{
++    struct rtglobal_vcpu * svc = RTGLOBAL_VCPU(vc);
++    struct rtglobal_vcpu * snext = NULL;
++    struct rtglobal_private * prv = RTGLOBAL_PRIV(ops);
++    spinlock_t *lock;
++
++#ifdef RTXEN_DEBUG
++    if ( vc->domain->domain_id != 0 && rtxen_counter[RTXEN_CONTEXT] < RTXEN_MAX ) {
++        printtime();
++        rtglobal_dump_vcpu(svc);
++        rtxen_counter[RTXEN_CONTEXT]++;
++    }
++#endif
++
++    clear_bit(__RTGLOBAL_scheduled, &svc->flags);
++    if ( is_idle_vcpu(vc) ) return;
++
++    lock = vcpu_schedule_lock_irq(vc);
++    if ( test_and_clear_bit(__RTGLOBAL_delayed_runq_add, &svc->flags) && likely(vcpu_runnable(vc)) ) {
++        __runq_insert(ops, svc);
++        __repl_update(ops, NOW());
++        snext = __runq_pick(ops, prv->cpus);    /* pick snext from ALL cpus */
++        runq_tickle(ops, snext);
++    }
++    vcpu_schedule_unlock_irq(lock, vc);
++}
++
++static struct rtglobal_private _rtglobal_priv;
++
++const struct scheduler sched_rtglobal_def = {
++    .name           = "SMP RTGLOBAL Scheduler",
++    .opt_name       = "rtglobal",
++    .sched_id       = XEN_SCHEDULER_RTGLOBAL,
++    .sched_data     = &_rtglobal_priv,
++
++    .init_domain    = rtglobal_dom_init,
++    .destroy_domain = rtglobal_dom_destroy,
++
++    .insert_vcpu    = rtglobal_vcpu_insert, /*vcpu domain*/
++    .remove_vcpu    = rtglobal_vcpu_remove,
++
++    .sleep          = rtglobal_vcpu_sleep,
++    .wake           = rtglobal_vcpu_wake,
++    .yield          = NULL,
++    
++    .adjust         = rtglobal_dom_cntl,
++    .adjust_global  = rtglobal_sys_cntl,
++
++    .pick_cpu       = rtglobal_cpu_pick,
++    .do_schedule    = rtglobal_schedule,
++
++    .dump_cpu_state = rtglobal_dump_pcpu,
++    .dump_settings  = rtglobal_dump,
++    .init           = rtglobal_init,
++    .deinit         = rtglobal_deinit,
++    .alloc_pdata    = rtglobal_alloc_pdata,
++    .free_pdata     = rtglobal_free_pdata,
++    .alloc_domdata  = rtglobal_alloc_domdata,
++    .free_domdata   = rtglobal_free_domdata,
++    .alloc_vdata    = rtglobal_alloc_vdata,
++    .free_vdata     = rtglobal_free_vdata,
++
++    .context_saved  = rtglobal_context_saved, /* Only need to save for global scheduling */
++
++    .migrate        = NULL,
++};
+diff --git a/xen/common/sched_rtpartition.c b/xen/common/sched_rtpartition.c
+new file mode 100644
+index 0000000..5fca232
+--- /dev/null
++++ b/xen/common/sched_rtpartition.c
+@@ -0,0 +1,856 @@
++/******************************************************************************
++ * Preemptive Partition EDF/RM scheduler for xen
++ *
++ * by Sisu Xi, 2013, Washington University in Saint Louis
++ * based on code of credit Scheduler
++ */
++
++#include <xen/config.h>
++#include <xen/init.h>
++#include <xen/lib.h>
++#include <xen/sched.h>
++#include <xen/domain.h>
++#include <xen/delay.h>
++#include <xen/event.h>
++#include <xen/time.h>
++#include <xen/perfc.h>
++#include <xen/sched-if.h>
++#include <xen/softirq.h>
++#include <asm/atomic.h>
++#include <xen/errno.h>
++#include <xen/trace.h>
++#include <xen/cpu.h>
++#include <xen/keyhandler.h>
++#include <xen/trace.h>
++
++/*
++ * TODO:
++ *
++ * How to show individual VCPU info?
++ * More testing with xentrace and xenanalyze
++ */
++
++/*
++ * Design:
++ *
++ * Follows the pre-emptive Partition EDF/RM theory.
++ * Each VCPU can have a dedicated period/budget pair of parameter. When a VCPU is running, it burns its budget, and when there are no budget, the VCPU need to wait unitl next period to get replensihed. Any unused budget is discarded in the end of period.
++ * Server mechanism: deferrable server is used here. Therefore, when a VCPU has no task but with budget left, the budget is preserved.
++ * Priority scheme: a global variable called priority_scheme is used to switch between EDF and RM
++ * Queue scheme: partitioned runqueue is used here. Each PCPU holds a dedicated run queue. VCPUs are divided into two parts: with and without remaining budget. Among each part, VCPUs are sorted by their current deadlines.
++ * Scheduling quanta: 1 ms is picked as the scheduling quanta, but the accounting is done in microsecond level.
++ * Other: VCPU migration is supported via command. No load balancing is provided by default.
++ */
++
++ /*
++ * Locking:
++ * This is a partitioned queue implementation
++ */
++
++/*
++ * Default parameters
++ */
++#define RTPARTITION_DEFAULT_PERIOD     10
++#define RTPARTITION_DEFAULT_BUDGET      4
++
++
++/*
++ * Useful macros
++ */
++#define RTPARTITION_PRIV(_ops)      ((struct rtpartition_private *)((_ops)->sched_data))
++#define RTPARTITION_PCPU(_cpu)      ((struct rtpartition_pcpu *)per_cpu(schedule_data, _cpu).sched_priv)
++#define RTPARTITION_VCPU(_vcpu)     ((struct rtpartition_vcpu *)(_vcpu)->sched_priv)
++#define RTPARTITION_DOM(_dom)       ((struct rtpartition_dom *)(_dom)->sched_priv)
++#define RUNQ(_cpu)                  (&RTPARTITION_PCPU(_cpu)->runq)
++
++/*
++ * Used to printout debug information
++ */
++#define printtime()     ( printk("%d : %3ld.%3ld : %-19s ", smp_processor_id(), NOW()/MILLISECS(1), NOW()%MILLISECS(1)/1000, __func__) )
++
++/*
++ * Systme-wide private data, include a global RunQueue
++ * The global lock is referenced by schedule_data.schedule_lock from all physical cpus.
++ * It can be grabbed via vcpu_schedule_lock_irq()
++ */
++struct rtpartition_private {
++    spinlock_t lock;        /* used for irqsave */
++    struct list_head sdom;  /* list of availalbe domains, used for dump */
++    cpumask_t cpus;         /* cpumask_t of available physical cpus */
++    unsigned priority_scheme;       /* EDF or RM */
++};
++
++/*
++ * Physical CPU
++ */
++struct rtpartition_pcpu {
++    struct list_head runq;  /* per pcpu runq */
++};
++
++/*
++ * Virtual CPU
++ */
++struct rtpartition_vcpu {
++    struct list_head runq_elem; /* On the runqueue list */
++    struct list_head sdom_elem; /* On the domain VCPU list */
++
++    /* Up-pointers */
++    struct rtpartition_dom *sdom;
++    struct vcpu *vcpu;
++
++    /* RTPARTITION parameters, in milliseconds */
++    int period;
++    int budget;
++
++    /* VCPU current infomation */
++    long cur_budget;             /* current budget in microseconds, if none, should not schedule unless extra */
++    s_time_t last_start;        /* last start time, used to calculate budget */
++    s_time_t cur_deadline;      /* current deadline, used to do EDF */
++};
++
++/*
++ * Domain
++ */
++struct rtpartition_dom {
++    struct list_head vcpu;      /* link its VCPUs */
++    struct list_head sdom_elem; /* link list on rtpartition_priv */
++    struct domain *dom;         /* pointer to upper domain */
++    int    extra;               /* not evaluated */
++};
++
++/*
++ * RunQueue helper functions
++ */
++static int
++__vcpu_on_runq(struct rtpartition_vcpu *svc)
++{
++   return !list_empty(&svc->runq_elem);
++}
++
++static struct rtpartition_vcpu *
++__runq_elem(struct list_head *elem)
++{
++    return list_entry(elem, struct rtpartition_vcpu, runq_elem);
++}
++
++/* lock is grabbed before calling this function */
++static inline void
++__runq_remove(struct rtpartition_vcpu *svc)
++{
++    if ( __vcpu_on_runq(svc) )
++        list_del_init(&svc->runq_elem);
++}
++
++/* lock is grabbed before calling this function */
++static void
++__runq_insert(const struct scheduler *ops, unsigned int cpu, struct rtpartition_vcpu *svc)
++{
++    struct list_head *runq = RUNQ(cpu);
++    struct list_head *iter;
++    struct rtpartition_private *prv = RTPARTITION_PRIV(ops);
++    ASSERT( spin_is_locked(per_cpu(schedule_data, svc->vcpu->processor).schedule_lock) );
++
++    if ( __vcpu_on_runq(svc) )
++        return;
++
++    list_for_each(iter, runq) {
++        struct rtpartition_vcpu * iter_svc = __runq_elem(iter);
++
++        if ( svc->cur_budget > 0 ) { // svc still has budget
++            if ( iter_svc->cur_budget == 0 ||
++                 ( ( prv->priority_scheme == EDF && svc->cur_deadline <= iter_svc->cur_deadline ) ||
++                   ( prv->priority_scheme == RM && svc->period <= iter_svc->period )) ) {
++                    break;
++            }
++        } else { // svc has no budget
++            if ( iter_svc->cur_budget == 0 &&
++                 ( ( prv->priority_scheme == EDF && svc->cur_deadline <= iter_svc->cur_deadline ) ||
++                   ( prv->priority_scheme == RM && svc->period <= iter_svc->period )) ) {
++                    break;
++            }
++        }
++    }
++
++    list_add_tail(&svc->runq_elem, iter);
++}
++
++/*
++ * Debug related code, dump vcpu/pcpu
++ */
++static void
++rtpartition_dump_vcpu(struct rtpartition_vcpu *svc)
++{
++    if ( svc == NULL ) {
++        printk("NULL!\n");
++        return;
++    }
++// #define cpustr keyhandler_scratch
++    // cpumask_scnprintf(cpustr, sizeof(cpustr), svc->vcpu->cpu_affinity);
++    printk("[%5d.%-2d] cpu %d, (%-2d, %-2d), cur_b=%ld cur_d=%lu last_start=%lu onR=%d runnable=%d\n",
++        // , affinity=%s\n",
++            svc->vcpu->domain->domain_id,
++            svc->vcpu->vcpu_id,
++            svc->vcpu->processor,
++            svc->period,
++            svc->budget,
++            svc->cur_budget,
++            svc->cur_deadline,
++            svc->last_start,
++            __vcpu_on_runq(svc),
++            vcpu_runnable(svc->vcpu));
++            // cpustr);
++// #undef cpustr
++}
++
++static void
++rtpartition_dump_pcpu(const struct scheduler *ops, int cpu)
++{
++    struct rtpartition_vcpu *svc = RTPARTITION_VCPU(curr_on_cpu(cpu));
++    struct list_head *runq, *iter;
++    int loop = 0;
++
++    printtime();
++    printk("On cpu %d, running: ", cpu);
++    rtpartition_dump_vcpu(svc);
++
++    printk("RunQ info: \n");
++    runq = RUNQ(cpu);
++    list_for_each( iter, runq ) {
++        svc = __runq_elem(iter);
++        printk("\t%3d: ", ++loop);
++        rtpartition_dump_vcpu(svc);
++    }
++}
++
++/* should not need lock here. only showing stuff */
++static void
++rtpartition_dump(const struct scheduler *ops)
++{
++    struct list_head *iter_sdom, *iter_svc;
++    struct rtpartition_private *prv = RTPARTITION_PRIV(ops);
++    struct rtpartition_vcpu *svc;
++    int cpu = 0;
++    int loop = 0;
++
++    printtime();
++    if ( prv->priority_scheme == EDF ) printk("EDF\n");
++    else printk ("RM\n");
++
++    printk("PCPU info: \n");
++    for_each_cpu(cpu, &prv->cpus) {
++        rtpartition_dump_pcpu(ops, cpu);
++    }
++
++    printk("Domain info: \n");
++    loop = 0;
++    list_for_each( iter_sdom, &prv->sdom ) {
++        struct rtpartition_dom *sdom;
++        sdom = list_entry(iter_sdom, struct rtpartition_dom, sdom_elem);
++        printk("\tdomain: %d\n", sdom->dom->domain_id);
++
++        list_for_each( iter_svc, &sdom->vcpu ) {
++            svc = list_entry(iter_svc, struct rtpartition_vcpu, sdom_elem);
++            printk("\t\t%3d: ", ++loop);
++            rtpartition_dump_vcpu(svc);
++        }
++    }
++
++    printk("\n");
++}
++
++/*
++ * Init/Free related code
++ */
++static int
++rtpartition_init(struct scheduler *ops)
++{
++    struct rtpartition_private *prv;
++
++    prv = xmalloc(struct rtpartition_private);
++    if ( prv == NULL ) {
++        printk("malloc failed at rtpartition_private\n");
++        return -ENOMEM;
++    }
++    memset(prv, 0, sizeof(*prv));
++
++    ops->sched_data = prv;
++    spin_lock_init(&prv->lock);
++    INIT_LIST_HEAD(&prv->sdom);
++    cpumask_clear(&prv->cpus);
++    prv->priority_scheme = EDF;     /* by default, use EDF scheduler */
++
++    printk("This is the Deferrable Server version of the preemptive RTPARTITION scheduler\n");
++    printk("If you want to use it as a periodic server, please run a background busy CPU task\n");
++
++    printtime();
++    printk("\n");
++
++    return 0;
++}
++
++static void
++rtpartition_deinit(const struct scheduler *ops)
++{
++    struct rtpartition_private *prv;
++
++    printtime();
++    printk("\n");
++
++    prv = RTPARTITION_PRIV(ops);
++    if ( prv )
++        xfree(prv);
++}
++
++/* point per_cpu spinlock to the global system lock */
++static void *
++rtpartition_alloc_pdata(const struct scheduler *ops, int cpu)
++{
++    struct rtpartition_private *prv = RTPARTITION_PRIV(ops);
++    struct rtpartition_pcpu *spc;
++    unsigned long flags;
++
++    spc = xzalloc(struct rtpartition_pcpu);
++    if ( spc == NULL )
++        return NULL;
++
++    spin_lock_irqsave(&prv->lock, flags);
++
++    cpumask_set_cpu(cpu, &prv->cpus);
++    INIT_LIST_HEAD(&spc->runq);
++    if ( per_cpu(schedule_data, cpu).sched_priv == NULL )
++        per_cpu(schedule_data, cpu).sched_priv = spc;
++
++    spin_unlock_irqrestore(&prv->lock, flags);
++
++    printtime();
++    printk("total cpus: %d", cpumask_weight(&prv->cpus));
++    return spc;
++}
++
++static void
++rtpartition_free_pdata(const struct scheduler *ops, void *pcpu, int cpu)
++{
++    struct rtpartition_private * prv = RTPARTITION_PRIV(ops);
++    struct rtpartition_pcpu * spc = pcpu;
++
++    cpumask_clear_cpu(cpu, &prv->cpus);
++    printtime();
++    printk("cpu=%d\n", cpu);
++    xfree(spc);
++}
++
++static void *
++rtpartition_alloc_domdata(const struct scheduler *ops, struct domain *dom)
++{
++    unsigned long flags;
++    struct rtpartition_dom *sdom;
++    struct rtpartition_private * prv = RTPARTITION_PRIV(ops);
++
++    printtime();
++    printk("dom=%d\n", dom->domain_id);
++
++    sdom = xmalloc(struct rtpartition_dom);
++    if ( sdom == NULL ) {
++        printk("%s, xmalloc failed\n", __func__);
++        return NULL;
++    }
++    memset(sdom, 0, sizeof(*sdom));
++
++    INIT_LIST_HEAD(&sdom->vcpu);
++    INIT_LIST_HEAD(&sdom->sdom_elem);
++    sdom->dom = dom;
++    sdom->extra = 0;         /* by default, should not allow extra time */
++
++    /* spinlock here to insert the dom */
++    spin_lock_irqsave(&prv->lock, flags);
++    list_add_tail(&sdom->sdom_elem, &(prv->sdom));
++    spin_unlock_irqrestore(&prv->lock, flags);
++
++    return (void *)sdom;
++}
++
++static void
++rtpartition_free_domdata(const struct scheduler *ops, void *data)
++{
++    unsigned long flags;
++    struct rtpartition_dom *sdom = data;
++    struct rtpartition_private * prv = RTPARTITION_PRIV(ops);
++
++    printtime();
++    printk("dom=%d\n", sdom->dom->domain_id);
++
++    spin_lock_irqsave(&prv->lock, flags);
++    list_del_init(&sdom->sdom_elem);
++    spin_unlock_irqrestore(&prv->lock, flags);
++    xfree(data);
++}
++
++static int
++rtpartition_dom_init(const struct scheduler *ops, struct domain *dom)
++{
++    struct rtpartition_dom *sdom;
++
++    printtime();
++    printk("dom=%d\n", dom->domain_id);
++
++    /* IDLE Domain does not link on rtpartition_private */
++    if ( is_idle_domain(dom) ) { return 0; }
++
++    sdom = rtpartition_alloc_domdata(ops, dom);
++    if ( sdom == NULL ) {
++        printk("%s, failed\n", __func__);
++        return -ENOMEM;
++    }
++    dom->sched_priv = sdom;
++
++    return 0;
++}
++
++static void
++rtpartition_dom_destroy(const struct scheduler *ops, struct domain *dom)
++{
++    printtime();
++    printk("dom=%d\n", dom->domain_id);
++
++    rtpartition_free_domdata(ops, RTPARTITION_DOM(dom));
++}
++
++static void *
++rtpartition_alloc_vdata(const struct scheduler *ops, struct vcpu *vc, void *dd)
++{
++    struct rtpartition_vcpu *svc;
++    s_time_t now = NOW();
++    long count;
++
++    /* Allocate per-VCPU info */
++    svc = xmalloc(struct rtpartition_vcpu);
++    if ( svc == NULL ) {
++        printk("%s, xmalloc failed\n", __func__);
++        return NULL;
++    }
++    memset(svc, 0, sizeof(*svc));
++
++    INIT_LIST_HEAD(&svc->runq_elem);
++    INIT_LIST_HEAD(&svc->sdom_elem);
++    svc->sdom = dd;
++    svc->vcpu = vc;
++    svc->last_start = 0;            /* init last_start is 0 */
++
++    svc->period = RTPARTITION_DEFAULT_PERIOD;
++    if ( !is_idle_vcpu(vc) && vc->domain->domain_id != 0 ) {
++        svc->budget = RTPARTITION_DEFAULT_BUDGET;
++    } else {
++        svc->budget = RTPARTITION_DEFAULT_PERIOD;
++    }
++
++    count = (now/MILLISECS(svc->period)) + 1;
++    svc->cur_deadline += count*MILLISECS(svc->period); /* sync all VCPU's start time to 0 */
++
++    svc->cur_budget = svc->budget*1000; /* counting in microseconds level */
++    printtime();
++    rtpartition_dump_vcpu(svc);
++
++    return svc;
++}
++
++static void
++rtpartition_free_vdata(const struct scheduler *ops, void *priv)
++{
++    struct rtpartition_vcpu *svc = priv;
++    printtime();
++    rtpartition_dump_vcpu(svc);
++    xfree(svc);
++}
++
++/* lock is grabbed before calling this function */
++/* only link VCPU to dom, insert to runq is deferred */
++static void
++rtpartition_vcpu_insert(const struct scheduler *ops, struct vcpu *vc)
++{
++    struct rtpartition_vcpu *svc = RTPARTITION_VCPU(vc);
++
++    printtime();
++    rtpartition_dump_vcpu(svc);
++
++    /* IDLE VCPU not allowed on RunQ */
++    if ( is_idle_vcpu(vc) )
++        return;
++
++    list_add_tail(&svc->sdom_elem, &svc->sdom->vcpu);   /* add to dom vcpu list */
++}
++
++/* lock is grabbed before calling this function */
++/* vcpu should already be off runqueue */
++static void
++rtpartition_vcpu_remove(const struct scheduler *ops, struct vcpu *vc)
++{
++    struct rtpartition_vcpu * const svc = RTPARTITION_VCPU(vc);
++    struct rtpartition_dom * const sdom = svc->sdom;
++
++    printtime();
++    rtpartition_dump_vcpu(svc);
++
++    BUG_ON( sdom == NULL );
++    BUG_ON( __vcpu_on_runq(svc) );
++
++    if ( !is_idle_vcpu(vc) ) {
++        list_del_init(&svc->sdom_elem);
++    }
++}
++
++/*
++ * Other important functions
++ */
++/* do we need the lock here? */
++/* TODO: How to return the per VCPU parameters? Right now return the sum of budgets */
++static int
++rtpartition_dom_cntl(const struct scheduler *ops, struct domain *d, struct xen_domctl_scheduler_op *op)
++{
++    struct rtpartition_dom * const sdom = RTPARTITION_DOM(d);
++    struct list_head *iter;
++    struct rtpartition_private * prv = RTPARTITION_PRIV(ops);
++
++    if ( op->cmd == XEN_DOMCTL_SCHEDOP_getinfo ) {
++        /* for debug use, whenever adjust Dom0 parameter, do global dump */
++        if ( d->domain_id == 0 ) {
++            rtpartition_dump(ops);
++        }
++
++        /* TODO: how to return individual VCPU parameters? */
++        op->u.rtpartition.budget = 0;
++        op->u.rtpartition.extra = sdom->extra;
++        list_for_each( iter, &sdom->vcpu ) {
++            struct rtpartition_vcpu * svc = list_entry(iter, struct rtpartition_vcpu, sdom_elem);
++            op->u.rtpartition.budget += svc->budget;
++            op->u.rtpartition.period = svc->period;
++        }
++    } else {
++        ASSERT(op->cmd == XEN_DOMCTL_SCHEDOP_putinfo);
++
++        if ( d->domain_id == 0 ) {
++            if ( prv->priority_scheme == EDF ) {
++                prv->priority_scheme = RM;
++                printk("priority changed to RM\n");
++            } else {
++                prv->priority_scheme = EDF;
++                printk("priority changed to EDF\n");
++            }
++        }
++
++        sdom->extra = op->u.rtpartition.extra;
++        list_for_each( iter, &sdom->vcpu ) {
++            struct rtpartition_vcpu * svc = list_entry(iter, struct rtpartition_vcpu, sdom_elem);
++            if ( op->u.rtpartition.vcpu == svc->vcpu->vcpu_id ) { /* adjust per VCPU parameter */
++                svc->period = op->u.rtpartition.period;
++                svc->budget = op->u.rtpartition.budget;
++                break;
++            }
++        }
++    }
++
++    return 0;
++}
++
++/* return a VCPU considering affinity */
++static int
++rtpartition_cpu_pick(const struct scheduler *ops, struct vcpu *vc)
++{
++    cpumask_t cpus;
++    int cpu;
++    struct rtpartition_private * prv = RTPARTITION_PRIV(ops);
++
++    cpumask_copy(&cpus, vc->cpu_affinity);
++    cpumask_and(&cpus, &prv->cpus, &cpus);
++
++    cpu = cpumask_test_cpu(vc->processor, &cpus)
++            ? vc->processor 
++            : cpumask_cycle(vc->processor, &cpus);
++    ASSERT( !cpumask_empty(&cpus) && cpumask_test_cpu(cpu, &cpus) );
++
++// #ifdef RTXEN_DEBUG
++//     if ( vc->domain->domain_id != 0 && rtxen_counter[RTXEN_PICK] < RTXEN_MAX ) {
++//         printtime();
++//         rtpartition_dump_vcpu(RTPARTITION_VCPU(vc));
++//         rtxen_counter[RTXEN_PICK]++;
++//     }
++// #endif
++
++    return cpu;
++}
++
++/* Implemented as deferrable server. */
++/* burn budget at microsecond level */
++static void
++burn_budgets(const struct scheduler *ops, struct rtpartition_vcpu *svc, s_time_t now) {
++    s_time_t delta;
++    unsigned int consume;
++    long count = 0;
++
++    /* first time called for this svc, update last_start */
++    if ( svc->last_start == 0 ) {
++        svc->last_start = now;
++        return;
++    }
++
++    /* don't burn budget for idle VCPU */
++    if ( is_idle_vcpu(svc->vcpu) ) {
++        return;
++    }
++
++    /* update deadline info */
++    delta = now - svc->cur_deadline;
++    if ( delta >= 0 ) {
++        count = ( delta/MILLISECS(svc->period) ) + 1;
++        svc->cur_deadline += count * MILLISECS(svc->period);
++        svc->cur_budget = svc->budget * 1000;
++        return;
++    }
++
++    delta = now - svc->last_start;
++    if ( delta < 0 ) {
++        printk("%s, delta = %ld for ", __func__, delta);
++        rtpartition_dump_vcpu(svc);
++        svc->last_start = now;  /* update last_start */
++        svc->cur_budget = 0;
++        return;
++    }
++
++    if ( svc->cur_budget == 0 ) return;
++
++    /* burn at microseconds level */
++    consume = ( delta/MICROSECS(1) );
++    if ( delta%MICROSECS(1) > MICROSECS(1)/2 ) consume++;
++
++    svc->cur_budget -= consume;
++    if ( svc->cur_budget < MICROSECS(500) ) svc->cur_budget = 0;
++}
++
++/* RunQ is sorted. Pick first one budget. If no one, return NULL */
++/* lock is grabbed before calling this function */
++static struct rtpartition_vcpu *
++__runq_pick(unsigned int cpu)
++{
++    struct list_head *runq = RUNQ(cpu);
++    struct list_head *iter;
++    struct rtpartition_vcpu *iter_svc = NULL;
++
++    list_for_each(iter, runq) {
++        iter_svc = __runq_elem(iter);   
++
++        if ( iter_svc->cur_budget <= 0 && iter_svc->sdom->extra == 0 )
++            continue;
++
++        return iter_svc;
++    }
++
++    return NULL;
++}
++
++/* lock is grabbed before calling this function */
++static void
++__repl_update(const struct scheduler *ops, unsigned int cpu, s_time_t now)
++{
++    struct list_head *runq = RUNQ(cpu);
++    struct list_head *iter;
++    struct list_head *tmp;
++    struct rtpartition_vcpu *svc = NULL;
++
++    s_time_t diff;
++    long count;
++
++    list_for_each_safe(iter, tmp, runq) {
++        svc = __runq_elem(iter);
++
++        if ( now > svc->cur_deadline ) {
++            diff = now - svc->cur_deadline;    
++            count = (diff/MILLISECS(svc->period)) + 1;
++            svc->cur_deadline += count * MILLISECS(svc->period);
++            svc->cur_budget = svc->budget * 1000;
++            __runq_remove(svc);
++            __runq_insert(ops, cpu, svc);   // need ops to get the priority_scheme
++        }
++    }
++}
++
++/* The lock is already grabbed in schedule.c, no need to lock here */
++static struct task_slice
++rtpartition_schedule(const struct scheduler *ops, s_time_t now, bool_t tasklet_work_scheduled)
++{
++    const int cpu = smp_processor_id();
++    struct rtpartition_private * prv = RTPARTITION_PRIV(ops);
++    struct rtpartition_vcpu * const scurr = RTPARTITION_VCPU(current);
++    struct rtpartition_vcpu * snext = NULL;
++    struct task_slice ret;
++
++#ifdef RTXEN_DEBUG
++    if ( !is_idle_vcpu(scurr->vcpu) && scurr->vcpu->domain->domain_id != 0 && rtxen_counter[RTXEN_SCHED] < RTXEN_MAX ) {
++    // if ( rtxen_counter[RTXEN_SCHED] < RTXEN_MAX ) {
++        printtime();
++        printk("from: ");
++        rtpartition_dump_vcpu(scurr);
++        rtxen_counter[RTXEN_SCHED]++;
++    }
++#endif
++
++    /* burn_budget would return for IDLE VCPU */
++    burn_budgets(ops, scurr, now);
++
++    __repl_update(ops, cpu, now);
++
++    if ( tasklet_work_scheduled ) {
++        snext = RTPARTITION_VCPU(idle_vcpu[cpu]);
++    } else {
++        snext = __runq_pick(cpu);
++        if ( snext == NULL )
++            snext = RTPARTITION_VCPU(idle_vcpu[cpu]);
++
++        /* if scurr has higher priority and budget, still pick scurr */
++        if ( !is_idle_vcpu(current) &&
++             vcpu_runnable(current) &&
++             scurr->cur_budget > 0 &&
++             ( is_idle_vcpu(snext->vcpu) ||
++               ( prv->priority_scheme == EDF && scurr->cur_deadline <= snext->cur_deadline ) ||
++               ( prv->priority_scheme == RM && scurr->period <= snext->period)) ) {
++               // scurr->vcpu->domain->domain_id == snext->vcpu->domain->domain_id ) ) {
++            snext = scurr;
++        }
++    }
++
++    /* Trace switch self problem */
++    // if ( snext != scurr &&
++    //      !is_idle_vcpu(snext->vcpu) &&
++    //      !is_idle_vcpu(scurr->vcpu) &&
++    //      snext->vcpu->domain->domain_id == scurr->vcpu->domain->domain_id &&
++    //      scurr->cur_budget > 0 &&
++    //      vcpu_runnable(current) &&
++    //      snext->cur_deadline < scurr->cur_deadline ) {
++    //     TRACE_3D(TRC_SCHED_RTPARTITION_SWITCHSELF, scurr->vcpu->domain->domain_id, scurr->vcpu->vcpu_id, snext->vcpu->vcpu_id);
++    // }
++
++    if ( snext != scurr &&
++         !is_idle_vcpu(current) &&
++         vcpu_runnable(current) ) {
++        __runq_insert(ops, cpu, scurr); // insert scurr back to runq
++    }
++
++    snext->last_start = now;
++    ret.migrated = 0;
++    if ( !is_idle_vcpu(snext->vcpu) ) {
++        if ( snext != scurr ) {
++            __runq_remove(snext);
++        }
++        if ( snext->vcpu->processor != cpu ) {
++            snext->vcpu->processor = cpu;
++            ret.migrated = 1;
++        }
++    }
++
++    // if ( is_idle_vcpu(snext->vcpu) || snext->cur_budget > MILLISECS(1)) {
++    //     ret.time = MILLISECS(1);
++    // } else if ( snext->cur_budget > 0 ) {
++    //     ret.time = MICROSECS(snext->budget);
++    // }
++
++    ret.time = MILLISECS(1);
++    ret.task = snext->vcpu;
++
++#ifdef RTXEN_DEBUG
++    if ( !is_idle_vcpu(snext->vcpu) && snext->vcpu->domain->domain_id != 0 && rtxen_counter[RTXEN_SCHED] < RTXEN_MAX ) {
++    // if ( rtxen_counter[RTXEN_SCHED] < RTXEN_MAX ) {
++        printtime();
++        printk(" to : ");
++        rtpartition_dump_vcpu(snext);
++    }
++#endif
++
++    return ret;
++}
++
++/* Remove VCPU from RunQ */
++/* The lock is already grabbed in schedule.c, no need to lock here */
++static void
++rtpartition_vcpu_sleep(const struct scheduler *ops, struct vcpu *vc)
++{
++    struct rtpartition_vcpu * const svc = RTPARTITION_VCPU(vc);
++
++#ifdef RTXEN_DEBUG
++    if ( vc->domain->domain_id != 0 && rtxen_counter[RTXEN_SLEEP] < RTXEN_MAX ) {
++        printtime();
++        rtpartition_dump_vcpu(svc);
++        rtxen_counter[RTXEN_SLEEP]++;
++    }
++#endif
++
++    BUG_ON( is_idle_vcpu(vc) );
++
++    if ( curr_on_cpu(vc->processor) == vc ) {
++        cpu_raise_softirq(vc->processor, SCHEDULE_SOFTIRQ);
++    } else if ( __vcpu_on_runq(svc) ) {
++        __runq_remove(svc);
++    }
++}
++
++/* Should always wake up runnable, put it back to RunQ. Check priority to raise interrupt */
++/* The lock is already grabbed in schedule.c, no need to lock here */
++static void
++rtpartition_vcpu_wake(const struct scheduler *ops, struct vcpu *vc)
++{
++    struct rtpartition_vcpu * const svc = RTPARTITION_VCPU(vc);
++    const unsigned int cpu = vc->processor;
++    s_time_t now = NOW();
++    
++#ifdef RTXEN_DEBUG
++    if ( vc->domain->domain_id != 0 && rtxen_counter[RTXEN_WAKE] < RTXEN_MAX ) {
++        printtime();
++        rtpartition_dump_vcpu(svc);
++        rtxen_counter[RTXEN_WAKE]++;
++    }
++#endif
++
++    BUG_ON( is_idle_vcpu(vc) );
++
++    if ( unlikely(curr_on_cpu(cpu) == vc) ||
++         unlikely(__vcpu_on_runq(svc)) )
++        return;
++
++    __runq_insert(ops, cpu, svc);
++    __repl_update(ops, cpu, now);
++    cpu_raise_softirq(cpu, SCHEDULE_SOFTIRQ);
++
++    return;
++}
++
++static struct rtpartition_private _rtpartition_priv;
++
++const struct scheduler sched_rtpartition_def = {
++    .name           = "SMP RTPARTITION Scheduler",
++    .opt_name       = "rtpartition",
++    .sched_id       = XEN_SCHEDULER_RTPARTITION,
++    .sched_data     = &_rtpartition_priv,
++
++    .dump_cpu_state = rtpartition_dump_pcpu,
++    .dump_settings  = rtpartition_dump,
++    .init           = rtpartition_init,
++    .deinit         = rtpartition_deinit,
++    .alloc_pdata    = rtpartition_alloc_pdata,
++    .free_pdata     = rtpartition_free_pdata,
++    .alloc_domdata  = rtpartition_alloc_domdata,
++    .free_domdata   = rtpartition_free_domdata,
++    .init_domain    = rtpartition_dom_init,
++    .destroy_domain = rtpartition_dom_destroy,
++    .alloc_vdata    = rtpartition_alloc_vdata,
++    .free_vdata     = rtpartition_free_vdata,
++    .insert_vcpu    = rtpartition_vcpu_insert,
++    .remove_vcpu    = rtpartition_vcpu_remove,
++
++    .adjust         = rtpartition_dom_cntl,
++
++    .pick_cpu       = rtpartition_cpu_pick,
++    .do_schedule    = rtpartition_schedule,
++    .sleep          = rtpartition_vcpu_sleep,
++    .wake           = rtpartition_vcpu_wake,
++    
++    .context_saved  = NULL,
++    .yield          = NULL,
++    .migrate        = NULL,
++};
+diff --git a/xen/common/schedule.c b/xen/common/schedule.c
+index c174c41..368b972 100644
+--- a/xen/common/schedule.c
++++ b/xen/common/schedule.c
+@@ -39,7 +39,7 @@
+ #include <xsm/xsm.h>
+ 
+ /* opt_sched: scheduler - default to credit */
+-static char __initdata opt_sched[10] = "credit";
++static char __initdata opt_sched[20] = "credit";
+ string_param("sched", opt_sched);
+ 
+ /* if sched_smt_power_savings is set,
+@@ -68,6 +68,8 @@ static const struct scheduler *schedulers[] = {
+     &sched_sedf_def,
+     &sched_credit_def,
+     &sched_credit2_def,
++	&sched_rtglobal_def,
++	&sched_rtpartition_def,
+     &sched_arinc653_def,
+ };
+ 
+@@ -344,6 +346,11 @@ void vcpu_sleep_nosync(struct vcpu *v)
+ {
+     unsigned long flags;
+     spinlock_t *lock = vcpu_schedule_lock_irqsave(v, &flags);
++    /* trace overhead */
++    s_time_t t1, t2;
++    t1 = NOW();
++
++//    vcpu_schedule_lock_irqsave(v, flags); /* xen 4.3 code */
+ 
+     if ( likely(!vcpu_runnable(v)) )
+     {
+@@ -355,6 +362,9 @@ void vcpu_sleep_nosync(struct vcpu *v)
+ 
+     vcpu_schedule_unlock_irqrestore(lock, flags, v);
+ 
++    t2 = NOW();
++    TRACE_3D(TRC_SCHED_OVERHEAD_SLEEP, v->domain->domain_id, v->vcpu_id, t2-t1);
++
+     TRACE_2D(TRC_SCHED_SLEEP, v->domain->domain_id, v->vcpu_id);
+ }
+ 
+@@ -372,6 +382,11 @@ void vcpu_wake(struct vcpu *v)
+ {
+     unsigned long flags;
+     spinlock_t *lock = vcpu_schedule_lock_irqsave(v, &flags);
++    /* trace overhead */
++    s_time_t t1, t2;
++    t1 = NOW();
++
++//    vcpu_schedule_lock_irqsave(v, flags); /* xen 4.3 */
+ 
+     if ( likely(vcpu_runnable(v)) )
+     {
+@@ -387,6 +402,9 @@ void vcpu_wake(struct vcpu *v)
+ 
+     vcpu_schedule_unlock_irqrestore(lock, flags, v);
+ 
++    t2 = NOW();
++    TRACE_3D(TRC_SCHED_OVERHEAD_WAKE, v->domain->domain_id, v->vcpu_id, t2-t1);
++
+     TRACE_2D(TRC_SCHED_WAKE, v->domain->domain_id, v->vcpu_id);
+ }
+ 
+@@ -1151,6 +1169,8 @@ static void schedule(void)
+     struct task_slice     next_slice;
+     int cpu = smp_processor_id();
+ 
++    s_time_t t2;       /* trace scheduling latency */ 
++
+     ASSERT_NOT_IN_ATOMIC();
+ 
+     SCHED_STAT_CRANK(sched_run);
+@@ -1193,6 +1213,17 @@ static void schedule(void)
+     {
+         pcpu_schedule_unlock_irq(lock, cpu);
+         trace_continue_running(next);
++
++        /* trace overhead */
++        t2 = NOW();
++        TRACE_6D(TRC_SCHED_OVERHEAD_SCHED_LATENCY,
++             prev->domain->domain_id,
++             prev->vcpu_id,
++             next->domain->domain_id,
++             next->vcpu_id,
++             next_slice.migrated,
++             t2-now);
++
+         return continue_running(prev);
+     }
+ 
+@@ -1221,6 +1252,16 @@ static void schedule(void)
+     ASSERT(next->runstate.state != RUNSTATE_running);
+     vcpu_runstate_change(next, RUNSTATE_running, now);
+ 
++    /* trace overhead */
++    t2 = NOW();
++    TRACE_6D(TRC_SCHED_OVERHEAD_SCHED_LATENCY,
++             prev->domain->domain_id,
++             prev->vcpu_id,
++             next->domain->domain_id,
++             next->vcpu_id,
++             next_slice.migrated,
++             t2-now);
++
+     /*
+      * NB. Don't add any trace records from here until the actual context
+      * switch, else lost_records resume will not work properly.
+diff --git a/xen/include/public/domctl.h b/xen/include/public/domctl.h
+index 565fa4c..76be9f4 100644
+--- a/xen/include/public/domctl.h
++++ b/xen/include/public/domctl.h
+@@ -314,6 +314,21 @@ struct xen_domctl_max_vcpus {
+ typedef struct xen_domctl_max_vcpus xen_domctl_max_vcpus_t;
+ DEFINE_XEN_GUEST_HANDLE(xen_domctl_max_vcpus_t);
+ 
++/*
++ * This structure is used to pass to rtglobal scheduler from a 
++ * privileged domain to Xen
++ */
++struct xen_domctl_sched_rtglobal_params {
++    struct {
++        uint16_t period;
++        uint16_t budget;
++        uint16_t extra;
++    } vcpus[XEN_LEGACY_MAX_VCPUS];
++    uint16_t num_vcpus;
++    uint16_t vcpu_index;
++};
++typedef struct xen_domctl_sched_rtglobal_params xen_domctl_sched_rtglobal_params_t;
++DEFINE_XEN_GUEST_HANDLE(xen_domctl_sched_rtglobal_params_t);
+ 
+ /* XEN_DOMCTL_scheduler_op */
+ /* Scheduler types. */
+@@ -321,6 +336,13 @@ DEFINE_XEN_GUEST_HANDLE(xen_domctl_max_vcpus_t);
+ #define XEN_SCHEDULER_CREDIT   5
+ #define XEN_SCHEDULER_CREDIT2  6
+ #define XEN_SCHEDULER_ARINC653 7
++#define XEN_SCHEDULER_RTGLOBAL 8
++#define XEN_SCHEDULER_RTPARTITION 9
++#define XEN_SCHEDULER_RTGLOBAL_EDF  81
++#define XEN_SCHEDULER_RTGLOBAL_RM   82
++#define EDF     XEN_SCHEDULER_RTGLOBAL_EDF
++#define RM      XEN_SCHEDULER_RTGLOBAL_RM
++
+ /* Set or get info? */
+ #define XEN_DOMCTL_SCHEDOP_putinfo 0
+ #define XEN_DOMCTL_SCHEDOP_getinfo 1
+@@ -342,12 +364,24 @@ struct xen_domctl_scheduler_op {
+         struct xen_domctl_sched_credit2 {
+             uint16_t weight;
+         } credit2;
++        struct xen_domctl_sched_rtglobal{
++            uint16_t period; /* for compatibility of sisu's code in xm cmd */
++            uint16_t budget; /* for compatibility of sisu's code in xm cmd */
++            uint16_t extra; /* for compatibility of sisu's code in xm cmd */
++            uint16_t vcpu; /* for compatibility of sisu's code in xm cmd */
++            XEN_GUEST_HANDLE_64(xen_domctl_sched_rtglobal_params_t) schedule;
++        } rtglobal;
++		struct xen_domctl_sched_rtpartition {
++			uint16_t period;
++			uint16_t budget;
++			uint16_t extra;
++			uint16_t vcpu;
++		} rtpartition;
+     } u;
+ };
+ typedef struct xen_domctl_scheduler_op xen_domctl_scheduler_op_t;
+ DEFINE_XEN_GUEST_HANDLE(xen_domctl_scheduler_op_t);
+ 
+-
+ /* XEN_DOMCTL_setdomainhandle */
+ struct xen_domctl_setdomainhandle {
+     xen_domain_handle_t handle;
+diff --git a/xen/include/public/sysctl.h b/xen/include/public/sysctl.h
+index 3588698..6212e7d 100644
+--- a/xen/include/public/sysctl.h
++++ b/xen/include/public/sysctl.h
+@@ -583,6 +583,15 @@ struct xen_sysctl_credit_schedule {
+ typedef struct xen_sysctl_credit_schedule xen_sysctl_credit_schedule_t;
+ DEFINE_XEN_GUEST_HANDLE(xen_sysctl_credit_schedule_t);
+ 
++struct xen_sysctl_rtglobal_schedule {
++    /* Priority scheme of the real time scheduler */
++    uint16_t priority_scheme;
++    /* Server scheme used by the real time scheduler */
++//    unsigned server_scheme;
++};
++typedef struct xen_sysctl_rtglobal_schedule xen_sysctl_rtglobal_schedule_t;
++DEFINE_XEN_GUEST_HANDLE(xen_sysctl_rtglobal_schedule_t);
++
+ /* XEN_SYSCTL_scheduler_op */
+ /* Set or get info? */
+ #define XEN_SYSCTL_SCHEDOP_putinfo 0
+@@ -596,6 +605,7 @@ struct xen_sysctl_scheduler_op {
+             XEN_GUEST_HANDLE_64(xen_sysctl_arinc653_schedule_t) schedule;
+         } sched_arinc653;
+         struct xen_sysctl_credit_schedule sched_credit;
++        struct xen_sysctl_rtglobal_schedule sched_rtglobal;
+     } u;
+ };
+ typedef struct xen_sysctl_scheduler_op xen_sysctl_scheduler_op_t;
+diff --git a/xen/include/public/trace.h b/xen/include/public/trace.h
+index cfcf4aa..0c38223 100644
+--- a/xen/include/public/trace.h
++++ b/xen/include/public/trace.h
+@@ -58,6 +58,14 @@
+ #define TRC_SCHED_CLASS     0x00022000   /* Scheduler-specific    */
+ #define TRC_SCHED_VERBOSE   0x00028000   /* More inclusive scheduling */
+ 
++#define TRC_SCHED_OVERHEAD  0x00024000   /* Trace to record scheduling overhead */
++#define TRC_SCHED_OVERHEAD_SCHED_LATENCY    (TRC_SCHED_OVERHEAD + 1)
++#define TRC_SCHED_OVERHEAD_CONTEXT_SWITCH   (TRC_SCHED_OVERHEAD + 2)
++#define TRC_SCHED_OVERHEAD_CONTEXT_SAVED    (TRC_SCHED_OVERHEAD + 3)
++#define TRC_SCHED_OVERHEAD_WAKE             (TRC_SCHED_OVERHEAD + 4)
++#define TRC_SCHED_OVERHEAD_SLEEP            (TRC_SCHED_OVERHEAD + 5)
++#define TRC_SCHED_OVERHEAD_SELF_SWITCH      (TRC_SCHED_OVERHEAD + 6)
++
+ /*
+  * The highest 3 bits of the last 12 bits of TRC_SCHED_CLASS above are
+  * reserved for encoding what scheduler produced the information. The
+@@ -97,14 +105,14 @@
+ #define TRC_SCHED_CONTINUE_RUNNING  (TRC_SCHED_MIN + 2)
+ #define TRC_SCHED_DOM_ADD        (TRC_SCHED_VERBOSE +  1)
+ #define TRC_SCHED_DOM_REM        (TRC_SCHED_VERBOSE +  2)
+-#define TRC_SCHED_SLEEP          (TRC_SCHED_VERBOSE +  3)
+-#define TRC_SCHED_WAKE           (TRC_SCHED_VERBOSE +  4)
++#define TRC_SCHED_SLEEP          (TRC_SCHED_VERBOSE +  3)   
++#define TRC_SCHED_WAKE           (TRC_SCHED_VERBOSE +  4)   
+ #define TRC_SCHED_YIELD          (TRC_SCHED_VERBOSE +  5)
+ #define TRC_SCHED_BLOCK          (TRC_SCHED_VERBOSE +  6)
+-#define TRC_SCHED_SHUTDOWN       (TRC_SCHED_VERBOSE +  7)
+-#define TRC_SCHED_CTL            (TRC_SCHED_VERBOSE +  8)
+-#define TRC_SCHED_ADJDOM         (TRC_SCHED_VERBOSE +  9)
+-#define TRC_SCHED_SWITCH         (TRC_SCHED_VERBOSE + 10)
++#define TRC_SCHED_SHUTDOWN       (TRC_SCHED_VERBOSE +  7)   
++#define TRC_SCHED_CTL            (TRC_SCHED_VERBOSE +  8)   
++#define TRC_SCHED_ADJDOM         (TRC_SCHED_VERBOSE +  9)   
++#define TRC_SCHED_SWITCH         (TRC_SCHED_VERBOSE + 10)   
+ #define TRC_SCHED_S_TIMER_FN     (TRC_SCHED_VERBOSE + 11)
+ #define TRC_SCHED_T_TIMER_FN     (TRC_SCHED_VERBOSE + 12)
+ #define TRC_SCHED_DOM_TIMER_FN   (TRC_SCHED_VERBOSE + 13)
+diff --git a/xen/include/xen/sched-if.h b/xen/include/xen/sched-if.h
+index d95e254..1907f1c 100644
+--- a/xen/include/xen/sched-if.h
++++ b/xen/include/xen/sched-if.h
+@@ -171,7 +171,8 @@ extern const struct scheduler sched_sedf_def;
+ extern const struct scheduler sched_credit_def;
+ extern const struct scheduler sched_credit2_def;
+ extern const struct scheduler sched_arinc653_def;
+-
++extern const struct scheduler sched_rtglobal_def;
++extern const struct scheduler sched_rtpartition_def;
+ 
+ struct cpupool
+ {
+diff --git a/xen/tools/figlet/figlet b/xen/tools/figlet/figlet
+new file mode 100755
+index 0000000..08e7282
+Binary files /dev/null and b/xen/tools/figlet/figlet differ

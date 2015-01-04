@@ -1,0 +1,11 @@
+name="vm1"
+memory=512
+vcpus=3
+disk=['file:/home/pennpanda/Research/rt-xen/images/litmus1.img,xvda,w']
+vif=['bridge=xenbr0']
+# set the kernel and ramdisk to the ones we just extracted from the img
+#kernel="/home/pennpanda/Research/rt-xen/images/vmlinuz"
+#ramdisk="/home/pennpanda/Research/rt-xen/images/initrd.gz"
+# has to assign root uuid, the rest is arbitrary.
+#extra="root=UUID=12345678-1234-1234-1234-123456789abc ro console=hvc0 quiet splash"
+bootloader = "pygrub"

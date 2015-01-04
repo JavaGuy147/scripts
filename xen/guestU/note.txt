@@ -1,0 +1,3 @@
+guest1.xl is the correct script to boot the guest domain vm1. The image in the guest1.xl is an image with correct ubuntu 12.04 OS and litmus.
+
+install-vm-from-iso.xl is the configuration file to install a guest image from an ISO file. The file you need to prepare is the Ubuntu ISO installation file.

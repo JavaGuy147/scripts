@@ -47,11 +47,21 @@ Step 3: change the iptables policy permanently via file /etc/rc.local.
         sudo iptables -P FORWARD ACCEPT
         sudo iptables --table nat -A POSTROUTING -o eth0 -j MASQUERADE
 
-NB: If domU cannot ping www.google.com, you may very probably need to rerun the two iptables command in Step 3 as root!
+NB: 
+    1) If domU cannot ping www.google.com, you may very probably need to rerun the two iptables command in Step 3 as root!
     Make sure both commands do not return any error!
     You have encountered this network problem for many times, when you want to install a new OS into a fresh domU image.
     When you want to install a new OS into a fresh domU image and the installer reports the ubuntu website cannot be found 
     (i.e., network is not connected), it may be caused by this failure of this Step 3 (iptables fails to accept the packet of domU via NAT.)
+    2) When you install an OS into a fresh domU image, the automatic network configuration of the installer may not work. 
+        You need to manually configure the network: 
+            Choose an ip in the xenbr0's subnetwork for the domU,
+            Configure the gateway;
+            Configure the nameserver! <--It is not the gateway! xenbr0 does not have nameserver functionality, so you have to use a valid nameserver ip;
+                You can find the valid nameserver in  /etc/resolv.conf on a machine/dom0 with network connection. (nameserver 128.91.18.2)
+
+
+===DHCP server in dom0 is not a must===
 
 Step 4: Install DHCP server
     sudo aptitude install isc-dhcp-server

@@ -1,4 +1,4 @@
-#This document is used to record some useful commands for me
+This document is used to record some useful commands for me
 #Run man to see detailed info.
 pkg-config - Return metainformation about installed libraries.
 
@@ -54,3 +54,15 @@ find . -type d \( -path "./stubdom/" -o -path "./dist/" \) -prune -o -name '*.[c
 ldd `which xl`
 #if some program's dependent lib is not detected but it's installed( you can check if it's there by `whereis lib-name`)
 /sbin/ldconfig 
+
+
+###Mac###
+How to scroll up and down in vim on Mac?
+1) set the .vimrc with set mouse=a in Mac and the sshed machine;
+2) Ctrl + F (Forward) to scrool down;
+3) Ctrl + B (Backward) to scrool up.
+
+###Virtual Box###
+How to ssh to the virtual box?
+1) Add a second network Adapter with Host Only configuration;
+2) In virtual machine, set the ip address to static address

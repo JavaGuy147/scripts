@@ -2,6 +2,7 @@
 
 void main()
 {
+    char str[1024];
     struct{
         unsigned field1 :8;
         unsigned field2 :8;
@@ -21,5 +22,6 @@ void main()
     printf("long size %zuB\n", sizeof(long));
     printf("unsigned long size %zuB\n", sizeof(unsigned long));
 
+    printf("sizeof(char str[1024]) is %d\n", sizeof(str));
     return;
 }

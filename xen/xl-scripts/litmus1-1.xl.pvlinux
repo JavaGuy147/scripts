@@ -1,0 +1,7 @@
+name="litmus1"
+memory=1024
+vcpus=1
+cpus = "1-5"
+disk = ['file:/home/panda/Research/rt-xen/images/litmus1.img,xvda,w']
+vif= ['bridge=xenbr0']
+bootloader = "pygrub"

@@ -24,6 +24,13 @@ git config --global credential.helper 'cache --timeout=3600' #timeout 3600sec
 git config --global user.name "Your Name Here"
 #set email 
 git config --global user.email "your_email@example.com"
+#How to apply several commit points from repo 1 to repo 2.
+This same question is raised in stackoverflow: http://stackoverflow.com/questions/3816040/git-apply-changes-introduced-by-commit-in-one-repo-to-another-repo
+    You probably want to use git format-patch and then git am to apply that patch to your repository.
+    /path/to/repo1 $ git format-patch sha1^..sha1
+    /path/to/repo1 $ cd /path/to/repo2
+    /path/to/repo2 $ git am /path/to/repo1/0001-*.patch # this apply patch 0001 to the repo2; You can use *.patch to apply all patchse automatically, but sometimes it may not be able to apply automatically.
+When git am reports error, it is usually because the head of repo1 and head of repo2 diverge on some point. You need to use 3-way merge to solve it. So you should use command 'git am -3 /path/to/repo1/0001-*.patch' to use 3-way merge to apply the patch, and solve the conflicts when 'git am' reports errors.
 
 ##git repository locally##
 How to create a git repository locally

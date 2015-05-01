@@ -1,0 +1,34 @@
+How to configure serial port for domU
+(Discussion is from http://xen.1045712.n5.nabble.com/Serial-port-access-from-DomU-td2603705.html)
+Background:- I have tested a Gentoo Virtual machine (DOMU) to access the serial port of Physical machine (opensuse 11.1) (DOM0) using the following configuration. 
+
+Step1: Following modules should be loaded on the DOM0 
+8250 
+8250_pnp 
+serial_core 
+
+check is using "lsmod" command. 
+
+Step 2:- Finding the IRQ and ioport ranges. 
+
+Run the following command on the DOM0 to find the irq for the serial port. 
+
+# dmesg |grep tty 
+serial8250: ttyS0 at I/O 0x3f8 (irq = 4) is a 16550A 
+serial8250: ttyS1 at I/O 0x2f8 (irq = 3) is a 16550A 
+
+and run the following command to find the ioport 
+
+
+# cat /proc/ioports |grep serial 
+02f8-02ff : serial 
+03f8-03ff : serial 
+
+now add the following lines in the DOMU config file ( i mean configuration file of virtual machine) 
+
+
+domU config: 
+irq = [ 4 ] 
+ioports = [ "02f8-02ff" ] 
+
+check with minicom 

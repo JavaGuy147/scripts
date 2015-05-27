@@ -1,0 +1,11 @@
+#!/bin/bash
+#install xen's prerequirement libraries.
+#scripts from Xen website
+sudo apt-get -y install build-essential
+sudo apt-get -y install bcc bin86 gawk bridge-utils iproute libcurl3 libcurl4-openssl-dev bzip2 module-init-tools transfig tgif 
+sudo apt-get -y install pciutils-dev mercurial 
+sudo apt-get -y install make gcc libc6-dev zlib1g-dev python python-dev python-twisted libncurses5-dev patch 
+sudo apt-get install -y libsdl-dev libjpeg62-dev iasl libbz2-dev e2fslibs-dev git-core uuid-dev ocaml ocaml-findlib libx11-dev bison flex xz-utils libyajl-dev 
+sudo apt-get install -y gettext
+sudo apt-get install -y gcc-multilib
+sudo apt-get install -y libpixman-1-dev

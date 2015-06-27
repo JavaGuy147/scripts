@@ -24,6 +24,9 @@ git config --global credential.helper 'cache --timeout=3600' #timeout 3600sec
 git config --global user.name "Your Name Here"
 #set email 
 git config --global user.email "your_email@example.com"
+#grep a specific feature, such as sedf
+git-grep -i sedf
+
 #How to apply several commit points from repo 1 to repo 2.
 This same question is raised in stackoverflow: http://stackoverflow.com/questions/3816040/git-apply-changes-introduced-by-commit-in-one-repo-to-another-repo
     You probably want to use git format-patch and then git am to apply that patch to your repository.
@@ -73,3 +76,8 @@ How to scroll up and down in vim on Mac?
 How to ssh to the virtual box?
 1) Add a second network Adapter with Host Only configuration;
 2) In virtual machine, set the ip address to static address
+
+
+###Manual cause kernel panic in Linux###
+echo 1 > /proc/sys/kernel/sysrq
+echo c > /proc/sysrq-trigger

@@ -15,6 +15,9 @@ pdflatex -shell-escape myfile.tex
 #judge if a duplicate field exist in a file; if an item in first column appears more than once
 awk -F '[ \t]' 'FNR==NR {if($1 in a) a[$1]=a[$1]+1; else a[$1]=1;next} ($1 in a && a[$1]>1){print $1}' mem-layout.dat mem-layout.dat
 
+##perf & trace##
+strace: trace the system call.
+pstack: trace the stack of user-level program
 
 ##git##
 how to set git without pasword

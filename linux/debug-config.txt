@@ -1,0 +1,26 @@
+We need to configure the serial port to let Linux dump the "dmesg" to the serial port,
+so that we can collect the "kernel panic" information.
+The extra Linux Command Line is "console=tty0 console=ttyS0,9600n8 ignore_loglevel"
+Note:
+1) We can assign multiple console value, as long as they are not the same type of devices. For exmple, "console=ttyS0 console=ttyS1" both belong
+serial device and cannot be used at the same time.
+2) We need to assign "ignore_loglevel" to dump all messages to the serial port; Sometimes, some applications may change the level of message 
+that can be dumped to the serial port. If we don't configure "ignore_loglevel", we will witness that Linux stop dumping message to serial port
+at some time point.
+
+Some useful references are list below. Reading the content will be very helpful to understand how the configuration works.
+https://www.virtualbox.org/wiki/Serial_redirect
+http://www.tldp.org/HOWTO/Remote-Serial-Console-HOWTO/configure-kernel.html
+
+An example of the configuration of the grub entry is
+menuentry 'Ubuntu, with Linux 3.10.41-litmus+ (serial port)' --class ubuntu --class gnu-linux --class gnu --class os {
+        recordfail
+        gfxmode $linux_gfx_mode
+        insmod gzio
+        insmod part_msdos
+        insmod ext2
+        set root='(hd0,msdos1)'
+        search --no-floppy --fs-uuid --set=root b26736f6-3b5e-4d16-b840-9a80081b93b5
+        linux   /boot/vmlinuz-3.10.41-litmus+ root=UUID=b26736f6-3b5e-4d16-b840-9a80081b93b5 console=tty0 console=ttyS0,9600n8 ignore_loglevel
+        initrd  /boot/initrd.img-3.10.41-litmus+
+}

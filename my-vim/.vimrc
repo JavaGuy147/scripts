@@ -1,9 +1,9 @@
 syntax on " open highlight
 set tabstop=4
-set expandtab
+"set expandtab
 set shiftwidth=4
 set number
-filetype plugin on
+"filetype plugin on
 set tags=./tags,tags;$HOME " search tags until $HOME
 
 "vim-session config
